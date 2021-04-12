@@ -4,11 +4,12 @@ import com.nobita.demo.model.Unit;
 import com.nobita.demo.resultset.UnitResultSet;
 import com.nobita.demo.rowmapper.UnitRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.AccessType;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class UnitDAO implements BaseDAO<Unit> {
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -20,7 +21,7 @@ public class UnitDAO implements BaseDAO<Unit> {
     }
 
     @Override
-    public Unit findByID(int id) {
+    public Unit findByID(long id) {
         String sql = "select * from unit where id=?";
         Object[] values = {id};
         return jdbcTemplate.queryForObject(sql, new UnitRowMapper(), values);
@@ -41,7 +42,7 @@ public class UnitDAO implements BaseDAO<Unit> {
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(long id) {
         String sql = "delete * from unit where id=?";
         Object[] values = {id};
         return jdbcTemplate.update(sql, values) > 0;

@@ -1,8 +1,8 @@
-package com.nobita.demo.dao;
+package com.nobita.demo.service;
 
 import java.util.List;
 
-public interface BaseDAO<T>{
+public interface BaseService<T>{
     List<T> findAll();
 
     T findByID(long id);

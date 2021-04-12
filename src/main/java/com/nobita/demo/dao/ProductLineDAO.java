@@ -5,9 +5,11 @@ import com.nobita.demo.resultset.ProductLineResultSet;
 import com.nobita.demo.rowmapper.ProductLineRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class ProductLineDAO implements BaseDAO<ProductLine> {
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -19,7 +21,7 @@ public class ProductLineDAO implements BaseDAO<ProductLine> {
     }
 
     @Override
-    public ProductLine findByID(int id) {
+    public ProductLine findByID(long id) {
         String sql = "select * from productline where id=?";
         Object[] values = {id};
         return jdbcTemplate.queryForObject(sql, new ProductLineRowMapper(), values);
@@ -40,7 +42,7 @@ public class ProductLineDAO implements BaseDAO<ProductLine> {
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(long id) {
         String sql = "delete from productline where id=?";
         Object[] values = {id};
         return jdbcTemplate.update(sql, values) > 0;

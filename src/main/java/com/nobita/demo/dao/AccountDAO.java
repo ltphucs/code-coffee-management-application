@@ -21,7 +21,7 @@ public class AccountDAO implements BaseDAO<Account> {
     }
 
     @Override
-    public Account findByID(int id) {
+    public Account findByID(long id) {
         String sql="select ac.*,au.name as name_authorization from account ac left join authorization au on au.id= ac.id_authorization where ac.id=?";
         Object [] values={id};
         return jdbcTemplate.queryForObject(sql,new AccountRowMapper(),values);
@@ -42,7 +42,7 @@ public class AccountDAO implements BaseDAO<Account> {
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(long id) {
         String sql ="delete from account where id=?";
         Object [] values ={id};
         return jdbcTemplate.update(sql,values) > 0;
