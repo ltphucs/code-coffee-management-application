@@ -6,9 +6,10 @@ import com.nobita.demo.rowmapper.UnitRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.AccessType;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
+@Repository
 public class UnitDAO implements BaseDAO<Unit> {
     @Autowired
     JdbcTemplate jdbcTemplate;

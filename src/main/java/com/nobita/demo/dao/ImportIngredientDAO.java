@@ -5,9 +5,10 @@ import com.nobita.demo.resultset.ImportIngredientResultSet;
 import com.nobita.demo.rowmapper.ImportIngredientRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
+@Repository
 public class ImportIngredientDAO implements BaseDAO<ImportIngredient> {
     @Autowired
     JdbcTemplate jdbcTemplate;
