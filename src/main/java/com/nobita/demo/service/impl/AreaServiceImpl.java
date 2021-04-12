@@ -20,21 +20,21 @@ public class AreaServiceImpl implements AreaService {
 
     @Override
     public Area findByID(long id) {
-        return null;
+        return areaDAO.findByID(id);
     }
 
     @Override
     public boolean save(Area area) {
-        return false;
+        return areaDAO.save(area);
     }
 
     @Override
     public boolean update(Area area) {
-        return false;
+        return areaDAO.update(area);
     }
 
     @Override
     public boolean delete(long id) {
-        return false;
+        return areaDAO.delete(id);
     }
 }

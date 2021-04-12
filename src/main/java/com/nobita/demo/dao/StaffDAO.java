@@ -5,10 +5,11 @@ import com.nobita.demo.resultset.StaffResultSet;
 import com.nobita.demo.rowmapper.StaffRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
 import java.util.List;
-
+@Repository
 public class StaffDAO implements BaseDAO<Staff> {
 
     @Autowired

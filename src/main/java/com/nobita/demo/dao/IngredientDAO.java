@@ -4,10 +4,11 @@ import com.nobita.demo.resultset.IngredientResultSet;
 import com.nobita.demo.rowmapper.IngredientRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-
-public class Ingredient implements BaseDAO<com.nobita.demo.model.Ingredient>{
+@Repository
+public class IngredientDAO implements BaseDAO<com.nobita.demo.model.Ingredient>{
     @Autowired
     JdbcTemplate jdbcTemplate;
 

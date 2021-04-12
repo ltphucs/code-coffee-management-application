@@ -5,9 +5,11 @@ import com.nobita.demo.resultset.AreaResultSet;
 import com.nobita.demo.rowmapper.AreaRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class AreaDAO implements BaseDAO<Area> {
     @Autowired
     JdbcTemplate jdbcTemplate;
