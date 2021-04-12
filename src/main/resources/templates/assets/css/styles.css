@@ -1,0 +1,28 @@
+#quantity {
+  max-width: 2.6rem;
+}
+
+.w-100px {
+  width: 100px;
+}
+
+.h-100px {
+  height: 100px;
+}
+
+
+.mx-width-100 {
+  max-width: 100px;
+}
+
+.mx-height-100 {
+  max-height: 100px;
+}
+
+.bg-size-contain {
+  background-size: contain;
+}
+.bg-pos-center {
+  background-position: center;
+
+}
