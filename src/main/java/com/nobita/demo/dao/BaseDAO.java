@@ -3,7 +3,7 @@ package com.nobita.demo.dao;
 import java.util.List;
 
 public interface BaseDAO<T>{
-    List<T> findAll();
+    List<T> findAll(Con);
 
     T findByID(int id);
 
