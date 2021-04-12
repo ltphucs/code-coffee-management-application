@@ -19,7 +19,7 @@ public class ImportIngredientDAO implements BaseDAO<ImportIngredient> {
     }
 
     @Override
-    public ImportIngredient findByID(int id) {
+    public ImportIngredient findByID(long id) {
         String sql="select ip.*,i.name as name_ingredient from import_ingredient ip left join ingredient i on i.id=ip.id_ingredient where ip.id=?";
         Object [] values ={id};
         ImportIngredient ingredient=jdbcTemplate.queryForObject(sql,new ImportIngredientRowMapper(),values);
@@ -41,7 +41,7 @@ public class ImportIngredientDAO implements BaseDAO<ImportIngredient> {
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(long id) {
         String sql="delete from import_ingredient where id=?";
         Object[] values ={id};
         return jdbcTemplate.update(sql,values) > 0;

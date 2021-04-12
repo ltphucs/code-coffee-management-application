@@ -19,7 +19,7 @@ public class AreaDAO implements BaseDAO<Area> {
     }
 
     @Override
-    public Area findByID(int id) {
+    public Area findByID(long id) {
         String sql = "select * from area where id=?";
         Object[] values = {id};
         return jdbcTemplate.queryForObject(sql, new AreaRowMapper(), values);
@@ -40,7 +40,7 @@ public class AreaDAO implements BaseDAO<Area> {
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(long id) {
         String sql="delete from area where id=?";
         Object[] values ={id};
         return jdbcTemplate.update(sql, values) > 0;

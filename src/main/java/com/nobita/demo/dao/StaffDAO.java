@@ -21,7 +21,7 @@ public class StaffDAO implements BaseDAO<Staff> {
     }
 
     @Override
-    public Staff findByID(int id) {
+    public Staff findByID(long id) {
         String sql = "select s.*,p.name as name_position from staff s left join position p on p.id=s.id_position where s.id=?";
         Object[] values = {id};
         return jdbcTemplate.queryForObject(sql,new StaffRowMapper(),values);
@@ -42,7 +42,7 @@ public class StaffDAO implements BaseDAO<Staff> {
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(long id) {
         String sql ="delete from staff where id =?";
         Object[] values= {id};
         return jdbcTemplate.update(sql,values) > 0;
