@@ -1,9 +1,15 @@
+a:hover{
+  text-decoration: none;
+}
 #quantity {
   max-width: 2.6rem;
 }
 
 .w-100px {
   width: 100px;
+}
+.w-200px {
+  width: 200px;
 }
 
 .h-100px {
@@ -25,4 +31,15 @@
 .bg-pos-center {
   background-position: center;
 
+}
+.line-height-1 {
+  line-height: 1;
+}
+
+.table thead th {
+  vertical-align: bottom;
+  border-bottom: none;
+}
+.table-item:hover {
+  color: #007bff;
 }

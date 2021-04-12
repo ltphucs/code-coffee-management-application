@@ -47,5 +47,4 @@ public class AccountDAO implements BaseDAO<Account> {
         Object [] values ={id};
         return jdbcTemplate.update(sql,values) > 0;
     }
-    //test
 }
