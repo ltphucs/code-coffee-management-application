@@ -1,5 +1,6 @@
 package com.nobita.demo.model;
 
+import com.nobita.demo.model.en.ProductStatus;
 import lombok.Data;
 import org.springframework.data.annotation.Transient;
 import org.springframework.web.multipart.MultipartFile;
