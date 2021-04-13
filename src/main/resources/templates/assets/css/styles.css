@@ -1,13 +1,27 @@
-a:hover{
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+a:hover {
   text-decoration: none;
 }
+
 #quantity {
-  max-width: 3.6rem;
+  max-width: 2.6rem;
 }
 
 .w-100px {
   width: 100px;
 }
+
 .w-200px {
   width: 200px;
 }
@@ -28,10 +42,12 @@ a:hover{
 .bg-size-contain {
   background-size: contain;
 }
+
 .bg-pos-center {
   background-position: center;
 
 }
+
 .line-height-1 {
   line-height: 1;
 }
@@ -40,15 +56,32 @@ a:hover{
   vertical-align: bottom;
   border-bottom: none;
 }
+
 .table-item:hover {
   color: #007bff;
 }
+
 .order-item-trash:hover {
   color: red;
 }
 
-.order-table-title > th {
+.order-table-title>th {
   display: flex;
   justify-content: flex-start;
   align-items: center;
+}
+
+.w-90per {
+  max-width: 90%;
+}
+
+.mx-h-100vh {
+  max-height: 100vh;
+}
+
+.w-95per {
+  max-width: 95%;
+}
+.border-r-025rem {
+  border-radius: 0.25rem;
 }
