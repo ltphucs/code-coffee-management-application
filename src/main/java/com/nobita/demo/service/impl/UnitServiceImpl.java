@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
 @Service
 public class UnitServiceImpl implements UnitService {
+
     @Autowired
-    UnitDAO unitDAO;
+    private UnitDAO unitDAO;
 
     @Override
     public List<Unit> findAll() {

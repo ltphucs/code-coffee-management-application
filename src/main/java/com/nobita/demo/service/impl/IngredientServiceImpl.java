@@ -10,8 +10,9 @@ import java.util.List;
 
 @Service
 public class IngredientServiceImpl implements IngredientService {
+
     @Autowired
-    IngredientDAO ingredientDAO;
+    private IngredientDAO ingredientDAO;
 
     @Override
     public List<Ingredient> findAll() {

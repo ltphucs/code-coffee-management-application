@@ -7,7 +7,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+<<<<<<< HEAD:src/main/java/com/nobita/demo/dao/IngredientDAO.java
 
+=======
+>>>>>>> f43e667f37355859f3daac6b68421a29e0b63ae6:src/main/java/com/nobita/demo/dao/Ingredient.java
 @Repository
 public class IngredientDAO implements BaseDAO<com.nobita.demo.model.Ingredient>{
     @Autowired

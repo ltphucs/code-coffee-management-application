@@ -1,6 +1,5 @@
 package com.nobita.demo.service.impl;
 
-import com.nobita.demo.dao.ProductDAO;
 import com.nobita.demo.dao.ProductLineDAO;
 import com.nobita.demo.model.ProductLine;
 import com.nobita.demo.service.ProductLineService;
@@ -8,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
 @Service
 public class ProductLineServiceImpl implements ProductLineService {
+
     @Autowired
-    ProductLineDAO productLineDAO;
+   private ProductLineDAO productLineDAO;
 
     @Override
     public List<ProductLine> findAll() {

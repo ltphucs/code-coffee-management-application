@@ -10,8 +10,9 @@ import java.util.List;
 
 @Service
 public class AccountServiceImpl implements AccountService {
+
     @Autowired
-    AccountDAO accountDAO;
+    private AccountDAO accountDAO;
 
     @Override
     public List<Account> findAll() {

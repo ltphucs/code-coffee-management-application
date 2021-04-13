@@ -10,8 +10,9 @@ import java.util.List;
 
 @Service
 public class AreaServiceImpl implements AreaService {
+
     @Autowired
-    AreaDAO areaDAO;
+    private AreaDAO areaDAO;
 
     @Override
     public List<Area> findAll() {

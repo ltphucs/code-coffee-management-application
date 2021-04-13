@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
 @Service
 public class StaffServiceImpl implements StaffService {
+
     @Autowired
-    StaffDAO staffDAO;
+    private StaffDAO staffDAO;
 
     @Override
     public List<Staff> findAll() {

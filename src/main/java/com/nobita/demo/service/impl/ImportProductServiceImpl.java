@@ -10,8 +10,9 @@ import java.util.List;
 
 @Service
 public class ImportProductServiceImpl implements ImportProductService {
+
     @Autowired
-    ImportProductDAO importProductDAO;
+    private ImportProductDAO importProductDAO;
 
     @Override
     public List<ImportProduct> findAll() {
