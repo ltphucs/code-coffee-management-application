@@ -2,7 +2,7 @@ a:hover{
   text-decoration: none;
 }
 #quantity {
-  max-width: 2.6rem;
+  max-width: 3.6rem;
 }
 
 .w-100px {
@@ -42,4 +42,13 @@ a:hover{
 }
 .table-item:hover {
   color: #007bff;
+}
+.order-item-trash:hover {
+  color: red;
+}
+
+.order-table-title > th {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
