@@ -2,6 +2,7 @@ package com.nobita.demo.controller.api;
 
 import com.nobita.demo.model.Staff;
 import com.nobita.demo.service.StaffService;
+import com.nobita.demo.validate.StaffPasswordValidate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,8 +21,10 @@ import java.util.Map;
 public class StaffRestController {
 
     @Autowired
-    StaffService staffService;
+    private StaffService staffService;
 
+    @Autowired
+    private StaffPasswordValidate validate;
     @GetMapping
     public ResponseEntity<?> list() {
         List<Staff> staffs = staffService.findAll();
@@ -42,6 +45,7 @@ public class StaffRestController {
 
     @PostMapping
     public ResponseEntity<?> save(@Valid @RequestBody Staff staff, BindingResult result) {
+        validate.validate(staff,result);
         if (result.hasErrors()){
             List<FieldError> fieldErrors = result.getFieldErrors();
             Map<String, String> errors = new HashMap<>();
@@ -56,6 +60,7 @@ public class StaffRestController {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<?> update(@Valid @PathVariable("id") Long id, @RequestBody Staff staff, BindingResult result) {
+        validate.validate(staff,result);
         if (result.hasErrors()){
             List<FieldError> fieldErrors = result.getFieldErrors();
             Map<String, String> errors = new HashMap<>();
