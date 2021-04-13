@@ -5,9 +5,11 @@ import com.nobita.demo.resultset.AreaResultSet;
 import com.nobita.demo.rowmapper.AreaRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public class AreaDAO implements BaseDAO<Area> {
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -19,7 +21,7 @@ public class AreaDAO implements BaseDAO<Area> {
     }
 
     @Override
-    public Area findByID(int id) {
+    public Area findByID(long id) {
         String sql = "select * from area where id=?";
         Object[] values = {id};
         return jdbcTemplate.queryForObject(sql, new AreaRowMapper(), values);
@@ -40,7 +42,7 @@ public class AreaDAO implements BaseDAO<Area> {
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(long id) {
         String sql="delete from area where id=?";
         Object[] values ={id};
         return jdbcTemplate.update(sql, values) > 0;

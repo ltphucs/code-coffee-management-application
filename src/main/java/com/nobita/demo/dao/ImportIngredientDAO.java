@@ -5,9 +5,14 @@ import com.nobita.demo.resultset.ImportIngredientResultSet;
 import com.nobita.demo.rowmapper.ImportIngredientRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
+<<<<<<< HEAD
 
+=======
+>>>>>>> f43e667f37355859f3daac6b68421a29e0b63ae6
+@Repository
 public class ImportIngredientDAO implements BaseDAO<ImportIngredient> {
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -19,7 +24,7 @@ public class ImportIngredientDAO implements BaseDAO<ImportIngredient> {
     }
 
     @Override
-    public ImportIngredient findByID(int id) {
+    public ImportIngredient findByID(long id) {
         String sql="select ip.*,i.name as name_ingredient from import_ingredient ip left join ingredient i on i.id=ip.id_ingredient where ip.id=?";
         Object [] values ={id};
         ImportIngredient ingredient=jdbcTemplate.queryForObject(sql,new ImportIngredientRowMapper(),values);
@@ -41,7 +46,7 @@ public class ImportIngredientDAO implements BaseDAO<ImportIngredient> {
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(long id) {
         String sql="delete from import_ingredient where id=?";
         Object[] values ={id};
         return jdbcTemplate.update(sql,values) > 0;

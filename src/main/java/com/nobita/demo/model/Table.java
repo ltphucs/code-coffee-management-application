@@ -1,5 +1,6 @@
 package com.nobita.demo.model;
 
+import com.nobita.demo.model.en.TableStatus;
 import lombok.Data;
 
 @Data

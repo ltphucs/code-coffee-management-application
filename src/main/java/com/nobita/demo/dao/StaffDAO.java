@@ -5,10 +5,15 @@ import com.nobita.demo.resultset.StaffResultSet;
 import com.nobita.demo.rowmapper.StaffRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
 import java.util.List;
+<<<<<<< HEAD
 
+=======
+>>>>>>> f43e667f37355859f3daac6b68421a29e0b63ae6
+@Repository
 public class StaffDAO implements BaseDAO<Staff> {
 
     @Autowired
@@ -21,7 +26,7 @@ public class StaffDAO implements BaseDAO<Staff> {
     }
 
     @Override
-    public Staff findByID(int id) {
+    public Staff findByID(long id) {
         String sql = "select s.*,p.name as name_position from staff s left join position p on p.id=s.id_position where s.id=?";
         Object[] values = {id};
         return jdbcTemplate.queryForObject(sql,new StaffRowMapper(),values);
@@ -42,7 +47,7 @@ public class StaffDAO implements BaseDAO<Staff> {
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(long id) {
         String sql ="delete from staff where id =?";
         Object[] values= {id};
         return jdbcTemplate.update(sql,values) > 0;

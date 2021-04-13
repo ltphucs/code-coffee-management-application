@@ -4,10 +4,15 @@ import com.nobita.demo.resultset.IngredientResultSet;
 import com.nobita.demo.rowmapper.IngredientRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
+<<<<<<< HEAD:src/main/java/com/nobita/demo/dao/IngredientDAO.java
 
-public class Ingredient implements BaseDAO<com.nobita.demo.model.Ingredient>{
+=======
+>>>>>>> f43e667f37355859f3daac6b68421a29e0b63ae6:src/main/java/com/nobita/demo/dao/Ingredient.java
+@Repository
+public class IngredientDAO implements BaseDAO<com.nobita.demo.model.Ingredient>{
     @Autowired
     JdbcTemplate jdbcTemplate;
 
@@ -18,7 +23,7 @@ public class Ingredient implements BaseDAO<com.nobita.demo.model.Ingredient>{
     }
 
     @Override
-    public com.nobita.demo.model.Ingredient findByID(int id) {
+    public com.nobita.demo.model.Ingredient findByID(long id) {
         String sql="select i.* ,u.name as name_unit from ingredient i lef join unit u on u.id=i.id_ingredient";
         Object[]values ={id};
         return jdbcTemplate.queryForObject(sql,new IngredientRowMapper(),values);
@@ -39,7 +44,7 @@ public class Ingredient implements BaseDAO<com.nobita.demo.model.Ingredient>{
     }
 
     @Override
-    public boolean delete(int id) {
+    public boolean delete(long id) {
         String sql="delete from ingredient where id=?";
         Object[]values ={id};
         return jdbcTemplate.update(sql,values) >0;
