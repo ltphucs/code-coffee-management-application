@@ -9,10 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
 import java.util.List;
-<<<<<<< HEAD
-
-=======
->>>>>>> f43e667f37355859f3daac6b68421a29e0b63ae6
 @Repository
 public class StaffDAO implements BaseDAO<Staff> {
 
@@ -35,14 +31,14 @@ public class StaffDAO implements BaseDAO<Staff> {
     @Override
     public boolean save(Staff staff) {
         String sql = "insert into staff(fullname,gender,id_position,date_of_birth,address,phone,username,password) values (?,?,?,?,?,?,?,?)";
-        Object[] values = {staff.getFullname(), staff.getGender(), staff.getPosition().getId(), Date.valueOf(staff.getDateOfBirth()), staff.getAddress(), staff.getPhone(), staff.getUsername(), staff.getPassword()};
+        Object[] values = {staff.getFullName(), staff.getGender(), staff.getPosition().getId(), Date.valueOf(staff.getDateOfBirth()), staff.getAddress(), staff.getPhone(), staff.getUsername(), staff.getPassword()};
         return jdbcTemplate.update(sql, values) > 0;
     }
 
     @Override
     public boolean update(Staff staff) {
         String sql ="update staff set fullname =?,gender=?,id_position =?,date_of_birth=?,address= ?,phone =?,username =? ,password =? where id =?";
-        Object [] values = {staff.getFullname(), staff.getGender(), staff.getPosition().getId(), Date.valueOf(staff.getDateOfBirth()), staff.getAddress(), staff.getPhone(), staff.getUsername(), staff.getPassword(),staff.getId()};
+        Object [] values = {staff.getFullName(), staff.getGender(), staff.getPosition().getId(), Date.valueOf(staff.getDateOfBirth()), staff.getAddress(), staff.getPhone(), staff.getUsername(), staff.getPassword(),staff.getId()};
         return jdbcTemplate.update(sql,values) > 0 ;
     }
 
