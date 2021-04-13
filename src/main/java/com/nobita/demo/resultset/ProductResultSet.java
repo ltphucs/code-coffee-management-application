@@ -2,7 +2,7 @@ package com.nobita.demo.resultset;
 
 import com.nobita.demo.model.Product;
 import com.nobita.demo.model.ProductLine;
-import com.nobita.demo.model.ProductStatus;
+import com.nobita.demo.model.en.ProductStatus;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 

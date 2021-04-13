@@ -1,9 +1,8 @@
 package com.nobita.demo.rowmapper;
 
-import com.nobita.demo.dao.TableDAO;
 import com.nobita.demo.model.Area;
 import com.nobita.demo.model.Table;
-import com.nobita.demo.model.TableStatus;
+import com.nobita.demo.model.en.TableStatus;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

@@ -1,12 +1,15 @@
 package com.nobita.demo.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping(value = "products")
+@RequestMapping(value = "productLines")
 public class ProductLineController {
-//
-//    @GetMapping
-//    public
+
+    @GetMapping
+    public String show(){
+        return "product-line";
+    }
 }
