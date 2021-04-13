@@ -8,7 +8,9 @@ import java.time.LocalDateTime;
 @Data
 public class ImportIngredient {
     private Long id;
-    private LocalDateTime dateJoin;
+
+    private LocalDateTime dateJoin = LocalDateTime.now();
+
     private Ingredient ingredient;
 
     @Min(value = 1,message = "Số lượng không được bé hơn 1")

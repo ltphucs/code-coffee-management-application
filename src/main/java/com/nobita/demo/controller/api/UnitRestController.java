@@ -6,12 +6,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping(value = "units")
+@RequestMapping("/api/units")
 public class UnitRestController {
     @Autowired
     UnitService unitService;
@@ -35,27 +40,46 @@ public class UnitRestController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody Unit unit) {
-        try {
-            unitService.save(unit);
-            return new ResponseEntity<>(unit, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<Unit>(HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<?> save(@Valid @RequestBody Unit unit, BindingResult result) {
+        if (result.hasErrors()){
+            List<FieldError> fieldErrors = result.getFieldErrors();
+            Map<String, String> errors = new HashMap<>();
+            for (FieldError fieldError : fieldErrors) {
+                errors.put(fieldError.getField(), fieldError.getDefaultMessage());
+            }
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
+        unitService.save(unit);
+        return new ResponseEntity<>(unit,HttpStatus.OK);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody Unit unit) {
-        Unit currentUnit = unitService.findByID(id);
-        if (currentUnit == null) {
-            return new ResponseEntity<Unit>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> update(@Valid @PathVariable("id") Long id, @RequestBody Unit unit, BindingResult result) {
+        if (result.hasErrors()){
+            List<FieldError> fieldErrors = result.getFieldErrors();
+            Map<String, String> errors = new HashMap<>();
+            for (FieldError fieldError : fieldErrors) {
+                errors.put(fieldError.getField(), fieldError.getDefaultMessage());
+            }
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
-        currentUnit = unit;
-        try {
-            unitService.update(currentUnit);
-            return new ResponseEntity<>(currentUnit, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<Unit>(HttpStatus.INTERNAL_SERVER_ERROR);
+        Unit unit1 = unitService.findByID(id);
+        if (unit1 != null){
+            unit1.setName(unit.getName());
+            unit1.setComment(unit.getComment());
+            unitService.update(unit);
+            return new ResponseEntity<>(unit1,HttpStatus.OK);
         }
+        return new ResponseEntity<>(unit1,HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") long id){
+        Unit unit1 = unitService.findByID(id);
+        if (unit1!=null){
+            unitService.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
