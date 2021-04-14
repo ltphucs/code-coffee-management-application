@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "importIngredients")
+@RequestMapping(value = "api/importIngredients")
 public class ImportIngredientRestController {
     @Autowired
     ImportIngredientService importIngredientService;

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "tables")
+@RequestMapping(value = "api/tables")
 public class TableRestController {
     @Autowired
     TableService tableService;

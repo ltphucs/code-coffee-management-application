@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "units")
+@RequestMapping(value = "api/units")
 public class UnitRestController {
     @Autowired
     UnitService unitService;
