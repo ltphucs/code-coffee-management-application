@@ -55,7 +55,7 @@ public class ProductLineRestController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> update(@Valid @PathVariable("id") Long id,BindingResult result, @RequestBody ProductLine productLine) {
+    public ResponseEntity<?> update( @PathVariable("id") Long id,@Valid @RequestBody ProductLine productLine,BindingResult result) {
         if (result.hasErrors()){
             List<FieldError> fieldErrors = result.getFieldErrors();
             Map<String, String> errors = new HashMap<>();

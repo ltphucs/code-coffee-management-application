@@ -54,7 +54,7 @@ public class ProductRestController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> update(@Valid@PathVariable("id") Long id,BindingResult result, @RequestBody Product product) {
+    public ResponseEntity<?> update(@PathVariable("id") Long id,@Valid @RequestBody Product product,BindingResult result) {
         if (result.hasErrors()){
             List<FieldError> fieldErrors = result.getFieldErrors();
             Map<String, String> errors = new HashMap<>();
@@ -71,7 +71,7 @@ public class ProductRestController {
             product1.setProductLine(product.getProductLine());
             product1.setImage(product.getImage());
             product1.setProductStatus(product.getProductStatus());
-            productService.save(product);
+            productService.save(product1);
             return new ResponseEntity<>(product1,HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

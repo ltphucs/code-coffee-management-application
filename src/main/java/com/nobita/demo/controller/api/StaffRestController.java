@@ -59,7 +59,7 @@ public class StaffRestController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> update(@Valid @PathVariable("id") Long id, @RequestBody Staff staff, BindingResult result) {
+    public ResponseEntity<?> update(@PathVariable("id") Long id,@Valid  @RequestBody Staff staff, BindingResult result) {
         validate.validate(staff,result);
         if (result.hasErrors()){
             List<FieldError> fieldErrors = result.getFieldErrors();
@@ -81,7 +81,7 @@ public class StaffRestController {
             staff1.setUsername(staff.getUsername());
             staff1.setPassword(staff.getPassword());
 
-            staffService.update(staff);
+            staffService.update(staff1);
             return new ResponseEntity<>(staff1,HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

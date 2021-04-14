@@ -65,13 +65,13 @@ public class AccountRestController {
 
 //   edit account
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> update(@Valid @PathVariable("id") Long id, @RequestBody Account account, BindingResult result) {
+    public ResponseEntity<?> update(@PathVariable("id") Long id,@Valid @RequestBody Account account, BindingResult result) {
         //     tìm ra id account
-        Account account1 = accountService.findByID(id);
+        Account currentAccount = accountService.findByID(id);
 //      nếu có thì ktra lỗi k thì update
-        if (account1 != null) {
+        if (currentAccount != null) {
             passwordValidate.validate(account, result);
-            if (result.hasFieldErrors()) {
+            if (result.hasErrors()) {
                 List<FieldError> fieldErrors = result.getFieldErrors();
                 Map<String, String> errors = new HashMap<>();
                 for (FieldError fieldError : fieldErrors) {
@@ -79,11 +79,11 @@ public class AccountRestController {
                 }
                 return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
             }
-            account1.setUsername(account.getUsername());
-            account1.setPassword(account.getPassword());
-            account1.setAuthorization(account.getAuthorization());
-            accountService.update(account);
-            return new ResponseEntity<>(account1, HttpStatus.OK);
+            currentAccount.setUsername(account.getUsername());
+            currentAccount.setPassword(account.getPassword());
+            currentAccount.setAuthorization(account.getAuthorization());
+            accountService.update(currentAccount);
+            return new ResponseEntity<>(currentAccount, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

@@ -49,7 +49,7 @@ public class AreaRestController {
         Area area1 = areaService.findByID(id);
         if (area1 != null){
             area1.setName(area.getName());
-            areaService.update(area);
+            areaService.update(area1);
             return new ResponseEntity<>(area1,HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

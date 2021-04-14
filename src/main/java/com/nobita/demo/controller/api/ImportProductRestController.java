@@ -55,7 +55,7 @@ public class ImportProductRestController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> update(@Valid @PathVariable("id") Long id,BindingResult result, @RequestBody ImportProduct importProduct) {
+    public ResponseEntity<?> update( @PathVariable("id") Long id,@Valid @RequestBody ImportProduct importProduct,BindingResult result) {
         if (result.hasErrors()){
             List<FieldError> fieldErrors = result.getFieldErrors();
             Map<String, String> errors = new HashMap<>();
@@ -72,7 +72,7 @@ public class ImportProductRestController {
             importProduct1.setPrice(importProduct.getPrice());
             importProduct1.setTotalPrice(importProduct.getTotalPrice());
             importProduct1.setComment(importProduct.getComment());
-            importProductService.save(importProduct);
+            importProductService.save(importProduct1);
             return new ResponseEntity<>(importProduct1,HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

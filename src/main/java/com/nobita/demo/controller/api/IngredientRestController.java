@@ -54,7 +54,7 @@ public class IngredientRestController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> update(@Valid @PathVariable("id") Long id,BindingResult result, @RequestBody Ingredient ingredient) {
+    public ResponseEntity<?> update( @PathVariable("id") Long id,@Valid @RequestBody Ingredient ingredient,BindingResult result) {
         if (result.hasErrors()){
             List<FieldError> fieldErrors = result.getFieldErrors();
             Map<String, String> errors = new HashMap<>();
@@ -68,7 +68,7 @@ public class IngredientRestController {
             ingredient1.setName(ingredient.getName());
             ingredient1.setUnit(ingredient.getUnit());
             ingredient1.setComment(ingredient.getComment());
-            ingredientService.update(ingredient);
+            ingredientService.update(ingredient1);
             return new ResponseEntity<>(ingredient1,HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

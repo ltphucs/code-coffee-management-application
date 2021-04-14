@@ -13,7 +13,6 @@ public class Account extends PasswordValidate {
             message = "Tên người dùng phải trong khoảng[3-25] và không được có ký tự đặc biệt")
     private String username;
 
-
     private String password;
 
     private Authorization authorization;

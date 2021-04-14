@@ -54,7 +54,7 @@ public class TableRestController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> update(@Valid @PathVariable("id") Long id,BindingResult result, @RequestBody Table table) {
+    public ResponseEntity<?> update( @PathVariable("id") Long id,@Valid @RequestBody Table table,BindingResult result) {
         if (result.hasErrors()){
             List<FieldError> fieldErrors = result.getFieldErrors();
             Map<String, String> errors = new HashMap<>();
@@ -68,7 +68,7 @@ public class TableRestController {
             table1.setName(table.getName());
             table1.setArea(table.getArea());
             table1.setTableStatus(table.getTableStatus());
-            tableService.update(table);
+            tableService.update(table1);
             return new ResponseEntity<>(table1,HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

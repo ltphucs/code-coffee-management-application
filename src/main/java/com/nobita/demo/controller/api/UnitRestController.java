@@ -54,7 +54,7 @@ public class UnitRestController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> update(@Valid @PathVariable("id") Long id, @RequestBody Unit unit, BindingResult result) {
+    public ResponseEntity<?> update(@PathVariable("id") Long id,@Valid @RequestBody Unit unit, BindingResult result) {
         if (result.hasErrors()){
             List<FieldError> fieldErrors = result.getFieldErrors();
             Map<String, String> errors = new HashMap<>();
@@ -67,10 +67,10 @@ public class UnitRestController {
         if (unit1 != null){
             unit1.setName(unit.getName());
             unit1.setComment(unit.getComment());
-            unitService.update(unit);
+            unitService.update(unit1);
             return new ResponseEntity<>(unit1,HttpStatus.OK);
         }
-        return new ResponseEntity<>(unit1,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/{id}")
