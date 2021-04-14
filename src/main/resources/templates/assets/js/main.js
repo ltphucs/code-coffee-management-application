@@ -46,9 +46,6 @@ $(document).ready(function () {
                 $('#area-sql').empty();
                 $.each(data, function (i, v) {
                     $('#area-sql').append(
-                        // `<li className="nav-item w-100px">
-                        //     <a className="nav-link active" role="tab" data-toggle="pill" href="#tab-${v.id}">${v.name}</a>
-                        // </li>`
                         `<li class="nav-item w-100px">
                             <a class="nav-link active" role="tab" data-toggle="pill" href="#tab-$href="#tab-${v.id}">${v.name}</a>
                         </li>`
