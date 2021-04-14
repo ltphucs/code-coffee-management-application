@@ -6,9 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "api/tables")
@@ -35,27 +40,48 @@ public class TableRestController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody Table table) {
-        try {
-            tableService.save(table);
-            return new ResponseEntity<>(table, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<Table>(HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<?> save(@Valid @RequestBody Table table, BindingResult result) {
+        if (result.hasErrors()){
+            List<FieldError> fieldErrors = result.getFieldErrors();
+            Map<String, String> errors = new HashMap<>();
+            for (FieldError fieldError : fieldErrors) {
+                errors.put(fieldError.getField(), fieldError.getDefaultMessage());
+            }
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
+        tableService.save(table);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody Table table) {
-        Table currentTable = tableService.findByID(id);
-        if (currentTable == null) {
-            return new ResponseEntity<Table>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> update( @PathVariable("id") Long id,@Valid @RequestBody Table table,BindingResult result) {
+        if (result.hasErrors()){
+            List<FieldError> fieldErrors = result.getFieldErrors();
+            Map<String, String> errors = new HashMap<>();
+            for (FieldError fieldError : fieldErrors) {
+                errors.put(fieldError.getField(), fieldError.getDefaultMessage());
+            }
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
-        currentTable = table;
-        try {
-            tableService.update(currentTable);
-            return new ResponseEntity<>(currentTable, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<Table>(HttpStatus.INTERNAL_SERVER_ERROR);
+        Table table1 = tableService.findByID(id);
+        if (table1 != null){
+            table1.setName(table.getName());
+            table1.setArea(table.getArea());
+            table1.setTableStatus(table.getTableStatus());
+            tableService.update(table1);
+            return new ResponseEntity<>(table1,HttpStatus.OK);
         }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") long id){
+        Table table = tableService.findByID(id);
+        if (table != null){
+            tableService.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
     }
 }

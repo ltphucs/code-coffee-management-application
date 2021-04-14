@@ -45,17 +45,23 @@ public class AreaRestController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody Area area) {
-        Area currentArea = areaService.findByID(id);
-        if (currentArea == null) {
-            return new ResponseEntity<Area>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> update(@PathVariable("id") long id, @RequestBody Area area) {
+        Area area1 = areaService.findByID(id);
+        if (area1 != null){
+            area1.setName(area.getName());
+            areaService.update(area1);
+            return new ResponseEntity<>(area1,HttpStatus.OK);
         }
-        currentArea = area;
-        try {
-            areaService.update(currentArea);
-            return new ResponseEntity<>(currentArea, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<Area>(HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") long id){
+        Area area = areaService.findByID(id);
+        if (area != null){
+            areaService.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

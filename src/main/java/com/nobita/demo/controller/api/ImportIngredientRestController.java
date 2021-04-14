@@ -6,15 +6,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "api/importIngredients")
 public class ImportIngredientRestController {
+
     @Autowired
-    ImportIngredientService importIngredientService;
+    private ImportIngredientService importIngredientService;
 
     @GetMapping
     public ResponseEntity<?> list() {
@@ -35,27 +41,50 @@ public class ImportIngredientRestController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody ImportIngredient importIngredient) {
-        try {
-            importIngredientService.save(importIngredient);
-            return new ResponseEntity<>(importIngredient, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<ImportIngredient>(HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<?> save(@Valid @RequestBody ImportIngredient importIngredient, BindingResult result) {
+        if (result.hasFieldErrors()){
+            List<FieldError> fieldErrors = result.getFieldErrors();
+            Map<String, String> errors = new HashMap<>();
+            for (FieldError fieldError : fieldErrors) {
+                errors.put(fieldError.getField(), fieldError.getDefaultMessage());
+            }
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
+        importIngredientService.save(importIngredient);
+        return new ResponseEntity<>(importIngredient,HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody ImportIngredient importIngredient) {
-        ImportIngredient currentImportIngredient = importIngredientService.findByID(id);
-        if (currentImportIngredient == null) {
-            return new ResponseEntity<ImportIngredient>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> update( @PathVariable("id") long id,@Valid @RequestBody ImportIngredient importIngredient,BindingResult result) {
+        if (result.hasFieldErrors()){
+            List<FieldError> fieldErrors = result.getFieldErrors();
+            Map<String, String> errors = new HashMap<>();
+            for (FieldError fieldError : fieldErrors) {
+                errors.put(fieldError.getField(), fieldError.getDefaultMessage());
+            }
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
-        currentImportIngredient = importIngredient;
-        try {
-            importIngredientService.update(currentImportIngredient);
-            return new ResponseEntity<>(currentImportIngredient, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<ImportIngredient>(HttpStatus.INTERNAL_SERVER_ERROR);
+        ImportIngredient importIngredient1 = importIngredientService.findByID(id);
+        if (importIngredient1 != null){
+            importIngredient1.setDateJoin(importIngredient.getDateJoin());
+            importIngredient1.setIngredient(importIngredient.getIngredient());
+            importIngredient1.setQuantity(importIngredient.getQuantity());
+            importIngredient1.setPrice(importIngredient.getPrice());
+            importIngredient1.setTotalPrice(importIngredient.getTotalPrice());
+            importIngredient1.setComment(importIngredient.getComment());
+            importIngredientService.update(importIngredient1);
+            return new ResponseEntity<>(importIngredient1,HttpStatus.OK);
         }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping("{/id}")
+    public ResponseEntity<?> delete(@PathVariable("id") long id){
+        ImportIngredient importIngredient1 = importIngredientService.findByID(id);
+        if (importIngredient1 != null){
+            importIngredientService.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

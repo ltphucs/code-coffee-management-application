@@ -6,9 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "api/ingredients")
@@ -35,27 +40,47 @@ public class IngredientRestController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody Ingredient ingredient) {
-        try {
-            ingredientService.save(ingredient);
-            return new ResponseEntity<>(ingredient, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<Ingredient>(HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<?> save(@Valid @RequestBody Ingredient ingredient, BindingResult result) {
+        if (result.hasErrors()){
+            List<FieldError> fieldErrors = result.getFieldErrors();
+            Map<String, String> errors = new HashMap<>();
+            for (FieldError fieldError : fieldErrors) {
+                errors.put(fieldError.getField(), fieldError.getDefaultMessage());
+            }
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
+        ingredientService.save(ingredient);
+        return new ResponseEntity<>(ingredient,HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody Ingredient ingredient) {
-        Ingredient currentIngredient = ingredientService.findByID(id);
-        if (currentIngredient == null) {
-            return new ResponseEntity<Ingredient>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> update( @PathVariable("id") Long id,@Valid @RequestBody Ingredient ingredient,BindingResult result) {
+        if (result.hasErrors()){
+            List<FieldError> fieldErrors = result.getFieldErrors();
+            Map<String, String> errors = new HashMap<>();
+            for (FieldError fieldError : fieldErrors) {
+                errors.put(fieldError.getField(), fieldError.getDefaultMessage());
+            }
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
-        currentIngredient = ingredient;
-        try {
-            ingredientService.update(currentIngredient);
-            return new ResponseEntity<>(currentIngredient, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<Ingredient>(HttpStatus.INTERNAL_SERVER_ERROR);
+        Ingredient ingredient1 = ingredientService.findByID(id);
+        if (ingredient1 != null){
+            ingredient1.setName(ingredient.getName());
+            ingredient1.setUnit(ingredient.getUnit());
+            ingredient1.setComment(ingredient.getComment());
+            ingredientService.update(ingredient1);
+            return new ResponseEntity<>(ingredient1,HttpStatus.OK);
         }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") long id){
+        Ingredient ingredient = ingredientService.findByID(id);
+        if (ingredient != null){
+            ingredientService.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

@@ -6,9 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "api/products")
@@ -35,27 +40,51 @@ public class ProductRestController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody Product product) {
-        try {
-            productService.save(product);
-            return new ResponseEntity<>(product, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<Product>(HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<?> save(@Valid @RequestBody Product product, BindingResult result) {
+        if (result.hasErrors()){
+            List<FieldError> fieldErrors = result.getFieldErrors();
+            Map<String, String> errors = new HashMap<>();
+            for (FieldError fieldError : fieldErrors) {
+                errors.put(fieldError.getField(), fieldError.getDefaultMessage());
+            }
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
+        productService.save(product);
+        return new ResponseEntity<>(product,HttpStatus.CREATED);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody Product product) {
-        Product currentProduct = productService.findByID(id);
-        if (currentProduct == null) {
-            return new ResponseEntity<Product>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> update(@PathVariable("id") Long id,@Valid @RequestBody Product product,BindingResult result) {
+        if (result.hasErrors()){
+            List<FieldError> fieldErrors = result.getFieldErrors();
+            Map<String, String> errors = new HashMap<>();
+            for (FieldError fieldError : fieldErrors) {
+                errors.put(fieldError.getField(), fieldError.getDefaultMessage());
+            }
+            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
-        currentProduct = product;
-        try {
-            productService.update(currentProduct);
-            return new ResponseEntity<>(currentProduct, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<Product>(HttpStatus.INTERNAL_SERVER_ERROR);
+        Product product1 = productService.findByID(id);
+        if (product1 != null){
+            product1.setName(product.getName());
+            product1.setInventory(product.getInventory());
+            product1.setPrice(product.getPrice());
+            product1.setProductLine(product.getProductLine());
+            product1.setImage(product.getImage());
+            product1.setProductStatus(product.getProductStatus());
+            productService.save(product1);
+            return new ResponseEntity<>(product1,HttpStatus.OK);
         }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
+    @DeleteMapping("{/id}")
+    public ResponseEntity<?> delete(@PathVariable("id") long id){
+        Product product = productService.findByID(id);
+        if (product != null){
+            productService.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
 }

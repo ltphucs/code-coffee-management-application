@@ -15,7 +15,7 @@ public class StaffRowMapper implements RowMapper<Staff> {
     public Staff mapRow(ResultSet rs, int rowNum) throws SQLException {
         Staff staff=new Staff();
         staff.setDateJoin(rs.getDate("date_join").toLocalDate());
-        staff.setFullname(rs.getString("fullname"));
+        staff.setFullName(rs.getString("fullname"));
         staff.setGender(rs.getString("gender"));
         Position position =new Position();
         position.setId(rs.getLong("id_position"));
