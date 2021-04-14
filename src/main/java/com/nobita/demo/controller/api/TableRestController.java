@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/tables")
+@RequestMapping(value = "api/tables")
 public class TableRestController {
     @Autowired
     TableService tableService;
