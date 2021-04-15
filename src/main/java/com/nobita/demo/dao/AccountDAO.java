@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class AccountDAO implements BaseDAO<Account> {
@@ -46,5 +47,11 @@ public class AccountDAO implements BaseDAO<Account> {
         String sql ="delete from account where id=?";
         Object [] values ={id};
         return jdbcTemplate.update(sql,values) > 0;
+    }
+
+    public Account findByUsername(String username){
+        String sql="select ac.* from account ac where ac.username=?";
+        Object [] values={username};
+        return jdbcTemplate.queryForObject(sql,new AccountRowMapper(),values);
     }
 }

@@ -38,4 +38,14 @@ public class AccountServiceImpl implements AccountService {
     public boolean delete(Long id) {
         return accountDAO.delete(id);
     }
+
+    @Override
+    public Account findByUsername(String username) {
+        return accountDAO.findByUsername(username);
+    }
+
+//    @Override
+//    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+//        return new MyAccountDetails(s);
+//    }
 }

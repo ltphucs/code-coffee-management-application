@@ -5,14 +5,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping(value = "order")
-public class HomeController {
+@RequestMapping("/login")
+public class LoginController {
 
     @GetMapping
-    public String showOrder(){
-        return "order-table";
+    public String login(){
+        return "login";
     }
-
-
-
 }
