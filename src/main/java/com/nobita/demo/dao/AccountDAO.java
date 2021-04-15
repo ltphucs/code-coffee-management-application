@@ -17,27 +17,27 @@ public class AccountDAO implements BaseDAO<Account> {
 
     @Override
     public List<Account> findAll() {
-        String sql="select ac.*,au.name as name_authorization from account ac left join authorization au on au.id= ac.id_authorization";
+        String sql="select * from account";
         return jdbcTemplate.query(sql,new AccountResultSet());
     }
 
     @Override
     public Account findByID(Long id) {
-        String sql="select ac.*,au.name as name_authorization from account ac left join authorization au on au.id= ac.id_authorization where ac.id=?";
+        String sql="select * from account where id=?";
         Object [] values={id};
         return jdbcTemplate.queryForObject(sql,new AccountRowMapper(),values);
     }
 
     @Override
     public boolean save(Account account) {
-        String sql ="insert into account(name,password,id_authorization) values (?,?,?)";
+        String sql ="insert into account(username,password,authorization) values (?,?,?)";
         Object [] values={account.getUsername(),account.getPassword(),account.getAuthorization()};
         return jdbcTemplate.update(sql,values) >0;
     }
 
     @Override
     public boolean update(Account account) {
-        String sql="update account set name=?,password=?,id_authorization=? where id =?";
+        String sql="update account set username=?,password=?,authorization=? where id =?";
         Object [] values={account.getUsername(),account.getPassword(),account.getAuthorization(),account.getId()};
         return jdbcTemplate.update(sql,values) >0;
     }
@@ -50,7 +50,7 @@ public class AccountDAO implements BaseDAO<Account> {
     }
 
     public Account findByUsername(String username){
-        String sql="select ac.* from account ac where ac.username=?";
+        String sql="select ac from account where username=?";
         Object [] values={username};
         return jdbcTemplate.queryForObject(sql,new AccountRowMapper(),values);
     }
