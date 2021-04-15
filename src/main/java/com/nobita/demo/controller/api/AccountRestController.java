@@ -1,5 +1,4 @@
 package com.nobita.demo.controller.api;
-
 import com.nobita.demo.model.Account;
 import com.nobita.demo.service.AccountService;
 import com.nobita.demo.validate.PasswordValidate;
@@ -10,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;

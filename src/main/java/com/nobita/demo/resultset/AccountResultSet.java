@@ -17,7 +17,7 @@ public class AccountResultSet implements ResultSetExtractor<List<Account>> {
         while(rs.next()){
             Account account=new Account();
             account.setId(rs.getLong("id"));
-            account.setUsername(rs.getString("name"));
+            account.setUsername(rs.getString("username"));
             account.setPassword(rs.getString("password"));
             Authorization authorization=new Authorization();
             authorization.setId(rs.getLong("id_authorization"));

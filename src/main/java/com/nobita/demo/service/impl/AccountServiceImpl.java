@@ -4,6 +4,9 @@ import com.nobita.demo.dao.AccountDAO;
 import com.nobita.demo.model.Account;
 import com.nobita.demo.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,4 +41,14 @@ public class AccountServiceImpl implements AccountService {
     public boolean delete(long id) {
         return accountDAO.delete(id);
     }
+
+    @Override
+    public Account findByUsername(String username) {
+        return accountDAO.findByUsername(username);
+    }
+
+//    @Override
+//    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+//        return new MyAccountDetails(s);
+//    }
 }
