@@ -40,12 +40,12 @@ public class TableRestController {
         }
         return new ResponseEntity<Table>(HttpStatus.NOT_FOUND);
     }
-//
-//    @GetMapping(value = "/area/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<?> getTableByArea(@PathVariable("id") Long id){
-//        List<Table> tables=tableService.findByArea(id);
-//        return new ResponseEntity<List<Table>>(tables,HttpStatus.OK);
-//    }
+
+    @GetMapping(value = "/area/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getTableByArea(@PathVariable("id") Long id){
+        List<Table> tables=tableService.findByArea(id);
+        return new ResponseEntity<List<Table>>(tables,HttpStatus.OK);
+    }
 
     @PostMapping
     public ResponseEntity<?> save(@Valid @RequestBody Table table, BindingResult result) {
