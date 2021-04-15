@@ -20,7 +20,7 @@ public class ProductLineDAO implements BaseDAO<ProductLine> {
     }
 
     @Override
-    public ProductLine findByID(long id) {
+    public ProductLine findByID(Long id) {
         String sql = "select * from productline where id=?";
         Object[] values = {id};
         return jdbcTemplate.queryForObject(sql, new ProductLineRowMapper(), values);
@@ -41,7 +41,7 @@ public class ProductLineDAO implements BaseDAO<ProductLine> {
     }
 
     @Override
-    public boolean delete(long id) {
+    public boolean delete(Long id) {
         String sql = "delete from productline where id=?";
         Object[] values = {id};
         return jdbcTemplate.update(sql, values) > 0;

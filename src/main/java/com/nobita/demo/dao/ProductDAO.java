@@ -21,7 +21,7 @@ public class ProductDAO implements BaseDAO<Product> {
     }
 
     @Override
-    public Product findByID(long id) {
+    public Product findByID(Long id) {
         String sql = "select p.* ,pl.name as name_productline from product p left join productline pl on pl.id =p.id_productline where p.id=?";
         Object [] values ={id};
         return jdbcTemplate.queryForObject(sql, new ProductRowMapper(),values);
@@ -42,7 +42,7 @@ public class ProductDAO implements BaseDAO<Product> {
     }
 
     @Override
-    public boolean delete(long id) {
+    public boolean delete(Long id) {
         String sql= "delete from product where id =?";
         Object[] values={id};
         return jdbcTemplate.update(sql,values) >0;

@@ -19,7 +19,7 @@ public class TableServiceImpl implements TableService {
     }
 
     @Override
-    public Table findByID(long id) {
+    public Table findByID(Long id) {
         return tableDAO.findByID(id);
     }
 
@@ -34,7 +34,12 @@ public class TableServiceImpl implements TableService {
     }
 
     @Override
-    public boolean delete(long id) {
+    public boolean delete(Long id) {
         return tableDAO.delete(id);
+    }
+
+    @Override
+    public List<Table> findByArea(Long id) {
+        return tableDAO.findByArea(id);
     }
 }

@@ -5,11 +5,11 @@ import java.util.List;
 public interface BaseDAO<T>{
     List<T> findAll();
 
-    T findByID(long id);
+    T findByID(Long id);
 
     boolean save(T t );
 
     boolean update(T t);
 
-    boolean delete(long id);
+    boolean delete(Long id);
 }

@@ -22,7 +22,7 @@ public class AccountDAO implements BaseDAO<Account> {
     }
 
     @Override
-    public Account findByID(long id) {
+    public Account findByID(Long id) {
         String sql="select ac.*,au.name as name_authorization from account ac left join authorization au on au.id= ac.id_authorization where ac.id=?";
         Object [] values={id};
         return jdbcTemplate.queryForObject(sql,new AccountRowMapper(),values);
@@ -31,19 +31,19 @@ public class AccountDAO implements BaseDAO<Account> {
     @Override
     public boolean save(Account account) {
         String sql ="insert into account(name,password,id_authorization) values (?,?,?)";
-        Object [] values={account.getUsername(),account.getPassword(),account.getAuthorization().getId()};
+        Object [] values={account.getUsername(),account.getPassword(),account.getAuthorization()};
         return jdbcTemplate.update(sql,values) >0;
     }
 
     @Override
     public boolean update(Account account) {
         String sql="update account set name=?,password=?,id_authorization=? where id =?";
-        Object [] values={account.getUsername(),account.getPassword(),account.getAuthorization().getId(),account.getId()};
+        Object [] values={account.getUsername(),account.getPassword(),account.getAuthorization(),account.getId()};
         return jdbcTemplate.update(sql,values) >0;
     }
 
     @Override
-    public boolean delete(long id) {
+    public boolean delete(Long id) {
         String sql ="delete from account where id=?";
         Object [] values ={id};
         return jdbcTemplate.update(sql,values) > 0;

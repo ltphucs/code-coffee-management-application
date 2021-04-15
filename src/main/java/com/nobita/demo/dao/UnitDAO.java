@@ -21,7 +21,7 @@ public class UnitDAO implements BaseDAO<Unit> {
     }
 
     @Override
-    public Unit findByID(long id) {
+    public Unit findByID(Long id) {
         String sql = "select * from unit where id=?";
         Object[] values = {id};
         return jdbcTemplate.queryForObject(sql, new UnitRowMapper(), values);
@@ -42,7 +42,7 @@ public class UnitDAO implements BaseDAO<Unit> {
     }
 
     @Override
-    public boolean delete(long id) {
+    public boolean delete(Long id) {
         String sql = "delete * from unit where id=?";
         Object[] values = {id};
         return jdbcTemplate.update(sql, values) > 0;

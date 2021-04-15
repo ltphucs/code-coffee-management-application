@@ -2,7 +2,9 @@ package com.nobita.demo.controller.api;
 
 import com.nobita.demo.model.Table;
 import com.nobita.demo.service.TableService;
+import com.nobita.demo.service.impl.TableServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.support.Repositories;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +40,12 @@ public class TableRestController {
         }
         return new ResponseEntity<Table>(HttpStatus.NOT_FOUND);
     }
+//
+//    @GetMapping(value = "/area/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<?> getTableByArea(@PathVariable("id") Long id){
+//        List<Table> tables=tableService.findByArea(id);
+//        return new ResponseEntity<List<Table>>(tables,HttpStatus.OK);
+//    }
 
     @PostMapping
     public ResponseEntity<?> save(@Valid @RequestBody Table table, BindingResult result) {

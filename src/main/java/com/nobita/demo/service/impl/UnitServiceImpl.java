@@ -19,7 +19,7 @@ public class UnitServiceImpl implements UnitService {
     }
 
     @Override
-    public Unit findByID(long id) {
+    public Unit findByID(Long id) {
         return unitDAO.findByID(id);
     }
 
@@ -34,7 +34,7 @@ public class UnitServiceImpl implements UnitService {
     }
 
     @Override
-    public boolean delete(long id) {
+    public boolean delete(Long id) {
         return unitDAO.delete(id);
     }
 }

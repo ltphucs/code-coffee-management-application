@@ -20,7 +20,7 @@ public class ImportProductServiceImpl implements ImportProductService {
     }
 
     @Override
-    public ImportProduct findByID(long id) {
+    public ImportProduct findByID(Long id) {
         return importProductDAO.findByID(id);
     }
 
@@ -35,7 +35,7 @@ public class ImportProductServiceImpl implements ImportProductService {
     }
 
     @Override
-    public boolean delete(long id) {
+    public boolean delete(Long id) {
         return importProductDAO.delete(id);
     }
 }

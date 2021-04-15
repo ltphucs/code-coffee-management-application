@@ -21,7 +21,7 @@ public class ImportProductDAO implements BaseDAO<ImportProduct> {
     }
 
     @Override
-    public ImportProduct findByID(long id) {
+    public ImportProduct findByID(Long id) {
         String sql = "select ip.*,p_name as name_product from import_product ip left join product p on p.id=ip.id_product wherer ip.id=?";
         Object[] values = {id};
         return jdbcTemplate.queryForObject(sql, new ImportProductRowMapper(), values);
@@ -42,7 +42,7 @@ public class ImportProductDAO implements BaseDAO<ImportProduct> {
     }
 
     @Override
-    public boolean delete(long id) {
+    public boolean delete(Long id) {
         String sql="delete from import_product where id=?";
         Object[] values={id};
         return jdbcTemplate.update(sql,values) >0;

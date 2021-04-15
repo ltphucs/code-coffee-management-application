@@ -20,7 +20,7 @@ public class IngredientDAO implements BaseDAO<com.nobita.demo.model.Ingredient>{
     }
 
     @Override
-    public com.nobita.demo.model.Ingredient findByID(long id) {
+    public com.nobita.demo.model.Ingredient findByID(Long id) {
         String sql="select i.* ,u.name as name_unit from ingredient i lef join unit u on u.id=i.id_ingredient";
         Object[]values ={id};
         return jdbcTemplate.queryForObject(sql,new IngredientRowMapper(),values);
@@ -41,7 +41,7 @@ public class IngredientDAO implements BaseDAO<com.nobita.demo.model.Ingredient>{
     }
 
     @Override
-    public boolean delete(long id) {
+    public boolean delete(Long id) {
         String sql="delete from ingredient where id=?";
         Object[]values ={id};
         return jdbcTemplate.update(sql,values) >0;

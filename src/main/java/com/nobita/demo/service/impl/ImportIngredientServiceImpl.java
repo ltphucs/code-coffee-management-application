@@ -12,13 +12,14 @@ public class ImportIngredientServiceImpl implements ImportIngredientService {
 
     @Autowired
     private ImportIngredientDAO importIngredientDAO;
+
     @Override
     public List<ImportIngredient> findAll() {
         return importIngredientDAO.findAll();
     }
 
     @Override
-    public ImportIngredient findByID(long id) {
+    public ImportIngredient findByID(Long id) {
         return importIngredientDAO.findByID(id);
     }
 
@@ -33,7 +34,7 @@ public class ImportIngredientServiceImpl implements ImportIngredientService {
     }
 
     @Override
-    public boolean delete(long id) {
+    public boolean delete(Long id) {
         return importIngredientDAO.delete(id);
     }
 }

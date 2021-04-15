@@ -23,9 +23,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         Account accountOptional =  accountService.findByUsername(s);
-        System.out.println(accountOptional.toString());
+
         if(accountOptional == null){
-            throw new UsernameNotFoundException("account not found");
+            throw new UsernameNotFoundException("Account not found");
         }
         Set<GrantedAuthority> authorities = new HashSet<>();
         String authorization = String.valueOf(accountOptional.getAuthorization());
