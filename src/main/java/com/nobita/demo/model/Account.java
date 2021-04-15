@@ -1,5 +1,6 @@
 package com.nobita.demo.model;
 
+import com.nobita.demo.model.en.Authorization;
 import com.nobita.demo.validate.PasswordValidate;
 import lombok.Data;
 

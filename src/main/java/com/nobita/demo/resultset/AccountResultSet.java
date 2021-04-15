@@ -1,7 +1,7 @@
 package com.nobita.demo.resultset;
 
 import com.nobita.demo.model.Account;
-import com.nobita.demo.model.Authorization;
+import com.nobita.demo.model.en.Authorization;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 

@@ -12,6 +12,7 @@ public class ImportIngredientServiceImpl implements ImportIngredientService {
 
     @Autowired
     private ImportIngredientDAO importIngredientDAO;
+
     @Override
     public List<ImportIngredient> findAll() {
         return importIngredientDAO.findAll();

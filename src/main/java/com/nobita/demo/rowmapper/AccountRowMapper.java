@@ -1,7 +1,7 @@
 package com.nobita.demo.rowmapper;
 
 import com.nobita.demo.model.Account;
-import com.nobita.demo.model.Authorization;
+import com.nobita.demo.model.en.Authorization;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
