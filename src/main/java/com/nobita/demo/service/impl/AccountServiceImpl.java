@@ -20,7 +20,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account findByID(long id) {
+    public Account findByID(Long id) {
         return accountDAO.findByID(id);
     }
 
@@ -35,7 +35,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean delete(long id) {
+    public boolean delete(Long id) {
         return accountDAO.delete(id);
     }
 }

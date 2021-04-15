@@ -20,7 +20,7 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public Ingredient findByID(long id) {
+    public Ingredient findByID(Long id) {
         return ingredientDAO.findByID(id);
     }
 
@@ -35,7 +35,7 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
-    public boolean delete(long id) {
+    public boolean delete(Long id) {
         return ingredientDAO.delete(id);
     }
 }

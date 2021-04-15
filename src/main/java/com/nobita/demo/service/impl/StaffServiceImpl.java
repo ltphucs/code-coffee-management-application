@@ -19,7 +19,7 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    public Staff findByID(long id) {
+    public Staff findByID(Long id) {
         return staffDAO.findByID(id);
     }
 
@@ -34,7 +34,7 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    public boolean delete(long id) {
+    public boolean delete(Long id) {
         return staffDAO.delete(id);
     }
 }

@@ -1,7 +1,10 @@
 package com.nobita.demo.controller.api;
 
+import com.nobita.demo.dto.AreaDTO;
 import com.nobita.demo.model.Area;
+import com.nobita.demo.model.Table;
 import com.nobita.demo.service.AreaService;
+import com.nobita.demo.service.TableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,6 +18,8 @@ import java.util.List;
 public class AreaRestController {
     @Autowired
     AreaService areaService;
+    @Autowired
+    TableService tableService;
 
     @GetMapping
     public ResponseEntity<?> list() {
@@ -28,8 +33,14 @@ public class AreaRestController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> get(@PathVariable("id") Long id) {
         Area area = areaService.findByID(id);
+        List<Table> tables=tableService.findByArea(id);
+
+        AreaDTO areaDTO=new AreaDTO();
+
+        areaDTO.setArea(area);
+        areaDTO.setTableList(tables);
         if (area != null) {
-            return new ResponseEntity<>(area, HttpStatus.OK);
+            return new ResponseEntity<>(areaDTO, HttpStatus.OK);
         }
         return new ResponseEntity<Area>(HttpStatus.NOT_FOUND);
     }

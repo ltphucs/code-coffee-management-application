@@ -20,7 +20,7 @@ public class AreaServiceImpl implements AreaService {
     }
 
     @Override
-    public Area findByID(long id) {
+    public Area findByID(Long id) {
         return areaDAO.findByID(id);
     }
 
@@ -35,7 +35,7 @@ public class AreaServiceImpl implements AreaService {
     }
 
     @Override
-    public boolean delete(long id) {
+    public boolean delete(Long id) {
         return areaDAO.delete(id);
     }
 }

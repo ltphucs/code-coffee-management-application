@@ -19,7 +19,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product findByID(long id) {
+    public Product findByID(Long id) {
         return productDAO.findByID(id);
     }
 
@@ -34,7 +34,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public boolean delete(long id) {
+    public boolean delete(Long id) {
         return productDAO.delete(id);
     }
 }
