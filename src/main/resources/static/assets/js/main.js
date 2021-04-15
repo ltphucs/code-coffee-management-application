@@ -44,6 +44,20 @@ $(document).ready(function () {
             dataType: "json",
             success: function (data) {
                 $('#area-sql').empty();
+                $('#showOrdersTables').empty();
+                $('#showOrdersTables').append(
+                    `<div class="col mt-5">
+                            <div class="d-xl-flex align-items-xl-start">
+                                <ul class="nav nav-pills text-capitalize border rounded-0 d-xl-flex flex-column" id="area-sql"></ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane fade show active" role="tabpanel" id="tab">
+                                        <div class="col d-flex flex-wrap" id="tables-sql">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`
+                );
                 $.each(data, function (i, v) {
                     $('#area-sql').append(
                         `<li class="nav-item w-100px">
@@ -73,20 +87,22 @@ $(document).ready(function () {
                     )
                 })
                 $('#tables-sql').append(
-                    `<div class="d-flex flex-column justify-content-center align-items-center w-200px">
-                        <a href="#" class="d-flex justify-content-center align-items-center table-add-btn"><i
-                            class="fa fa-plus" style="font-size: 30px;" onclick="areas.createTables()"></i></a>
-                    </div>`
+                        `<a href="#" class="d-flex flex-column justify-content-center align-items-center w-200px" onclick="areas.createTables()">
+                    <div class="d-flex justify-content-center align-items-center table-add-btn">
+                           <i class="fa fa-plus" style="font-size: 30px;" ></i>
+                    </div>
+                    </a>`
                 )
             }
         })
     }
 
     areas.createOrder = function () {
-        $('#showTables').empty();
-        $('#showOrder').empty();
-        $('#showOrder').append(
-            `<div>
+        $('#showTables').remove();
+        $('#showOrder').remove();
+        $('#showOrdersTables').append(
+            `<div class="col order-list" id="showOrder">
+                <div>
                 <div class="form-row">
                     <div class="col">
                         <div>
@@ -187,37 +203,41 @@ $(document).ready(function () {
                                 </button>
                             </div>
                         </div>
+                        </div>
             </div>`
         )
     }
 
     areas.createTables=function (){
-        $('#showOrder').empty();
-        $('#showTables').empty();
-        $('#showTables').append(
-            `<div>
-                <form method="post"><h2 class="text-center mt-3">Thêm bàn mới</h2>
-                    <div class="form-group"><label>Tên bàn</label><input class="form-control" type="text" name="name"
-                                                                         placeholder="Mời nhập tên bàn"></div>
-                    <div class="form-group"><label>Trạng thái</label><select class="form-control">
-                        <optgroup label="This is a group">
-                            <option value="12" selected="">This is item 1</option>
-                            <option value="13">This is item 2</option>
-                            <option value="14">This is item 3</option>
-                        </optgroup>
-                    </select></div>
-                    <div class="form-group"><label>Mô tả/Ghi chú</label><textarea class="form-control" name="message"
-                                                                                  placeholder="Nhập ghi chú"
-                                                                                  rows="5"></textarea></div>
-                    <div class="form-group">
-                        <div class="form-row">
-                            <div class="col">
-                                <button class="btn btn-success col-6" type="button">Thực hiện</button>
-                                <button class="btn btn-danger col-6 table-add-cancel-btn" type="button">Hủy bỏ</button>
-                            </div>
+        $('#showOrder').remove();
+        $('#showTables').remove();
+        $('#showOrdersTables').append(
+            `<div class="col table-add-form" id="showTables">
+
+                <div>
+                    <form method="post"><h2 class="text-center mt-3">Thêm bàn mới</h2>
+                        <div class="form-group"><label>Tên bàn</label><input class="form-control" type="text" name="name"
+                                                                             placeholder="Mời nhập tên bàn"></div>
+                        <div class="form-group"><label>Trạng thái</label><select class="form-control">
+                            <optgroup label="This is a group">
+                                <option value="12" selected="">This is item 1</option>
+                                <option value="13">This is item 2</option>
+                                <option value="14">This is item 3</option>
+                            </optgroup>
+                        </select></div>
+                        <div class="form-group"><label>Mô tả/Ghi chú</label><textarea class="form-control" name="message"
+                                                                                      placeholder="Nhập ghi chú"
+                                                                                      rows="5"></textarea></div>
+                       <div class="form-group">
+                            <div class="form-row row">
+                                
+                                    <button class="btn btn-success col-6" type="button">Thực hiện</button>
+                                    <button class="btn btn-danger col-6 table-add-cancel-btn" type="button">Hủy bỏ</button>
+                                </div>
+                         
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>`
         )
     }
