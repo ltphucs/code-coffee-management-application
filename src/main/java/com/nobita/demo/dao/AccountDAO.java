@@ -30,14 +30,14 @@ public class AccountDAO implements BaseDAO<Account> {
     @Override
     public boolean save(Account account) {
         String sql ="insert into account(name,password,id_authorization) values (?,?,?)";
-        Object [] values={account.getUsername(),account.getPassword(),account.getAuthorization().getId()};
+        Object [] values={account.getUsername(),account.getPassword(),account.getAuthorization()};
         return jdbcTemplate.update(sql,values) >0;
     }
 
     @Override
     public boolean update(Account account) {
         String sql="update account set name=?,password=?,id_authorization=? where id =?";
-        Object [] values={account.getUsername(),account.getPassword(),account.getAuthorization().getId(),account.getId()};
+        Object [] values={account.getUsername(),account.getPassword(),account.getAuthorization(),account.getId()};
         return jdbcTemplate.update(sql,values) >0;
     }
 

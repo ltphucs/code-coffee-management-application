@@ -38,8 +38,7 @@ $(document).ready(function () {
     let areas = {} || areas;
     areas.initAreas = function () {
         $.ajax({
-            // url: "http://localhost:8080/api/areas",
-            url: "http://localhost:3000/areas",
+            url: "http://localhost:8080/api/areas",
             method: "GET",
             dataType: "json",
             success: function (data) {
@@ -47,11 +46,12 @@ $(document).ready(function () {
                 $.each(data, function (i, v) {
                     $('#area-sql').append(
                         `<li class="nav-item w-100px">
-                            <a class="nav-link active" role="tab" data-toggle="pill" href="#tab-$href="#tab-${v.id}">${v.name}</a>
+                            <a class="nav-link" role="tab" data-toggle="pill" href="#tab-$href="#tab-1">${v.name}</a>
                         </li>`
                     );
                 })
             }
         })
     }
+    areas.initAreas();
 });
