@@ -50,7 +50,7 @@ public class AccountDAO implements BaseDAO<Account> {
     }
 
     public Account findByUsername(String username){
-        String sql="select ac.*,au.name as name_authorization from account ac left join authorization au on au.id= ac.id_authorization where ac.username=?";
+        String sql="select ac.* from account ac where ac.username=?";
         Object [] values={username};
         return jdbcTemplate.queryForObject(sql,new AccountRowMapper(),values);
     }
