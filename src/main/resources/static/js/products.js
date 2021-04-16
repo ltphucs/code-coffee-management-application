@@ -1,7 +1,6 @@
 var products = {};
 
 products.initProductTable = function () {
-    console.log("adfs");
     $("#products-datatables").DataTable({
         ajax: {
             url: "http://localhost:8080/api/products/",
@@ -25,7 +24,6 @@ products.initProductTable = function () {
             },
         ]
     });
-
 }
 
 $(document).ready(function () {
