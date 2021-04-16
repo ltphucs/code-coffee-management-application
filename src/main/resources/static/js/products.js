@@ -40,7 +40,7 @@ products.initValidation =  function(){
             productLine: "required"
         },
         messages: {
-            productName: "Please enter your productName",
+            name: "Please enter your productName",
             productLine: "Please enter your productLine",
         }
     });
