@@ -17,8 +17,8 @@ products.initProductTable = function () {
             {
                 data: "id", name: "action", title: "Chức năng", orderable: false,
                 "render": function (data, type, row, meta) {
-                    var str = "<a href='javascript:;' title='edit product'><i class='fa fa-edit'></i></a> " +
-                        "<a href='javascript:;' title='remove product' ><i class='fa fa-trash'></i></a>"
+                    var str = "<a href='javascript:;' title='edit product' onclick='products.get("+ data +")'><i class='fa fa-edit'></i></a> " +
+                        "<a href='javascript:;' title='remove product' onclick='products.delete("+ data +")' ><i class='fa fa-trash'></i></a>"
                     return str;
                 }
             },
@@ -55,13 +55,13 @@ products.resetForm = function () {
     $('#productLine.name').val('');
     $('#productStatus').val('');
     //
-    var validator = $("#formAddEdit").validate();
-    validator.resetForm();
+    // var validator = $("#formAddEdit");
+    // validator.resetForm();
 }
 
 products.initProductLines = function () {
     $.ajax({
-        url: "http://localhost:8080/api/productlines/",
+        url: "http://localhost:8080/api/productLines/",
         method: "GET",
         dataType: "json",
         success: function (data) {
@@ -95,6 +95,33 @@ products.get = function (id) {
             $('#id').val(data.id);
 
             $('#modalAddEdit').modal('show');
+        }
+    });
+};
+
+products.delete = function(id){
+    bootbox.confirm({
+        title: "Remove product",
+        message: "Do you want to remove this product?",
+        buttons: {
+            cancel: {
+                label: '<i class="fa fa-times"></i> No'
+            },
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes'
+            }
+        },
+        callback: function (result) {
+            if(result){
+                $.ajax({
+                    url : "http://localhost:8080/api/products/" + id,
+                    method: "DELETE",
+                    dataType : "json",
+                    success : function(data){
+                        products.initProductTable();
+                    }
+                });
+            }
         }
     });
 };
