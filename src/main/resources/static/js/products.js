@@ -1,7 +1,6 @@
 var products = {};
 
 products.initProductTable = function () {
-    console.log("adfs");
     $("#products-datatables").DataTable({
         ajax: {
             url: "http://localhost:8080/api/products/",
@@ -25,15 +24,16 @@ products.initProductTable = function () {
             },
         ]
     });
+
 }
 
-products.addNew = function(){
+products.addNew = function () {
     $('#modalTitle').html("Add new product");
     products.resetForm();
     $('#modalAddEdit').modal('show');
 };
 
-products.initValidation =  function(){
+products.initValidation = function () {
     $("#modalAddEdit").validate({
         rules: {
             name: "required",
@@ -44,9 +44,10 @@ products.initValidation =  function(){
             productLine: "Please enter your productLine",
         }
     });
+
 }
 
-products.resetForm =  function(){
+products.resetForm = function () {
     $('#formAddEdit')[0].reset();
     $('#name').val('');
     $('#inventory').val('');
@@ -54,34 +55,34 @@ products.resetForm =  function(){
     $('#productLine.name').val('');
     $('#productStatus').val('');
     //
-    var validator = $( "#formAddEdit" ).validate();
+    var validator = $("#formAddEdit").validate();
     validator.resetForm();
 }
 
-products.initProductLines = function(){
+products.initProductLines = function () {
     $.ajax({
-        url : "http://localhost:8080/api/productlines/",
-        method : "GET",
-        dataType : "json",
-        success : function(data){
+        url: "http://localhost:8080/api/productlines/",
+        method: "GET",
+        dataType: "json",
+        success: function (data) {
             $('#productLine').empty();
-            $.each(data, function(i, v){
+            $.each(data, function (i, v) {
                 $('#productLine').append(
-                    "<option value='"+ v.id +"'>"+ v.name +"</option>"
+                    "<option value='" + v.id + "'>" + v.name + "</option>"
                 );
             });
         }
     });
 };
 
-products.get = function(id){
-    console.log('get :'+ id);
+products.get = function (id) {
+    console.log('get :' + id);
 
     $.ajax({
-        url : "http://localhost:8080/api/products/" + id,
-        method : "GET",
-        dataType : "json",
-        success : function(data){
+        url: "http://localhost:8080/api/products/" + id,
+        method: "GET",
+        dataType: "json",
+        success: function (data) {
             console.log(data);
             $('#formAddEdit')[0].reset();
             //
@@ -98,14 +99,14 @@ products.get = function(id){
     });
 };
 
-products.save = function(){
-    if ($("#formAddEdit").valid()){
-        if($('#id').val() == 0){
+products.save = function () {
+    if ($("#formAddEdit").valid()) {
+        if ($('#id').val() == 0) {
             var productObj = {};
             productObj.name = $('#productName').val();
             productObj.inventory = $('#inventory').val();
-            productObj.price =$('#price').val();
-            productObj.image =$('#image').val();
+            productObj.price = $('#price').val();
+            productObj.image = $('#image').val();
             //
             var productLineObj = {};
             productLineObj.id = $("#productLine").val();
@@ -113,26 +114,25 @@ products.save = function(){
             productObj.productLine = productLineObj;
 
             $.ajax({
-                url : "http://localhost:8080/api/products/",
-                method : "POST",
-                dataType : "json",
-                contentType : "application/json",
-                data : JSON.stringify(productObj),
-                done: function(){
+                url: "http://localhost:8080/api/products/",
+                method: "POST",
+                dataType: "json",
+                contentType: "application/json",
+                data: JSON.stringify(productObj),
+                done: function () {
                     console.log("POST DONE");
                     $('#modalAddEdit').modal('hide');
 
                     $("#products-datatables").DataTable().ajax.reload();
                 },
-                success : function(data){
+                success: function (data) {
                     console.log("POST success");
                     $('#modalAddEdit').modal('hide');
                     $("#products-datatables").DataTable().ajax.reload();
 
                 }
             });
-        }
-        else{
+        } else {
             var productObj = {};
             productObj.name = $('#productName').val();
             productObj.inventory = $('#inventory').val();
@@ -145,12 +145,12 @@ products.save = function(){
             productObj.productLine = productLineObj;
 
             $.ajax({
-                url : "http://localhost:8080/api/products/" + productObj.id,
-                method : "PUT",
-                dataType : "json",
-                contentType : "application/json",
-                data : JSON.stringify(productObj),
-                success : function(data){
+                url: "http://localhost:8080/api/products/" + productObj.id,
+                method: "PUT",
+                dataType: "json",
+                contentType: "application/json",
+                data: JSON.stringify(productObj),
+                success: function (data) {
                     $('#modalAddEdit').modal('hide');
                     $("#products-datatables").DataTable().ajax.reload();
                 }
@@ -159,7 +159,7 @@ products.save = function(){
     }
 };
 
-products.init = function(){
+products.init = function () {
     products.initProductTable();
     products.initProductLines();
     products.initValidation();
