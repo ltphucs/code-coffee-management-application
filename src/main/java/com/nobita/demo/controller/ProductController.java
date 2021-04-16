@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping(value = "/products")
+@RequestMapping(value = "products")
 public class ProductController {
     @Autowired
     ProductService productService;
@@ -15,5 +15,10 @@ public class ProductController {
     @GetMapping
     public String showProductList(){
         return "product";
+    }
+
+    @GetMapping("/import")
+    public String showImportProduct(){
+        return "import-product";
     }
 }
