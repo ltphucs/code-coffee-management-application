@@ -17,8 +17,4 @@ public class ProductController {
         return "product";
     }
 
-    @GetMapping("/import")
-    public String showImportProduct(){
-        return "import-product";
-    }
 }

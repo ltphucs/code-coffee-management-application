@@ -22,4 +22,18 @@ public class ImportIngredient {
 
     private Long totalPrice;
     private String comment;
+
+    @Override
+    public String toString() {
+        return "ImportIngredient{" +
+                "id=" + id +
+                ", dateJoin=" + dateJoin +
+                ", ingredient=" + ingredient +
+                ", quantity=" + quantity +
+                ", totalQuantity=" + totalQuantity +
+                ", price=" + price +
+                ", totalPrice=" + totalPrice +
+                ", comment='" + comment + '\'' +
+                '}';
+    }
 }

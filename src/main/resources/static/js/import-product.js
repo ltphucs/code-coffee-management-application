@@ -61,7 +61,7 @@ products.resetForm = function () {
 
 products.initProductLines = function () {
     $.ajax({
-        url: "http://localhost:8080/api/productlines/",
+        url: "http://localhost:8080/api/productlines",
         method: "GET",
         dataType: "json",
         success: function (data) {
@@ -99,70 +99,70 @@ products.get = function (id) {
     });
 };
 
-products.save = function () {
-    if ($("#formAddEdit").valid()) {
-        if ($('#id').val() == 0) {
-            var productObj = {};
-            productObj.name = $('#productName').val();
-            productObj.inventory = $('#inventory').val();
-            productObj.price = $('#price').val();
-            productObj.image = $('#image').val();
-            //
-            var productLineObj = {};
-            productLineObj.id = $("#productLine").val();
-            productLineObj.name = $("#productLine option:selected").html();
-            productObj.productLine = productLineObj;
-
-            $.ajax({
-                url: "http://localhost:8080/api/products/",
-                method: "POST",
-                dataType: "json",
-                contentType: "application/json",
-                data: JSON.stringify(productObj),
-                done: function () {
-                    console.log("POST DONE");
-                    $('#modalAddEdit').modal('hide');
-
-                    $("#products-datatables").DataTable().ajax.reload();
-                },
-                success: function (data) {
-                    console.log("POST success");
-                    $('#modalAddEdit').modal('hide');
-                    $("#products-datatables").DataTable().ajax.reload();
-
-                }
-            });
-        } else {
-            var productObj = {};
-            productObj.name = $('#productName').val();
-            productObj.inventory = $('#inventory').val();
-            productObj.price = $('#price').val();
-            productObj.image = $('#image').val();
-            productObj.id = $('#id').val();
-            var productLineObj = {};
-            productLineObj.id = $("#productLine").val();
-            productLineObj.name = $("#productLine option:selected").html();
-            productObj.productLine = productLineObj;
-
-            $.ajax({
-                url: "http://localhost:8080/api/products/" + productObj.id,
-                method: "PUT",
-                dataType: "json",
-                contentType: "application/json",
-                data: JSON.stringify(productObj),
-                success: function (data) {
-                    $('#modalAddEdit').modal('hide');
-                    $("#products-datatables").DataTable().ajax.reload();
-                }
-            });
-        }
-    }
-};
+// products.save = function () {
+//     if ($("#formAddEdit").valid()) {
+//         if ($('#id').val() == 0) {
+//             var productObj = {};
+//             productObj.name = $('#productName').val();
+//             productObj.inventory = $('#inventory').val();
+//             productObj.price = $('#price').val();
+//             productObj.image = $('#image').val();
+//             //
+//             var productLineObj = {};
+//             productLineObj.id = $("#productLine").val();
+//             productLineObj.name = $("#productLine option:selected").html();
+//             productObj.productLine = productLineObj;
+//
+//             $.ajax({
+//                 url: "http://localhost:8080/api/products/",
+//                 method: "POST",
+//                 dataType: "json",
+//                 contentType: "application/json",
+//                 data: JSON.stringify(productObj),
+//                 done: function () {
+//                     console.log("POST DONE");
+//                     $('#modalAddEdit').modal('hide');
+//
+//                     $("#products-datatables").DataTable().ajax.reload();
+//                 },
+//                 success: function (data) {
+//                     console.log("POST success");
+//                     $('#modalAddEdit').modal('hide');
+//                     $("#products-datatables").DataTable().ajax.reload();
+//
+//                 }
+//             });
+//         } else {
+//             var productObj = {};
+//             productObj.name = $('#productName').val();
+//             productObj.inventory = $('#inventory').val();
+//             productObj.price = $('#price').val();
+//             productObj.image = $('#image').val();
+//             productObj.id = $('#id').val();
+//             var productLineObj = {};
+//             productLineObj.id = $("#productLine").val();
+//             productLineObj.name = $("#productLine option:selected").html();
+//             productObj.productLine = productLineObj;
+//
+//             $.ajax({
+//                 url: "http://localhost:8080/api/products/" + productObj.id,
+//                 method: "PUT",
+//                 dataType: "json",
+//                 contentType: "application/json",
+//                 data: JSON.stringify(productObj),
+//                 success: function (data) {
+//                     $('#modalAddEdit').modal('hide');
+//                     $("#products-datatables").DataTable().ajax.reload();
+//                 }
+//             });
+//         }
+//     }
+// };
 
 products.init = function () {
     products.initProductTable();
     products.initProductLines();
-    products.initValidation();
+    // products.initValidation();
 };
 
 $(document).ready(function () {

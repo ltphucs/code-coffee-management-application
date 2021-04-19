@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/ingredient")
-public class IngredientController {
+@RequestMapping("/ingredients")
+public class ImportIngredientController {
 
     @GetMapping
     public String showIngredient(){
-        return "";
+        return "Importingredient";
     }
 }
