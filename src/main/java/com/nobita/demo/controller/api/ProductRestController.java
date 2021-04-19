@@ -1,6 +1,9 @@
 package com.nobita.demo.controller.api;
 
+import com.nobita.demo.model.ImportProduct;
 import com.nobita.demo.model.Product;
+import com.nobita.demo.model.dto.DemoDTO;
+import com.nobita.demo.service.ImportProductService;
 import com.nobita.demo.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,11 +24,18 @@ public class ProductRestController {
     @Autowired
     ProductService productService;
 
+    @Autowired
+    ImportProductService importProductService;
+
     @GetMapping
     public ResponseEntity<?> list() {
         List<Product> products = productService.findAll();
+        List<ImportProduct> importProducts=importProductService.findAll();
+        DemoDTO demoDTO=new DemoDTO();
+        demoDTO.setProductList(products);
+        demoDTO.setImportProductList(importProducts);
         if (!products.isEmpty()) {
-            return new ResponseEntity<>(products, HttpStatus.OK);
+            return new ResponseEntity<>(demoDTO, HttpStatus.OK);
         }
         return new ResponseEntity<List<Product>>(HttpStatus.NO_CONTENT);
     }

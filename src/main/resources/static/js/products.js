@@ -33,27 +33,13 @@ products.addNew = function () {
     $('#modalAddEdit').modal('show');
 };
 
-products.initValidation = function () {
-    $("#modalAddEdit").validate({
-        rules: {
-            name: "required",
-            productLine: "required"
-        },
-        messages: {
-            name: "Please enter your productName",
-            productLine: "Please enter your productLine",
-        }
-    });
-
-}
-
 products.resetForm = function () {
     $('#formAddEdit')[0].reset();
     $('#name').val('');
     $('#inventory').val('');
     $('#price').val('');
     $('#productLine.name').val('');
-    $('#productStatus').val('');
+
     //
     // var validator = $("#formAddEdit");
     // validator.resetForm();
@@ -127,13 +113,15 @@ products.delete = function(id){
 };
 
 products.save = function () {
-    if ($("#formAddEdit").valid()) {
-        if ($('#id').val() == 0) {
+    if ($("#formAddEdit")) {
+        if (!$('#id').val()) {
             var productObj = {};
             productObj.name = $('#productName').val();
             productObj.inventory = $('#inventory').val();
             productObj.price = $('#price').val();
             productObj.image = $('#image').val();
+
+
             //
             var productLineObj = {};
             productLineObj.id = $("#productLine").val();
@@ -159,6 +147,7 @@ products.save = function () {
 
                 }
             });
+
         } else {
             var productObj = {};
             productObj.name = $('#productName').val();
@@ -189,7 +178,7 @@ products.save = function () {
 products.init = function () {
     products.initProductTable();
     products.initProductLines();
-    products.initValidation();
+    // products.initValidation();
 };
 
 $(document).ready(function () {

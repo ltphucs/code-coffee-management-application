@@ -16,13 +16,13 @@ public class ImportProductDAO implements BaseDAO<ImportProduct> {
 
     @Override
     public List<ImportProduct> findAll() {
-        String sql = "select ip.*,p_name as name_product from import_product ip left join product p on p.id=ip.id_product";
+        String sql = "select ip.*,p.name as name_product from import_product ip left join product p on p.id=ip.id_product";
         return jdbcTemplate.query(sql, new ImportProductResultSet());
     }
 
     @Override
     public ImportProduct findByID(Long id) {
-        String sql = "select ip.*,p_name as name_product from import_product ip left join product p on p.id=ip.id_product wherer ip.id=?";
+        String sql = "select ip.*,p.name as name_product from import_product ip left join product p on p.id=ip.id_product wherer ip.id=?";
         Object[] values = {id};
         return jdbcTemplate.queryForObject(sql, new ImportProductRowMapper(), values);
     }
