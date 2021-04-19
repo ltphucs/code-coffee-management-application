@@ -87,7 +87,7 @@ $(document).ready(function () {
                     )
                 })
                 $('#tables-sql').append(
-                        `<a href="#" class="d-flex flex-column justify-content-center align-items-center w-200px" onclick="areas.createTables()">
+                    `<a href="#" class="d-flex flex-column justify-content-center align-items-center w-200px" onclick="areas.createTables()">
                     <div class="d-flex justify-content-center align-items-center table-add-btn">
                            <i class="fa fa-plus" style="font-size: 30px;" ></i>
                     </div>

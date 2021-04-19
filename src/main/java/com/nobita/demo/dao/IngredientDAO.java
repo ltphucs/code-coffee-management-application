@@ -15,13 +15,13 @@ public class IngredientDAO implements BaseDAO<com.nobita.demo.model.Ingredient>{
 
     @Override
     public List<com.nobita.demo.model.Ingredient> findAll() {
-        String sql="select i.* ,u.name as name_unit from ingredient i lef join unit u on u.id=i.id_ingredient";
+        String sql="select i.* ,u.name as name_unit from ingredient i left join unit u on u.id=i.id_unit";
         return jdbcTemplate.query(sql,new IngredientResultSet());
     }
 
     @Override
     public com.nobita.demo.model.Ingredient findByID(Long id) {
-        String sql="select i.* ,u.name as name_unit from ingredient i lef join unit u on u.id=i.id_ingredient";
+        String sql="select i.* ,u.name as name_unit from ingredient i left join unit u on u.id=i.id_unit";
         Object[]values ={id};
         return jdbcTemplate.queryForObject(sql,new IngredientRowMapper(),values);
     }

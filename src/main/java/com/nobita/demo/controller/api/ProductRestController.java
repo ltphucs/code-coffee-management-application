@@ -1,6 +1,9 @@
 package com.nobita.demo.controller.api;
 
+import com.nobita.demo.model.ImportProduct;
 import com.nobita.demo.model.Product;
+import com.nobita.demo.model.dto.DemoDTO;
+import com.nobita.demo.service.ImportProductService;
 import com.nobita.demo.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +23,9 @@ import java.util.Map;
 public class ProductRestController {
     @Autowired
     ProductService productService;
+
+    @Autowired
+    ImportProductService importProductService;
 
     @GetMapping
     public ResponseEntity<?> list() {
