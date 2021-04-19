@@ -34,6 +34,7 @@ public class ImportProductRestController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> get( @PathVariable("id") long id) {
         ImportProduct importProduct = importProductService.findByID(id);
+        importProduct.setId(id);
         if (importProduct != null) {
             return new ResponseEntity<>(importProduct, HttpStatus.OK);
         }
@@ -66,14 +67,15 @@ public class ImportProductRestController {
         }
         ImportProduct importProduct1 = importProductService.findByID(id);
         if (importProduct1 != null){
-            importProduct1.setDateJoin(importProduct.getDateJoin());
-            importProduct1.setProduct(importProduct.getProduct());
-            importProduct1.setQuantity(importProduct.getQuantity());
-            importProduct1.setPrice(importProduct.getPrice());
-            importProduct1.setTotalPrice(importProduct.getTotalPrice());
-            importProduct1.setComment(importProduct.getComment());
-            importProductService.save(importProduct1);
-            return new ResponseEntity<>(importProduct1,HttpStatus.OK);
+            System.out.println(importProduct);
+//            importProduct1.setDateJoin(importProduct.getDateJoin());
+//            importProduct1.setProduct(importProduct.getProduct());
+//            importProduct1.setQuantity(importProduct.getQuantity());
+//            importProduct1.setPrice(importProduct.getPrice());
+//            importProduct1.setTotalPrice(importProduct.getTotalPrice());
+//            importProduct1.setComment(importProduct.getComment());
+            importProductService.update(importProduct);
+            return new ResponseEntity<>(importProduct,HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
