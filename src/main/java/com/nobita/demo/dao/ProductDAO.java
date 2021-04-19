@@ -27,6 +27,12 @@ public class ProductDAO implements BaseDAO<Product> {
         return jdbcTemplate.queryForObject(sql, new ProductRowMapper(),values);
     }
 
+    public List<Product> findByProductLine(Long id){
+        String sql = "select p.* ,pl.name as name_productline from product p left join productline pl on pl.id =p.id_productline where p.id_productline=?";
+        Object [] values={id};
+        return jdbcTemplate.query(sql,new ProductResultSet(),values);
+    }
+
     @Override
     public boolean save(Product product) {
         String sql ="insert into product(name,inventory,price,id_productline,image,status) values(?,?,?,?,?,?)";
