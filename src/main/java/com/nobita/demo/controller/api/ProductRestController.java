@@ -30,12 +30,8 @@ public class ProductRestController {
     @GetMapping
     public ResponseEntity<?> list() {
         List<Product> products = productService.findAll();
-        List<ImportProduct> importProducts=importProductService.findAll();
-        DemoDTO demoDTO=new DemoDTO();
-        demoDTO.setProductList(products);
-        demoDTO.setImportProductList(importProducts);
         if (!products.isEmpty()) {
-            return new ResponseEntity<>(demoDTO, HttpStatus.OK);
+            return new ResponseEntity<>(products, HttpStatus.OK);
         }
         return new ResponseEntity<List<Product>>(HttpStatus.NO_CONTENT);
     }

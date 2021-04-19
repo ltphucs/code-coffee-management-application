@@ -20,8 +20,7 @@ public class ImportIngredientRowMapper implements RowMapper<ImportIngredient> {
         ingredient.setUnit(unit);
         importIngredient.setId(rs.getLong("id"));
         importIngredient.setDateJoin(rs.getTimestamp("date_join").toLocalDateTime());
-        importIngredient.setQuantity(rs.getLong("import_quatity"));
-        importIngredient.setTotalQuantity(rs.getLong("total_quantitative_prediction"));
+        importIngredient.setQuantity(rs.getLong("import_quantity"));
         importIngredient.setPrice(rs.getLong("price"));
         importIngredient.setTotalPrice(rs.getLong("total_price"));
         importIngredient.setComment(rs.getString("comment"));

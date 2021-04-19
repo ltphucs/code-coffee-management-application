@@ -15,7 +15,6 @@ public class ImportIngredient {
 
     @Min(value = 1,message = "Số lượng không được bé hơn 1")
     private Long quantity;
-    private Long totalQuantity;
 
     @Min(value = 1,message = "Giá không thể bé hơn 1")
     private Long price;
@@ -30,7 +29,6 @@ public class ImportIngredient {
                 ", dateJoin=" + dateJoin +
                 ", ingredient=" + ingredient +
                 ", quantity=" + quantity +
-                ", totalQuantity=" + totalQuantity +
                 ", price=" + price +
                 ", totalPrice=" + totalPrice +
                 ", comment='" + comment + '\'' +

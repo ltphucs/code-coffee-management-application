@@ -45,7 +45,7 @@
                             <span class="text">Dòng sản phẩm</span>
                         </a>
 <!--                        add-->
-                        <a href="#" onclick="importIngredients.addNew()" class="btn btn-outline-primary btn-icon-split">
+                        <a href="#" onclick="importIngredient.addNew()" class="btn btn-outline-primary btn-icon-split">
                         <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -67,7 +67,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-bordered" id="importIngredients-datatables" width="100%" cellspacing="0">
+                            <table class="table table-bordered" id="import-ingredients-datatables" width="100%" cellspacing="0">
                                 <tfoot>
                                 <tr>
                                     <th>Tên nguyên liệu</th>
@@ -159,7 +159,7 @@
                         <!-- Modal footer -->
                         <div class="modal-footer">
                             <a href="javascript:" class="btn btn-primary"
-                               onclick="importIngredients.save()">Save</a>
+                               onclick="importIngredient.save()">Save</a>
 
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                         </div>
@@ -169,11 +169,6 @@
             </div>
 
         </div>
-        <!-- End of Main Content -->
-
-        <!-- Footer -->
-        <!-- End of Footer -->
-
     </div>
     <!-- End of Content Wrapper -->
 
