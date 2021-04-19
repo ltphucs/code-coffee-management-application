@@ -35,7 +35,6 @@
 
                 <!-- Page Heading -->
                 <div class="d-flex justify-content-between mb-4">
-
                     <h1 class=" h3 mb-2 text-gray-800 ">Quản lý nguyên liệu</h1>
                     <div class="d-flex">
                         <a href="#" class="btn btn-primary btn-icon-split mr-3">
@@ -45,7 +44,7 @@
                             <span class="text">Dòng sản phẩm</span>
                         </a>
 <!--                        add-->
-                        <a href="#" onclick="importIngredient.addNew()" class="btn btn-outline-primary btn-icon-split">
+                        <a href="javascript:;" onclick="importIngredient.addNew()" class="btn btn-outline-primary btn-icon-split">
                         <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -67,6 +66,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
+
                             <table class="table table-bordered" id="import-ingredients-datatables" width="100%" cellspacing="0">
                                 <tfoot>
                                 <tr>
@@ -101,7 +101,7 @@
                         <!-- Modal body -->
                         <div class="modal-body">
                             <form id="formAddEditIngredients" name="formAddEditIngredients">
-                                <input hidden name="id" id="id" value="0">
+                                <input hidden name="id" id="id">
                                 <div class="row form-group">
                                     <div class="col-3">
                                         <label>Tên nguyên liệu</label>
@@ -158,7 +158,7 @@
 
                         <!-- Modal footer -->
                         <div class="modal-footer">
-                            <a href="javascript:" class="btn btn-primary"
+                            <a href="javascript:;" class="btn btn-primary"
                                onclick="importIngredient.save()">Save</a>
 
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
