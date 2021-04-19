@@ -75,6 +75,7 @@
                                     <th>Số lượng</th>
                                     <th>Giá</th>
                                     <th>Tổng giá</th>
+                                    <th>Ghi chú</th>
                                     <th>Chức năng</th>
                                 </tr>
                                 </tfoot>
@@ -122,11 +123,22 @@
 
                                 <div class="row form-group">
                                     <div class="col-3">
-                                        <label>Price</label>
+                                        <label>Giá</label>
                                     </div>
                                     <div class="col-9">
                                         <input class="form-control" type="text"
                                                name="price" id="price"
+                                               data-rule-required=true>
+                                    </div>
+                                </div>
+
+                                <div class="row form-group">
+                                    <div class="col-3">
+                                        <label>Ghi chú</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input class="form-control" type="text"
+                                               name="comment" id="comment"
                                                data-rule-required=true>
                                     </div>
                                 </div>

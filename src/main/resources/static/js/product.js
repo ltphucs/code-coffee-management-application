@@ -25,6 +25,21 @@ product.initProductTable = function () {
     });
 }
 
+product.addNew = function (){
+    $('#modalTitle').html("Thêm sản phẩm mới");
+    product.resetForm();
+    $('#modalAddEdit').modal('show')
+}
+
+product.resetForm = function (){
+    $('#formAddEdit')[0].reset();
+    $('#productName').val('')
+    $('#inventory').val('')
+    $('#price').val('')
+    $('#productLine.name').val('')
+
+}
+
 $(document).ready(function () {
     product.initProductTable();
 });
