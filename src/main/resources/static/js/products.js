@@ -17,8 +17,8 @@ products.initProductTable = function () {
             {
                 data: "id", name: "action", title: "Chức năng", orderable: false,
                 "render": function (data, type, row, meta) {
-                    var str = "<a href='javascript:;' title='edit product'><i class='fa fa-edit'></i></a> " +
-                        "<a href='javascript:;' title='remove product' ><i class='fa fa-trash'></i></a>"
+                    var str = "<a href='javascript:;' title='edit product' onclick='products.get("+ data +")'><i class='fa fa-edit'></i></a> " +
+                        "<a href='javascript:;' title='remove product' onclick='products.delete("+ data +")' ><i class='fa fa-trash'></i></a>"
                     return str;
                 }
             },
@@ -33,6 +33,7 @@ products.addNew = function () {
     $('#modalAddEdit').modal('show');
 };
 
+<<<<<<< HEAD
 // products.initValidation = function () {
 //     $("#modalAddEdit").validate({
 //         rules: {
@@ -62,6 +63,23 @@ products.addNew = function () {
 products.initProductLines = function () {
     $.ajax({
         url: "http://localhost:8080/api/productLines",
+=======
+products.resetForm = function () {
+    $('#formAddEdit')[0].reset();
+    $('#name').val('');
+    $('#inventory').val('');
+    $('#price').val('');
+    $('#productLine.name').val('');
+
+    //
+    // var validator = $("#formAddEdit");
+    // validator.resetForm();
+}
+
+products.initProductLines = function () {
+    $.ajax({
+        url: "http://localhost:8080/api/productLines/",
+>>>>>>> 799e6fc6d0916d25513c31ae756b4e64c7e0c3b0
         method: "GET",
         dataType: "json",
         success: function (data) {
@@ -99,6 +117,7 @@ products.get = function (id) {
     });
 };
 
+<<<<<<< HEAD
 // products.save = function () {
 //     if ($("#formAddEdit").valid()) {
 //         if ($('#id').val() == 0) {
@@ -158,6 +177,97 @@ products.get = function (id) {
 //         }
 //     }
 // };
+=======
+products.delete = function(id){
+    bootbox.confirm({
+        title: "Remove product",
+        message: "Do you want to remove this product?",
+        buttons: {
+            cancel: {
+                label: '<i class="fa fa-times"></i> No'
+            },
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes'
+            }
+        },
+        callback: function (result) {
+            if(result){
+                $.ajax({
+                    url : "http://localhost:8080/api/products/" + id,
+                    method: "DELETE",
+                    dataType : "json",
+                    success : function(data){
+                        products.initProductTable();
+                    }
+                });
+            }
+        }
+    });
+};
+
+products.save = function () {
+    if ($("#formAddEdit")) {
+        if (!$('#id').val()) {
+            var productObj = {};
+            productObj.name = $('#productName').val();
+            productObj.inventory = $('#inventory').val();
+            productObj.price = $('#price').val();
+            productObj.image = $('#image').val();
+
+
+            //
+            var productLineObj = {};
+            productLineObj.id = $("#productLine").val();
+            productLineObj.name = $("#productLine option:selected").html();
+            productObj.productLine = productLineObj;
+
+            $.ajax({
+                url: "http://localhost:8080/api/products/",
+                method: "POST",
+                dataType: "json",
+                contentType: "application/json",
+                data: JSON.stringify(productObj),
+                done: function () {
+                    console.log("POST DONE");
+                    $('#modalAddEdit').modal('hide');
+
+                    $("#products-datatables").DataTable().ajax.reload();
+                },
+                success: function (data) {
+                    console.log("POST success");
+                    $('#modalAddEdit').modal('hide');
+                    $("#products-datatables").DataTable().ajax.reload();
+
+                }
+            });
+
+        } else {
+            var productObj = {};
+            productObj.name = $('#productName').val();
+            productObj.inventory = $('#inventory').val();
+            productObj.price = $('#price').val();
+            productObj.image = $('#image').val();
+            productObj.id = $('#id').val();
+            var productLineObj = {};
+            productLineObj.id = $("#productLine").val();
+            productLineObj.name = $("#productLine option:selected").html();
+            productObj.productLine = productLineObj;
+
+            $.ajax({
+                url: "http://localhost:8080/api/products/" + productObj.id,
+                method: "PUT",
+                dataType: "json",
+                contentType: "application/json",
+                data: JSON.stringify(productObj),
+                success: function (data) {
+                    $('#modalAddEdit').modal('hide');
+                    $("#products-datatables").DataTable().ajax.reload();
+                }
+            });
+        }
+    }
+};
+>>>>>>> 799e6fc6d0916d25513c31ae756b4e64c7e0c3b0
 
 products.init = function () {
     products.initProductTable();

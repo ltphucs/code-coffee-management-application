@@ -21,7 +21,7 @@ public class ImportProductResultSet implements ResultSetExtractor<List<ImportPro
             product.setName(rs.getString("name_product"));
             importProduct.setProduct(product);
             importProduct.setDateJoin(rs.getTimestamp("date_join").toLocalDateTime());
-            importProduct.setQuantity(rs.getInt("quantity"));
+            importProduct.setQuantity(rs.getInt("quatity"));
             importProduct.setPrice(rs.getLong("price"));
             importProduct.setTotalPrice(rs.getLong("total_price"));
             importProduct.setComment(rs.getString("comment"));
