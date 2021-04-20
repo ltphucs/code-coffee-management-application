@@ -1,6 +1,6 @@
-let product = {};
+let products = {};
 
-product.initProductTable = function () {
+products.initProductTable = function () {
     $("#products-datatables").DataTable({
         ajax: {
             url: "http://localhost:8080/api/products/",
@@ -25,21 +25,125 @@ product.initProductTable = function () {
     });
 }
 
-product.addNew = function (){
+products.addNew = function (){
     $('#modalTitle').html("Thêm sản phẩm mới");
-    product.resetForm();
+    products.resetForm();
     $('#modalAddEdit').modal('show')
 }
 
-product.resetForm = function (){
+products.resetForm = function (){
     $('#formAddEdit')[0].reset();
-    $('#productName').val('')
-    $('#inventory').val('')
-    $('#price').val('')
-    $('#productLine.name').val('')
+    $('#productName').val('');
+    $('#inventory').val('');
+    $('image').val('');
+    $('#price').val('');
+    $('#productLine.name').val('');
 
 }
 
+products.initProductLines = function(){
+    $.ajax({
+        url : "http://localhost:8080/api/productLines/",
+        method : "GET",
+        dataType : "json",
+        success : function(data){
+            $('#productLine').empty();
+            $.each(data, function(i, v){
+                $('#productLine').append(
+                    "<option value='"+ v.id +"'>"+ v.name +"</option>"
+                );
+            });
+        }
+    });
+};
+
+
+products.get = function(id){
+    console.log('get :'+ id);
+    $.ajax({
+        url : "http://localhost:8080/api/products/" + id,
+        method : "GET",
+        dataType : "json",
+        success : function(data){
+            console.log(data);
+            $('#formAddEdit')[0].reset();
+            //
+            $('#modalTitle').html("Edit product");
+            $('#productName').val(data.name);
+            $('#price').val(data.price);
+            $('#image').val(data.image);
+            $('#productLine').val(data.productLine.id);
+            $('#id').val(data.id);
+
+            $('#modalAddEdit').modal('show');
+        }
+    });
+};
+
+products.save = function(){
+    if ($("#formAddEdit")){
+        if(!$('#id').val()){
+            let productObj = {};
+            productObj.name = $('#productName').val();
+            productObj.price = Number($('#price').val());
+            productObj.image = $('#image').val();
+            //
+            let productLineObj = {};
+            productLineObj.id = $("#productLine").val();
+            productLineObj.name = $("#productLine option:selected").html();
+            productObj.productLine = productLineObj;
+
+            $.ajax({
+                url : "http://localhost:8080/api/products/",
+                method : "POST",
+                dataType : "json",
+                contentType : "application/json",
+                data : JSON.stringify(productObj),
+                done: function(){
+                    console.log("POST DONE");
+                    $('#modalAddEdit').modal('hide');
+                    $("#products-datatables").DataTable().ajax.reload();
+                },
+                success : function(data){
+                    console.log("POST success");
+                    $('#modalAddEdit').modal('hide');
+                    $("#products-datatables").DataTable().ajax.reload();
+
+                }
+            });
+        }
+        else{
+            let productObj = {};
+            productObj.name = $('#productName').val();
+            productObj.price = Number($('#price').val());
+            productObj.image = $('#image').val();
+            productObj.id = $('#id').val();
+            let productLineObj = {};
+            productLineObj.id = $("#productLine").val();
+            productLineObj.name = $("#productLine option:selected").html();
+            productObj.productLine = productLineObj;
+
+            $.ajax({
+                url : "http://localhost:8080/api/products/" + productObj.id,
+                method : "PUT",
+                dataType : "json",
+                contentType : "application/json",
+                data : JSON.stringify(productObj),
+                success : function(data){
+                    $('#modalAddEdit').modal('hide');
+                    $("#products-datatables").DataTable().ajax.reload();
+                }
+            });
+        }
+    }
+};
+
+products.init = function(){
+    products.initProductTable();
+    products.initProductLines();
+};
+
+
 $(document).ready(function () {
-    product.initProductTable();
+    products.init();
 });
