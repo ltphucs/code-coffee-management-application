@@ -50,7 +50,6 @@ importProducts.get = function (id) {
         success: function (data) {
             console.log(data);
             $('#formAddEdit')[0].reset();
-            //
             $('#modalTitle').html("Edit product");
             $('#productName').val(data.product.id);
             $('#quantity').val(data.quantity);
@@ -119,7 +118,7 @@ importProducts.save = function () {
             importProductObj.comment = $('#comment').val();
             importProductObj.id = Number($('#id').val());
 
-            var productObj = {};
+            let productObj = {};
             productObj.id =Number($("#products").val());
             productObj.name = $("#products option:selected").html();
             importProductObj.product = productObj;
@@ -133,7 +132,6 @@ importProducts.save = function () {
                 success: function (data) {
                     $('#modalAddEdit').modal('hide');
                     $("#importProducts-datatables").DataTable().ajax.reload();
-                    // importProducts.initImportProductTable();
                 }
             });
         }

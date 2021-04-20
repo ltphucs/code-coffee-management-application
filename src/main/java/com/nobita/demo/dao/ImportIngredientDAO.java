@@ -38,8 +38,8 @@ public class ImportIngredientDAO implements BaseDAO<ImportIngredient> {
     
     @Override
     public boolean update(ImportIngredient importIngredient) {
-        String sql="update import_ingredient set id_ingredient=?,quantity=?,total_quantity=?,price=?,total_price=?,comment=? where id=?";
-        Object[] values ={importIngredient.getIngredient().getId(),importIngredient.getQuantity(),importIngredient.getTotalPrice(),importIngredient.getTotalPrice(),importIngredient.getComment(),importIngredient.getId()};
+        String sql="update import_ingredient set id_ingredient = ?, import_quantity = ?, price = ?,total_price=?, comment = ? where id = ?";
+        Object[] values ={importIngredient.getIngredient().getId(),importIngredient.getQuantity(),importIngredient.getPrice(),importIngredient.getTotalPrice(),importIngredient.getComment(),importIngredient.getId()};
         return jdbcTemplate.update(sql,values) > 0;
     }
 

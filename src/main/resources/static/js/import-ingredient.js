@@ -9,24 +9,31 @@ importIngredient.initImportIngredients = function () {
             dataSrc: ""
         },
         columns: [
-            {data: "ingredient.name", name: "ingredient.name", title: "Tên nguyên liệu", orderable: false},
+            {data: "ingredient.name", name: "ingredient.name", title: "Tên nguyên liệu", orderable: true},
             {data: "dateJoin",name:"dateJoin",title: "Ngày nhập" },
             {data: "price", name: "price", title: "Giá"},
             {data: "quantity", name: "quantity", title: "Số lượng"},
-            {data: "ingredient.unit.name", name: "ingredient.unit.name", title: "Đơn vị", orderable: false},
+            {data: "ingredient.unit.name", name: "ingredient.unit.name", title: "Đơn vị"},
             {data: "totalPrice", name: "totalPrice", title: "Tổng Giá"},
             {data: "comment", name: "comment", title: "Ghi chú"},
             {
-                data: "id", name: "action", title: "Chức năng",
+                data: "id", name: "action", title: "Chức năng", orderable: false,
                 "render": function (data, type, row, meta) {
-                    return "<a href='javascript:;' title='edit product'><i class='fa fa-edit'></i></a> " +
-                        "<a href='javascript:;' title='remove product' ><i class='fa fa-trash'></i></a>"
+                    return "<a href='javascript:;' title='Chỉnh sửa nguyên liệu' onclick='importIngredient.get("+ data +")'><i class='fa fa-edit'></i></a> " +
+                        "<a href='javascript:;' title='remove product' onclick='importIngredient.delete("+ data +")' ><i class='fa fa-trash'></i></a>"
                 }
             },
         ],
-        order: [[1, "desc"]]
+        order: [[1, "desc"]],
     });
+    // let d = new Date();
+    // let x = document.getElementById("dateJoin");
+    // x.innerHTML = formatDate(d, "dddd h:mmtt d MMM yyyy");
+
 }
+
+
+
 
 
 // show modal
@@ -37,7 +44,6 @@ importIngredient.addNew = function(){
 };
 
 // reset form
-
 importIngredient.resetForm =  function(){
     $('#formAddEditIngredients')[0].reset();
     $('#nameIngredients').val('');
@@ -64,46 +70,120 @@ importIngredient.initListIngredients = function(){
     });
 }
 
+// lấy id
+
+importIngredient.get = function (id) {
+    $.ajax({
+        url: "http://localhost:8080/api/importIngredients/" + id,
+        method: "GET",
+        dataType: "json",
+        success: function (data) {
+            $('#formAddEditIngredients')[0].reset();
+            $('#modalTitle').html("Chỉnh sửa nguyên liệu");
+            $('#nameIngredients').val(data.ingredient.id);
+            $('#price').val(data.price);
+            $('#quantity').val(data.quantity);
+            $('#comment').val(data.comment);
+            $('#id').val(data.id);
+            $('#modalAddEdit').modal('show');
+        }
+    });
+};
+
 // add and save
 
 importIngredient.save = function(){
-    if ($('#id').val() == 0){
-        let importIngredients = {};
-        importIngredients.price = Number($('#price').val());
-        importIngredients.quantity = Number($('#quantity').val());
-        importIngredients.totalPrice =Number(importIngredients.price * importIngredients.quantity);
-        importIngredients.comment = $('#comment').val();
+    if ($('#formAddEditIngredients')){
+        if (!$('#id').val()){
+            let importIngredients = {};
+            importIngredients.price = Number($('#price').val());
+            importIngredients.quantity = Number($('#quantity').val());
+            importIngredients.totalPrice = Number(importIngredients.price * importIngredients.quantity);
+            importIngredients.comment = $('#comment').val();
 
-        var ingredientObj = {};
-        ingredientObj.id = Number($("#nameIngredients").val());
-        ingredientObj.name = $("#nameIngredients option:selected").html();
-        importIngredients.ingredient = ingredientObj;
+            let ingredientObj = {};
+            ingredientObj.id = Number($("#nameIngredients").val());
+            ingredientObj.name = $("#nameIngredients option:selected").html();
+            importIngredients.ingredient = ingredientObj;
 
-        $.ajax({
-            url : "http://localhost:8080/api/importIngredients",
-            method : "POST",
-            dataType : "json",
-            contentType : "application/json",
-            data : JSON.stringify(importIngredients),
-            done: function(){
-                console.log("POST DONE");
-                $('#modalAddEdit').modal('hide');
-                $("#import-ingredients-datatables").DataTable().ajax.reload();
-            },
-            success : function(data){
-                $('#modalAddEdit').modal('hide');
-                $("#import-ingredients-datatables").DataTable().ajax.reload();
+            $.ajax({
+                url : "http://localhost:8080/api/importIngredients",
+                method : "POST",
+                dataType : "json",
+                contentType : "application/json",
+                data : JSON.stringify(importIngredients),
+                done: function(){
+                    // console.log("POST DONE");
+                    $('#modalAddEdit').modal('hide');
+                    $("#import-ingredients-datatables").DataTable().ajax.reload();
+                },
+                success : function(data){
+                    $('#modalAddEdit').modal('hide');
+                    $("#import-ingredients-datatables").DataTable().ajax.reload();
 
-            }
-        });
-    }
-    else {
-        let importIngredients = {};
-        importIngredients.price = Number($('#price').val());
-        importIngredients.quantity = Number($('#quantity').val());
+                }
+            });
+        }
+        else {
+            let importIngredients = {};
+            importIngredients.price = Number($('#price').val());
+            importIngredients.quantity = Number($('#quantity').val());
+            importIngredients.totalPrice = Number(importIngredients.price * importIngredients.quantity);
+            importIngredients.comment = $('#comment').val();
+            importIngredients.id = Number($('#id').val());
 
+            let ingredientObj = {};
+            ingredientObj.id = Number($("#nameIngredients").val());
+            ingredientObj.name = $("#nameIngredients option:selected").html();
+            importIngredients.ingredient = ingredientObj;
+
+            $.ajax({
+                url: "http://localhost:8080/api/importIngredients/" + importIngredients.id,
+                method: "PUT",
+                dataType: "json",
+                contentType: "application/json",
+                data: JSON.stringify(importIngredients),
+                success: function () {
+                    $('#modalAddEdit').modal('hide');
+                    $("#import-ingredients-datatables").DataTable().ajax.reload();
+                }
+            });
+        }
     }
 }
+
+// delete
+importIngredient.delete = function(id){
+    bootbox.confirm({
+        title: "Xóa nguyên liệu",
+        message: "Bạn có chắc chắn muốn xóa nguyên liệu này không ???",
+        buttons: {
+            cancel: {
+                label: '<i class="fa fa-times"></i> No'
+            },
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes'
+            }
+        },
+        callback: function (result) {
+            // console.log(id);
+            if(result){
+                $.ajax({
+                    url : "http://localhost:8080/api/importIngredients/" + id,
+                    method: "DELETE",
+                    dataType : "json",
+
+                    success : function(){
+                        $('#modalAddEdit').modal('hide');
+                        $("#import-ingredients-datatables").DataTable().ajax.reload();
+                    }
+                });
+            }
+        }
+    });
+}
+
+
 
 
 $(document).ready(function () {
