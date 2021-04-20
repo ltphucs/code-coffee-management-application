@@ -1,6 +1,6 @@
 package com.nobita.demo.controller.api;
 
-import com.nobita.demo.dto.AreaDTO;
+import com.nobita.demo.model.dto.AreaDTO;
 import com.nobita.demo.model.Area;
 import com.nobita.demo.model.Table;
 import com.nobita.demo.service.AreaService;
@@ -33,9 +33,9 @@ public class AreaRestController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> get(@PathVariable("id") Long id) {
         Area area = areaService.findByID(id);
-        List<Table> tables=tableService.findByArea(id);
+        List<Table> tables = tableService.findByArea(id);
 
-        AreaDTO areaDTO=new AreaDTO();
+        AreaDTO areaDTO = new AreaDTO();
 
         areaDTO.setArea(area);
         areaDTO.setTableList(tables);
@@ -58,18 +58,18 @@ public class AreaRestController {
     @PutMapping(value = "/{id}")
     public ResponseEntity<?> update(@PathVariable("id") long id, @RequestBody Area area) {
         Area area1 = areaService.findByID(id);
-        if (area1 != null){
+        if (area1 != null) {
             area1.setName(area.getName());
             areaService.update(area1);
-            return new ResponseEntity<>(area1,HttpStatus.OK);
+            return new ResponseEntity<>(area1, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") long id){
+    public ResponseEntity<?> delete(@PathVariable("id") long id) {
         Area area = areaService.findByID(id);
-        if (area != null){
+        if (area != null) {
             areaService.delete(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
