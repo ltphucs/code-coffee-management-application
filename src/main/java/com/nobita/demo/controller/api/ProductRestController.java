@@ -61,7 +61,9 @@ public class ProductRestController {
             }
             return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
+        product.setInventory(0L);
         productService.save(product);
+
         return new ResponseEntity<>(product,HttpStatus.CREATED);
     }
 
@@ -89,7 +91,7 @@ public class ProductRestController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping("{/id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") long id){
         Product product = productService.findByID(id);
         if (product != null){

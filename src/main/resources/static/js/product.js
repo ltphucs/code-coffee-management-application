@@ -17,75 +17,108 @@ products.initProductTable = function () {
             {
                 data: "id", name: "action", title: "Chức năng", orderable: false,
                 "render": function (data, type, row, meta) {
-                    return "<a href='javascript:;' title='edit product' onclick='product.get("+ data +")'><i class='fa fa-edit'></i></a> " +
-                        "<a href='javascript:;' title='remove product' onclick='product.delete("+ data +")' ><i class='fa fa-trash'></i></a>"
+                    return "<a href='javascript:;' title='edit product' onclick='products.get(" + data + ")'><i class='fa fa-edit'></i></a> " +
+                        "<a href='javascript:;' title='remove product' onclick='products.delete(" + data + ")' ><i class='fa fa-trash'></i></a>"
                 }
             },
-        ]
+        ],
     });
 }
 
-products.addNew = function (){
+products.addNew = function () {
     $('#modalTitle').html("Thêm sản phẩm mới");
     products.resetForm();
     $('#modalAddEdit').modal('show')
 }
 
-products.resetForm = function (){
+products.resetForm = function () {
     $('#formAddEdit')[0].reset();
     $('#productName').val('');
     $('#inventory').val('');
-    $('image').val('');
+    $('#image').val('');
     $('#price').val('');
     $('#productLine.name').val('');
 
 }
 
-products.initProductLines = function(){
+products.initProductLines = function () {
     $.ajax({
-        url : "http://localhost:8080/api/productLines/",
-        method : "GET",
-        dataType : "json",
-        success : function(data){
+        url: "http://localhost:8080/api/productLines/",
+        method: "GET",
+        dataType: "json",
+        success: function (data) {
             $('#productLine').empty();
-            $.each(data, function(i, v){
+            $.each(data, function (i, v) {
                 $('#productLine').append(
-                    "<option value='"+ v.id +"'>"+ v.name +"</option>"
+                    "<option value='" + v.id + "'>" + v.name + "</option>"
                 );
             });
         }
     });
 };
 
+products.delete = function (id) {
+    bootbox.confirm({
+        title: "Xóa sản phẩm",
+        message: "Bạn có muốn xóa sản phẩm này?",
+        buttons: {
+            cancel: {
+                label: '<i class="fa fa-times"></i> No'
+            },
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes'
+            }
+        },
+        callback: function (result) {
+            // console.log(id);
+            if (result) {
+                $.ajax({
+                    url: "http://localhost:8080/api/products/" + id,
+                    method: "DELETE",
+                    dataType: "json",
 
-products.get = function(id){
-    console.log('get :'+ id);
+                    success: function (data) {
+                        console.log("aaaaaaaa");
+                        $('#modalAddEdit').modal('hide');
+                        $("#products-datatables").DataTable().ajax.reload();
+                        // importProducts.initImportProductTable();
+                    }
+                });
+            }
+        }
+    });
+};
+
+
+products.get = function (id) {
+    console.log('get :' + id);
     $.ajax({
-        url : "http://localhost:8080/api/products/" + id,
-        method : "GET",
-        dataType : "json",
-        success : function(data){
+        url: "http://localhost:8080/api/products/" + id,
+        method: "GET",
+        dataType: "json",
+        success: function (data) {
             console.log(data);
             $('#formAddEdit')[0].reset();
             //
-            $('#modalTitle').html("Edit product");
-            $('#productName').val(data.name);
-            $('#price').val(data.price);
-            $('#image').val(data.image);
-            $('#productLine').val(data.productLine.id);
-            $('#id').val(data.id);
+            $('#modalTitle').html("Sửa sản phẩm");
+            $('#productName').val(data.product.name);
+            $('#price').val(data.product.price);
+            $('#image').val(data.product.image);
+            $('#productLine').val(data.product.productLine.id);
+            $('#id').val(data.product.id);
 
             $('#modalAddEdit').modal('show');
         }
     });
 };
 
-products.save = function(){
-    if ($("#formAddEdit")){
-        if(!$('#id').val()){
+products.save = function () {
+    if ($("#formAddEdit")) {
+        if (!$('#id').val()) {
             let productObj = {};
             productObj.name = $('#productName').val();
             productObj.price = Number($('#price').val());
+            productObj.inventory = Number($('#inventory').val());
             productObj.image = $('#image').val();
             //
             let productLineObj = {};
@@ -94,42 +127,49 @@ products.save = function(){
             productObj.productLine = productLineObj;
 
             $.ajax({
-                url : "http://localhost:8080/api/products/",
-                method : "POST",
-                dataType : "json",
-                contentType : "application/json",
-                data : JSON.stringify(productObj),
-                done: function(){
+                url: "http://localhost:8080/api/products/",
+                method: "POST",
+                dataType: "json",
+                contentType: "application/json",
+                data: JSON.stringify(productObj),
+                done: function () {
                     console.log("POST DONE");
                     $('#modalAddEdit').modal('hide');
                     $("#products-datatables").DataTable().ajax.reload();
                 },
-                success : function(data){
+                success: function (data) {
                     console.log("POST success");
                     $('#modalAddEdit').modal('hide');
                     $("#products-datatables").DataTable().ajax.reload();
 
                 }
             });
-        }
-        else{
+        } else {
             let productObj = {};
             productObj.name = $('#productName').val();
             productObj.price = Number($('#price').val());
             productObj.image = $('#image').val();
             productObj.id = $('#id').val();
+
             let productLineObj = {};
-            productLineObj.id = $("#productLine").val();
+            productLineObj.id = Number($("#productLine").val());
             productLineObj.name = $("#productLine option:selected").html();
             productObj.productLine = productLineObj;
 
+            let importProductObj = {};
+            importProductObj.id = Number($("#importProduct").val());
+            importProductObj.quantity = Number($("#importProduct").val());
+            productObj.importProducts = importProductObj;
+
+            productObj.inventory = Number($('#inventory').val()) + importProductObj.quantity;
+
             $.ajax({
-                url : "http://localhost:8080/api/products/" + productObj.id,
-                method : "PUT",
-                dataType : "json",
-                contentType : "application/json",
-                data : JSON.stringify(productObj),
-                success : function(data){
+                url: "http://localhost:8080/api/products/" + productObj.id,
+                method: "PUT",
+                dataType: "json",
+                contentType: "application/json",
+                data: JSON.stringify(productObj),
+                success: function (data) {
                     $('#modalAddEdit').modal('hide');
                     $("#products-datatables").DataTable().ajax.reload();
                 }
@@ -138,7 +178,7 @@ products.save = function(){
     }
 };
 
-products.init = function(){
+products.init = function () {
     products.initProductTable();
     products.initProductLines();
 };

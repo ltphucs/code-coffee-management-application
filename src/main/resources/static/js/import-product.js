@@ -18,7 +18,7 @@ importProducts.initImportProductTable = function () {
             {
                 data: "id", name: "action", title: "Chức năng", orderable: false,
                 "render": function (data, type, row, meta) {
-                    return "<a href='javascript:;' title='edit product' onclick='importProducts.get("+ data +")'><i class='fa fa-edit'></i></a> " +
+                    return "<a href='javascript:;' title='edit product' onclick='importProducts.get(" + data + ")'><i class='fa fa-edit'></i></a> " +
                         "<a href='javascript:;' title='remove product' onclick='importProducts.delete(" + data + ")' ><i class='fa fa-trash'></i></a>"
                 }
             },
@@ -61,7 +61,7 @@ importProducts.get = function (id) {
     });
 };
 
-importProducts.initProduct = function () {
+importProducts.initProduct = function (data) {
     $.ajax({
         url: "http://localhost:8080/api/products/",
         method: "GET",
@@ -119,7 +119,7 @@ importProducts.save = function () {
             importProductObj.id = Number($('#id').val());
 
             let productObj = {};
-            productObj.id =Number($("#products").val());
+            productObj.id = Number($("#products").val());
             productObj.name = $("#products option:selected").html();
             importProductObj.product = productObj;
 
@@ -138,10 +138,10 @@ importProducts.save = function () {
     }
 }
 
-importProducts.delete = function(id){
+importProducts.delete = function (id) {
     bootbox.confirm({
-        title: "Remove product",
-        message: "Do you want to remove this product?",
+        title: "Xóa sản phẩm",
+        message: "Bạn có muốn xóa đơn nhập hàng này?",
         buttons: {
             cancel: {
                 label: '<i class="fa fa-times"></i> No'
@@ -152,13 +152,13 @@ importProducts.delete = function(id){
         },
         callback: function (result) {
             // console.log(id);
-            if(result){
+            if (result) {
                 $.ajax({
-                    url : "http://localhost:8080/api/importProducts/" + id,
+                    url: "http://localhost:8080/api/importProducts/" + id,
                     method: "DELETE",
-                    dataType : "json",
+                    dataType: "json",
 
-                    success : function(data){
+                    success: function (data) {
                         console.log("aaaaaaaa");
                         $('#modalAddEdit').modal('hide');
                         $("#importProducts-datatables").DataTable().ajax.reload();
