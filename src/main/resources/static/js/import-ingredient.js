@@ -10,8 +10,8 @@ importIngredient.initImportIngredients = function () {
         },
         columns: [
             {data: "ingredient.name", name: "ingredient.name", title: "Tên nguyên liệu", orderable: true},
-            {data: "dateJoin",name:"dateJoin",title: "Ngày nhập" },
-            {data: "price", name: "price", title: "Giá"},
+            {data: "dateJoin",name:"dateJoin",title: "Ngày nhập"},
+            {data: "price" , name: "price", title: "Giá"},
             {data: "quantity", name: "quantity", title: "Số lượng"},
             {data: "ingredient.unit.name", name: "ingredient.unit.name", title: "Đơn vị"},
             {data: "totalPrice", name: "totalPrice", title: "Tổng Giá"},
@@ -24,13 +24,27 @@ importIngredient.initImportIngredients = function () {
                 }
             },
         ],
+        // moment("dateJoin").fomat;
         order: [[1, "desc"]],
     });
-    // let d = new Date();
-    // let x = document.getElementById("dateJoin");
-    // x.innerHTML = formatDate(d, "dddd h:mmtt d MMM yyyy");
-
 }
+
+//  format datetime
+importIngredient.formatDateIngredients = function formatDate(dateString, notGetTime) {
+    if (dateString) {
+        try {
+            const d = new Date(Date.parse(dateString));
+            let dateStringFormated = (d.getDate()) + "/" + ConvertStr(d.getMonth() + 1) + "/" + d.getFullYear().toString()
+            if (!notGetTime)
+                dateStringFormated += " " + ConvertStr(d.getHours()) + ":" + ConvertStr(d.getMinutes());
+            return dateStringFormated;
+        } catch (error) {
+            return dateString;
+        }
+    }
+    return dateString;
+}
+
 
 
 
@@ -112,14 +126,17 @@ importIngredient.save = function(){
                 dataType : "json",
                 contentType : "application/json",
                 data : JSON.stringify(importIngredients),
-                done: function(){
-                    // console.log("POST DONE");
-                    $('#modalAddEdit').modal('hide');
-                    $("#import-ingredients-datatables").DataTable().ajax.reload();
-                },
+
                 success : function(data){
+                    toastr.success("Thêm mới thành công");
                     $('#modalAddEdit').modal('hide');
                     $("#import-ingredients-datatables").DataTable().ajax.reload();
+
+                },
+                error: function (data){
+                    // valid price
+                    $('#err-price').html(data.responseJSON.price);
+                    $('#err-quantity').html(data.responseJSON.quantity);
 
                 }
             });
@@ -144,6 +161,7 @@ importIngredient.save = function(){
                 contentType: "application/json",
                 data: JSON.stringify(importIngredients),
                 success: function () {
+                    toastr.success("Cập nhật thành công");
                     $('#modalAddEdit').modal('hide');
                     $("#import-ingredients-datatables").DataTable().ajax.reload();
                 }
@@ -166,14 +184,13 @@ importIngredient.delete = function(id){
             }
         },
         callback: function (result) {
-            // console.log(id);
             if(result){
                 $.ajax({
                     url : "http://localhost:8080/api/importIngredients/" + id,
                     method: "DELETE",
                     dataType : "json",
-
                     success : function(){
+                        toastr.success("Xóa thành công");
                         $('#modalAddEdit').modal('hide');
                         $("#import-ingredients-datatables").DataTable().ajax.reload();
                     }
@@ -189,4 +206,5 @@ importIngredient.delete = function(id){
 $(document).ready(function () {
     importIngredient.initImportIngredients();
     importIngredient.initListIngredients();
+    importIngredient.formatDateIngredients();
 });
