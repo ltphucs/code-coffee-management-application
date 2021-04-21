@@ -1,7 +1,9 @@
 package com.nobita.demo.dao;
 
 import com.nobita.demo.model.ImportProduct;
+import com.nobita.demo.model.Table;
 import com.nobita.demo.resultset.ImportProductResultSet;
+import com.nobita.demo.resultset.TableResultSet;
 import com.nobita.demo.rowmapper.ImportProductRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,13 +18,13 @@ public class ImportProductDAO implements BaseDAO<ImportProduct> {
 
     @Override
     public List<ImportProduct> findAll() {
-        String sql = "select ip.*,p_name as name_product from import_product ip left join product p on p.id=ip.id_product";
+        String sql = "select ip.*,p.name as name_product from import_product ip left join product p on p.id=ip.id_product";
         return jdbcTemplate.query(sql, new ImportProductResultSet());
     }
 
     @Override
     public ImportProduct findByID(Long id) {
-        String sql = "select ip.*,p_name as name_product from import_product ip left join product p on p.id=ip.id_product wherer ip.id=?";
+        String sql = "select ip.*,p.name as name_product from import_product ip left join product p on p.id=ip.id_product where ip.id=?";
         Object[] values = {id};
         return jdbcTemplate.queryForObject(sql, new ImportProductRowMapper(), values);
     }
@@ -46,5 +48,11 @@ public class ImportProductDAO implements BaseDAO<ImportProduct> {
         String sql="delete from import_product where id=?";
         Object[] values={id};
         return jdbcTemplate.update(sql,values) >0;
+    }
+
+    public List<ImportProduct> findByProduct(Long product){
+        String sql= "select ip.*,p.name as name_product from `import_product` ip left join product p on p.id=ip.id_product where p.id=?";
+        Object [] values ={product};
+        return jdbcTemplate.query(sql,new ImportProductResultSet(),values);
     }
 }

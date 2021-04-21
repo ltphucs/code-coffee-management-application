@@ -1,6 +1,9 @@
 package com.nobita.demo.controller.api;
 
+import com.nobita.demo.model.ImportProduct;
 import com.nobita.demo.model.Product;
+import com.nobita.demo.model.dto.ProductDTO;
+import com.nobita.demo.service.ImportProductService;
 import com.nobita.demo.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +24,9 @@ public class ProductRestController {
     @Autowired
     ProductService productService;
 
+    @Autowired
+    ImportProductService importProductService;
+
     @GetMapping
     public ResponseEntity<?> list() {
         List<Product> products = productService.findAll();
@@ -33,8 +39,14 @@ public class ProductRestController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> get(@PathVariable("id") Long id) {
         Product product = productService.findByID(id);
+        List<ImportProduct> importProducts = importProductService.findByProduct(id);
+
+        ProductDTO productDTO = new ProductDTO();
+        productDTO.setProduct(product);
+        productDTO.setImportProductList(importProducts);
+
         if (product != null) {
-            return new ResponseEntity<>(product, HttpStatus.OK);
+            return new ResponseEntity<>(productDTO, HttpStatus.OK);
         }
         return new ResponseEntity<Product>(HttpStatus.NOT_FOUND);
     }
@@ -49,7 +61,9 @@ public class ProductRestController {
             }
             return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
+        product.setInventory(0L);
         productService.save(product);
+
         return new ResponseEntity<>(product,HttpStatus.CREATED);
     }
 
@@ -77,7 +91,7 @@ public class ProductRestController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping("{/id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") long id){
         Product product = productService.findByID(id);
         if (product != null){

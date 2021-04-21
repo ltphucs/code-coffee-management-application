@@ -38,4 +38,9 @@ public class ImportProductServiceImpl implements ImportProductService {
     public boolean delete(Long id) {
         return importProductDAO.delete(id);
     }
+
+    @Override
+    public List<ImportProduct> findByProduct(Long product) {
+        return importProductDAO.findByProduct(product);
+    }
 }
