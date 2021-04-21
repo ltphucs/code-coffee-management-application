@@ -29,15 +29,15 @@ public class ProductDAO implements BaseDAO<Product> {
 
     @Override
     public boolean save(Product product) {
-        String sql ="insert into product(name,inventory,price,id_productline,image,status) values(?,?,?,?,?,?)";
-        Object [] values={product.getName(),product.getInventory(),product.getPrice(),product.getProductLine().getId(),product.getImage(),product.getProductStatus()};
+        String sql ="insert into product(name,price,id_productline,image) values(?,?,?,?)";
+        Object [] values={product.getName(),product.getPrice(),product.getProductLine().getId(),product.getImage()};
         return jdbcTemplate.update(sql,values) > 0;
     }
 
     @Override
     public boolean update(Product product) {
-        String sql = "update product set name=?,inventory=?,price =?,id_productline =?,image=?,status=? where id=?";
-        Object [] values={product.getName(),product.getInventory(),product.getPrice(),product.getProductLine().getId(),product.getImage(),product.getProductStatus(),product.getId()};
+        String sql = "update product set name=?,price =?,id_productline =?,image=? where id=?";
+        Object [] values={product.getName(),product.getPrice(),product.getProductLine().getId(),product.getImage(),product.getId()};
         return jdbcTemplate.update(sql,values) >0 ;
     }
 
