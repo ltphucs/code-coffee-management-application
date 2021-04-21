@@ -119,8 +119,18 @@
                                         <input class="form-control" type="number"
                                                name="price" id="price"
                                                data-rule-required=true>
+                                        <small id="err-price" class="text-danger"></small>
                                     </div>
                                 </div>
+<!--                                <div class="row form-group">-->
+<!--                                    <div class="col col-md-3">-->
+<!--                                        <label  class=" form-control-label"></label>-->
+<!--                                    </div>-->
+<!--                                    <div class="col-12 col-md-9">-->
+<!--                                        <h6 style="color: red" class="alert alert-warning" th:if="${#fields.hasErrors('ingredient.name')}"-->
+<!--                                            th:errors="*{ingredient.name}">Name Error</h6>-->
+<!--                                    </div>-->
+<!--                                </div>-->
 
                                 <div class="row form-group">
                                     <div class="col-3">
@@ -130,17 +140,10 @@
                                         <input class="form-control" type="number"
                                                name="quantity" id="quantity"
                                                data-rule-required=true>
+                                        <small id="err-quantity" class="text-danger"></small>
                                     </div>
                                 </div>
 
-<!--                                <div class="row form-group">-->
-<!--                                    <div class="col-3">-->
-<!--                                        <label>Đơn vị</label>-->
-<!--                                    </div>-->
-<!--                                    <div class="col-9">-->
-<!--                                        <select class="form-control" name="listUnit" id="listUnit"></select>-->
-<!--                                    </div>-->
-<!--                                </div>-->
                                 <div class="row form-group">
                                     <div class="col-3">
                                         <label>Ghi chú</label>
@@ -200,8 +203,40 @@
     </div>
 </div>
 
+<!--<div class="row">-->
+<!--    <input type="hidden" id="addMess">-->
+<!--</div>-->
+<!--<div class="row">-->
+<!--    <input type="hidden" id="updMess">-->
+<!--</div>-->
+<!--<div class="row">-->
+<!--    <input type="hidden" id="delMess">-->
+<!--</div>-->
+
 <th:block th:replace="layout/link.html :: scriptImport">
 </th:block>
+
+<!--<script>-->
+<!--    const updMess = $("#updMess").val();-->
+<!--    if(updMess != ""){-->
+<!--        toastr.success(updMess, 'updMess');-->
+<!--    }-->
+<!--</script>-->
+<!--<script>-->
+<!--    const delMess = $("#delMess").val();-->
+<!--    if(delMess != ""){-->
+<!--        toastr.success(delMess, 'delMess');-->
+<!--    }-->
+<!--</script>-->
+<!--<script>-->
+<!--    const addMess = $("#addMess").val();-->
+<!--    if(addMess != ""){-->
+<!--        toastr.success("Thêm mới thành công", "Thêm");-->
+<!--    }-->
+<!--</script>-->
+
+<!--<script src="bower_components/moment/min/moment.min.js"></script>-->
+<!--<script src="bower_components/moment/min/datetime-moment.js"></script>-->
 </body>
 
 </html>

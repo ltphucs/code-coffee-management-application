@@ -27,6 +27,13 @@ public class ProductDAO implements BaseDAO<Product> {
         return jdbcTemplate.queryForObject(sql, new ProductRowMapper(),values);
     }
 
+//    @Override
+//    public Product findByProductLine(Long productLineId) {
+//        String sql = "SELECT * FROM product WHERE id_productline = 6 or id_productline = 7";
+//        Object [] values ={productLineId};
+//        return jdbcTemplate.queryForObject(sql, new ProductRowMapper(),values);
+//    }
+
     @Override
     public boolean save(Product product) {
         String sql ="insert into product(name,inventory,price,id_productline,image,status) values(?,?,?,?,?,?)";
