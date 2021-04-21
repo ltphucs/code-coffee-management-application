@@ -112,14 +112,24 @@ products.get = function (id) {
     });
 };
 
+function setStatus(inventory, product){
+    if (inventory < 1){
+        return product.productStatus = 'OUT_OF_STOCK';
+    }
+    else {
+        return product.productStatus = 'STOCKING';
+    }
+}
+
 products.save = function () {
     if ($("#formAddEdit")) {
         if (!$('#id').val()) {
             let productObj = {};
             productObj.name = $('#productName').val();
+            // productObj.inventory = Number(0);
             productObj.price = Number($('#price').val());
-            productObj.inventory = Number($('#inventory').val());
             productObj.image = $('#image').val();
+            // productObj.productStatus = setStatus(productObj.inventory, productObj);
             //
             let productLineObj = {};
             productLineObj.id = $("#productLine").val();

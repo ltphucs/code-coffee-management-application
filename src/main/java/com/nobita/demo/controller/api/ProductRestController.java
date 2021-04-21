@@ -61,9 +61,7 @@ public class ProductRestController {
             }
             return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
-        product.setInventory(0L);
         productService.save(product);
-
         return new ResponseEntity<>(product,HttpStatus.CREATED);
     }
 
@@ -79,14 +77,8 @@ public class ProductRestController {
         }
         Product product1 = productService.findByID(id);
         if (product1 != null){
-            product1.setName(product.getName());
-            product1.setInventory(product.getInventory());
-            product1.setPrice(product.getPrice());
-            product1.setProductLine(product.getProductLine());
-            product1.setImage(product.getImage());
-            product1.setProductStatus(product.getProductStatus());
-            productService.save(product1);
-            return new ResponseEntity<>(product1,HttpStatus.OK);
+            productService.update(product);
+            return new ResponseEntity<>(product,HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

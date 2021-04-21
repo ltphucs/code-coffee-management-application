@@ -1,4 +1,5 @@
 let importProducts = {};
+let product = {};
 
 importProducts.initImportProductTable = function () {
     $("#importProducts-datatables").DataTable({
@@ -77,39 +78,78 @@ importProducts.initProduct = function (data) {
     })
 }
 
+function setStatus(inventory, product) {
+    if (inventory < 1) {
+        return product.productStatus = 'OUT_OF_STOCK';
+    } else {
+        return product.productStatus = 'STOCKING';
+    }
+}
+
+function updateProduct(product, id) {
+    $.ajax({
+        url: "http://localhost:8080/api/products/" + id,
+        method: "PUT",
+        dataType: "json",
+        contentType: "application/json",
+        data: JSON.stringify(product),
+        success: function () {
+            console.log("update product success");
+        },
+        error: function () {
+            console.log("Toang update product")
+        }
+    });
+}
+
+
 importProducts.save = function () {
     if ($('#formAddEdit')) {
         if (!$('#id').val()) {
-            let importProductObj = {};
-            importProductObj.quantity = Number($('#quantity').val());
-            importProductObj.price = Number($('#price').val());
-            importProductObj.totalPrice = importProductObj.quantity * importProductObj.price;
-            importProductObj.comment = $('#comment').val();
-
-            let productObj = {};
-            productObj.id = Number($("#products").val());
-            productObj.name = $("#products option:selected").html();
-            importProductObj.product = productObj;
-
             $.ajax({
-                url: "http://localhost:8080/api/importProducts/",
-                method: "POST",
+                url: "http://localhost:8080/api/products/" + Number($("#products").val()),
+                method: "GET",
                 dataType: "json",
-                contentType: "application/json",
-                data: JSON.stringify(importProductObj),
-                done: function () {
-                    console.log("POST DONE");
-                    $('#modalAddEdit').modal('hide');
-                    $("#importProducts-datatables").DataTable().ajax.reload();
-                    // $("#importProducts-datatables").DataTable().ajax.reload();
-                },
                 success: function (data) {
-                    console.log("POST success");
-                    $('#modalAddEdit').modal('hide');
-                    $("#importProducts-datatables").DataTable().ajax.reload();
-                    // importProducts.initImportProductTable();
+                    let importProductObj = {};
+                    importProductObj.quantity = Number($('#quantity').val());
+                    importProductObj.price = Number($('#price').val());
+                    importProductObj.totalPrice = importProductObj.quantity * importProductObj.price;
+                    importProductObj.comment = $('#comment').val();
+
+                    let productObj = {};
+                    productObj.id = Number($("#products").val());
+                    productObj.name = $("#products option:selected").html();
+                    productObj.inventory = data.product.inventory;
+                    productObj.inventory += Number(importProductObj.quantity);
+                    productObj.productStatus = setStatus(productObj.inventory, productObj);
+                    productObj.price = data.product.price;
+                    let productLine = {};
+                    productLine.id = data.product.productLine.id;
+                    productLine.name = data.product.productLine.name;
+                    productObj.productLine = productLine;
+                    productObj.image = data.product.image;
+                    importProductObj.product = productObj;
+
+                    $.ajax({
+                        url: "http://localhost:8080/api/importProducts/",
+                        method: "POST",
+                        dataType: "json",
+                        contentType: "application/json",
+                        data: JSON.stringify(importProductObj),
+                        success: function () {
+                            updateProduct(productObj, productObj.id);
+                            $('#modalAddEdit').modal('hide');
+                            $("#importProducts-datatables").DataTable().ajax.reload();
+
+                        },
+                        error: function () {
+                            console.log("Toang create import product ");
+                        }
+                    });
                 }
             });
+
         } else {
             let importProductObj = {};
             importProductObj.quantity = Number($('#quantity').val());
