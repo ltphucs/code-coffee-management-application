@@ -24,6 +24,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> findByProductLine(Long id){
+        return productDAO.findByProductLine(id);
+    }
+
+    @Override
     public boolean save(Product product) {
         return productDAO.save(product);
     }

@@ -1,52 +1,17 @@
-var areas = {};
+let areas = {};
 
-$(document).ready(function () {
-    // let orderStack = false;
-    // let tableStack = false;
-    // $(".table-item").click(function () {
-    //     if (!orderStack && !tableStack) {
-    //         $(".order-list").addClass("d-block");
-    //         orderStack = true;
-    //     }
-    //     if (!orderStack && tableStack) {
-    //         $(".table-add-form").removeClass("d-block");
-    //         tableStack = false;
-    //         $(".order-list").addClass("d-block");
-    //         orderStack = true;
-    //     }
-    // });
-    // $(".order-list-cancel-btn").click(function () {
-    //     $(".order-list").removeClass("d-block");
-    //     orderStack = false;
-    // });
-    // $(".table-add-btn").click(function () {
-    //     if (!tableStack && !orderStack) {
-    //         $(".table-add-form").addClass("d-block");
-    //         tableStack = true;
-    //     }
-    //     if (!tableStack && orderStack) {
-    //         $(".order-list").removeClass("d-block");
-    //         orderStack = false;
-    //         $(".table-add-form").addClass("d-block");
-    //         tableStack = true;
-    //     }
-    // });
-    // $(".table-add-cancel-btn").click(function () {
-    //     $(".table-add-form").removeClass("d-block");
-    //     tableStack = false;
-    // });
+let tables = {};
 
-
-    areas.initAreas = function () {
-        $.ajax({
-            url: "http://localhost:8080/api/areas/",
-            method: "GET",
-            dataType: "json",
-            success: function (data) {
-                $('#area-sql').empty();
-                $('#showOrdersTables').empty();
-                $('#showOrdersTables').append(
-                    `<div class="col mt-5">
+areas.initAreas = function () {
+    $.ajax({
+        url: "http://localhost:8080/api/areas/",
+        method: "GET",
+        dataType: "json",
+        success: function (data) {
+            $('#area-sql').empty();
+            $('#showOrdersTables').empty();
+            $('#showOrdersTables').append(
+                `<div class="col mt-5">
                             <div class="d-xl-flex align-items-xl-start">
                                 <ul class="nav nav-pills text-capitalize border rounded-0 d-xl-flex flex-column" id="area-sql"></ul>
                                 <div class="tab-content">
@@ -57,51 +22,147 @@ $(document).ready(function () {
                                 </div>
                             </div>
                         </div>`
-                );
-                $.each(data, function (i, v) {
-                    $('#area-sql').append(
-                        `<li class="nav-item w-100px">
-                            <a class="nav-link" role="tab" data-toggle="pill" href="#tab" onclick="areas.initTables(${v.id})">${v.name}</a>
+            );
+            $.each(data, function (i, v) {
+                $('#area-sql').append(
+                    `<li class="nav-item w-100px">
+                            <a class="nav-link" role="tab" data-toggle="pill" href="#tab" onclick="areas.showTables(${v.id})">${v.name}</a>
                         </li>`
-                    );
-                })
-            }
-        })
-    }
+                );
+            })
+        }
+    })
+}
 
-    areas.initTables = function (id) {
-        $.ajax({
-            url: "http://localhost:8080/api/tables/area/" + id,
-            method: "GET",
-            dataType: "JSON",
-            success: function (data) {
-                $('#tables-sql').empty();
-                $.each(data, function (i, v) {
-                    $('#tables-sql').append(
-                        `<div
+areas.showMenu = function () {
+    $.ajax({
+        url: "http://localhost:8080/api/menu",
+        method: "GET",
+        dataType: "JSON",
+        success: function (data) {
+            $.each(data, function (i, v) {
+                console.log(v);
+                $('#menuOrder').append(
+                    `<hr>
+                        <p>${v.nameProductLine}</p>
+                        <div class="coffee-search-items d-flex flex-row row">
+                        ${v.productList.map(p =>
+                        `<div class="coffee-search-item p-2 col-3 d-flex flex-column justify-content-center align-items-center">
+                                <div
+                                    class="mx-width-100 mx-height-100 w-100px h-100px bg-size-contain bg-pos-center d-flex flex-column justify-content-between"
+                                    style="background-image: url(assets/img/Tear_of_the_Goddess_Large.jpg);">
+                                    <span class="text-white price">Giá: ${p.price}</span>
+                                </div>
+                                <p class="product-name">${p.name}</p>
+                              </div>`
+                    ).join("")}
+                        </div>
+                    `
+                )
+            })
+        }
+    })
+}
+
+areas.showTables = function (id) {
+    tables.closeOrder();
+    tables.closeTable();
+    $.ajax({
+        url: "http://localhost:8080/api/areas/" + id + "/tables",
+        method: "GET",
+        dataType: "JSON",
+        success: function (data) {
+            $('#tables-sql').empty();
+            $.each(data, function (i, v) {
+                $('#tables-sql').append(
+                    `<div
                             class="d-flex flex-column justify-content-between align-items-center p-3 table-item">
-                            <i class="fl flaticon-table line-height-1" style="font-size: 110px" onclick="areas.createOrder()">
+                            <i class="fl flaticon-table line-height-1" style="font-size: 110px" onclick="tables.showFormAddOrder()">
                             </i>
                             <h5 class="d-lfex justify-content-center">${v.name}</h5>
                         </div>`
-                    )
-                })
-                $('#tables-sql').append(
-                    `<a href="#" class="d-flex flex-column justify-content-center align-items-center w-200px" onclick="areas.createTables()">
+                )
+            })
+            $('#tables-sql').append(
+                `<a href="javascript:;" class="d-flex flex-column justify-content-center align-items-center w-200px" onclick="tables.showFormAddTable()">
                     <div class="d-flex justify-content-center align-items-center table-add-btn">
                            <i class="fa fa-plus" style="font-size: 30px;" ></i>
                     </div>
-                    </a>`
-                )
-            }
-        })
-    }
+                </a>`
+            )
+        }
+    })
+}
 
-    areas.createOrder = function () {
-        $('#showTables').remove();
-        $('#showOrder').remove();
-        $('#showOrdersTables').append(
-            `<div class="col order-list" id="showOrder">
+tables.formAddTable = function () {
+    $('#showOrder').remove();
+    $('#showTables').remove();
+    $('#showOrdersTables').append(
+        `<div class="col table-add-form" id="showTables">
+                <div>
+                    <form method="post" id="formAdd"><h2 class="text-center mt-3">Thêm bàn mới</h2>
+                    <input type="hidden" name="id" id="id">
+                        <div class="form-group"><label>Tên bàn</label><input class="form-control" type="text" name="name" id="name"
+                                                                             placeholder="Mời nhập tên bàn"></div>
+                        <div class="form-group"><label>Mô tả/Ghi chú</label><textarea class="form-control" name="comment" id="comment"
+                                                                                      placeholder="Nhập ghi chú"
+                                                                                      rows="5"></textarea></div>
+                       <div class="form-group">
+                            <div class="form-row row">
+                                    <button class="btn btn-success col-6" type="button" onclick="tables.addTable()">Thực hiện</button>
+                                    <button class="btn btn-danger col-6 table-add-cancel-btn" type="button" onclick="tables.closeTable()">Hủy bỏ</button>
+                                </div>
+                        </div>
+                    </form>
+                </div>
+            </div>`
+    )
+}
+
+tables.OptionArea = function () {
+    $.ajax({
+        url: "http://localhost:8080/api/areas/",
+        method: "GET",
+        dataType: "JSON",
+        success: function (data) {
+            $('#area').append(
+                `<option value="" selected disabled>---Choose Area---</option>`
+            )
+            $.each(data, function (i, v) {
+                $('#area').append(
+                    `<option value="${v.id}">${v.name}</option>`
+                )
+            })
+        }
+    })
+}
+
+tables.initValidation = function () {
+    $('#showTables').validate({
+            rules: {
+                name: {
+                    required: true,
+                    minLength: 5
+                },
+            },
+            messages: {
+                name: {
+                    required: "Please enter table name",
+                    minLength: "Name table must be has 5 characters"
+                },
+            }
+        }
+    )
+}
+
+tables.addTable = function () {
+}
+
+tables.showFormAddOrder = function () {
+    $('#showTables').remove();
+    $('#showOrder').remove();
+    $('#showOrdersTables').append(
+        `<div class="col order-list" id="showOrder">
                 <div>
                 <div class="form-row">
                     <div class="col">
@@ -198,49 +259,30 @@ $(document).ready(function () {
                         <div class="form-group">
                             <div class="row">
                                 <button class="btn btn-success col-6 pt-2 pb-2" type="button">Thực hiện</button>
-                                <button class="btn btn-danger col-6 pt-2 pb-2 order-list-cancel-btn" type="button">Hủy
+                                <button class="btn btn-danger col-6 pt-2 pb-2 order-list-cancel-btn" type="button" onclick="areas.closeOrder()">Hủy
                                     bỏ
                                 </button>
                             </div>
                         </div>
                         </div>
             </div>`
-        )
+    )
+}
+
+tables.showFormAddTable = function () {
+    tables.formAddTable();
+    tables.OptionArea();
+}
+
+tables.closeTable = function () {
+    $('#showTables').empty();
+}
+
+tables.closeOrder = function () {
+    $('#showOrder').empty();
+}
+$(document).ready(function () {
+        areas.showMenu();
+        areas.initAreas();
     }
-
-    areas.createTables=function (){
-        $('#showOrder').remove();
-        $('#showTables').remove();
-        $('#showOrdersTables').append(
-            `<div class="col table-add-form" id="showTables">
-
-                <div>
-                    <form method="post"><h2 class="text-center mt-3">Thêm bàn mới</h2>
-                        <div class="form-group"><label>Tên bàn</label><input class="form-control" type="text" name="name"
-                                                                             placeholder="Mời nhập tên bàn"></div>
-                        <div class="form-group"><label>Trạng thái</label><select class="form-control">
-                            <optgroup label="This is a group">
-                                <option value="12" selected="">This is item 1</option>
-                                <option value="13">This is item 2</option>
-                                <option value="14">This is item 3</option>
-                            </optgroup>
-                        </select></div>
-                        <div class="form-group"><label>Mô tả/Ghi chú</label><textarea class="form-control" name="message"
-                                                                                      placeholder="Nhập ghi chú"
-                                                                                      rows="5"></textarea></div>
-                       <div class="form-group">
-                            <div class="form-row row">
-                                
-                                    <button class="btn btn-success col-6" type="button">Thực hiện</button>
-                                    <button class="btn btn-danger col-6 table-add-cancel-btn" type="button">Hủy bỏ</button>
-                                </div>
-                         
-                        </div>
-                    </form>
-                </div>
-            </div>`
-        )
-    }
-
-    areas.initAreas();
-});
+);

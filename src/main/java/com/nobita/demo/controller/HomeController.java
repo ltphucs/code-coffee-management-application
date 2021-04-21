@@ -12,7 +12,4 @@ public class HomeController {
     public String showOrder(){
         return "order-table";
     }
-
-
-
 }

@@ -33,16 +33,16 @@ public class AreaRestController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> get(@PathVariable("id") Long id) {
         Area area = areaService.findByID(id);
-        List<Table> tables = tableService.findByArea(id);
-
-        AreaDTO areaDTO = new AreaDTO();
-
-        areaDTO.setArea(area);
-        areaDTO.setTableList(tables);
         if (area != null) {
-            return new ResponseEntity<>(areaDTO, HttpStatus.OK);
+            return new ResponseEntity<>(area, HttpStatus.OK);
         }
         return new ResponseEntity<Area>(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping(value = "/{id}/tables",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getTableByArea(@PathVariable("id") Long id){
+        List<Table> tables=tableService.findByArea(id);
+        return new ResponseEntity<List<Table>>(tables,HttpStatus.OK);
     }
 
     @PostMapping
