@@ -38,13 +38,13 @@
 
                     <h1 class=" h3 mb-2 text-gray-800 ">Quản lý sản phẩm</h1>
                     <div class="d-flex">
-                        <a href="#" onclick="importProducts.addNew()" class="btn btn-primary btn-icon-split mr-3">
+                        <a href="javascript:;" onclick="importProducts.addNew()" class="btn btn-primary btn-icon-split mr-3">
                         <span class="icon text-white-50">
                             <i class="fas fa-plus"></i>
                         </span>
                             <span class="text">Dòng sản phẩm</span>
                         </a>
-                        <a href="#" onclick="importProducts.addNew()" class="btn btn-outline-primary btn-icon-split">
+                        <a href="javascript:;" onclick="importProducts.addNew()" class="btn btn-outline-primary btn-icon-split">
                         <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -75,6 +75,7 @@
                                     <th>Số lượng</th>
                                     <th>Giá</th>
                                     <th>Tổng giá</th>
+                                    <th>Ghi chú</th>
                                     <th>Chức năng</th>
                                 </tr>
                                 </tfoot>
@@ -122,11 +123,22 @@
 
                                 <div class="row form-group">
                                     <div class="col-3">
-                                        <label>Price</label>
+                                        <label>Giá</label>
                                     </div>
                                     <div class="col-9">
                                         <input class="form-control" type="text"
                                                name="price" id="price"
+                                               data-rule-required=true>
+                                    </div>
+                                </div>
+
+                                <div class="row form-group">
+                                    <div class="col-3">
+                                        <label>Ghi chú</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input class="form-control" type="text"
+                                               name="comment" id="comment"
                                                data-rule-required=true>
                                     </div>
                                 </div>

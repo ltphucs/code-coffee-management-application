@@ -66,19 +66,13 @@ public class ImportIngredientRestController {
         }
         ImportIngredient importIngredient1 = importIngredientService.findByID(id);
         if (importIngredient1 != null){
-            importIngredient1.setDateJoin(importIngredient.getDateJoin());
-            importIngredient1.setIngredient(importIngredient.getIngredient());
-            importIngredient1.setQuantity(importIngredient.getQuantity());
-            importIngredient1.setPrice(importIngredient.getPrice());
-            importIngredient1.setTotalPrice(importIngredient.getTotalPrice());
-            importIngredient1.setComment(importIngredient.getComment());
-            importIngredientService.update(importIngredient1);
-            return new ResponseEntity<>(importIngredient1,HttpStatus.OK);
+            importIngredientService.update(importIngredient);
+            return new ResponseEntity<>(importIngredient,HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping("{/id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") long id){
         ImportIngredient importIngredient1 = importIngredientService.findByID(id);
         if (importIngredient1 != null){

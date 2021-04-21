@@ -15,6 +15,7 @@ public class ImportProductRowMapper implements RowMapper<ImportProduct> {
         product.setId(rs.getLong("id_product"));
         product.setName(rs.getString("name_product"));
         importProduct.setProduct(product);
+        importProduct.setId(rs.getLong("id"));
         importProduct.setDateJoin(rs.getTimestamp("date_join").toLocalDateTime());
         importProduct.setQuantity(rs.getInt("quantity"));
         importProduct.setPrice(rs.getLong("price"));

@@ -35,7 +35,6 @@
 
                 <!-- Page Heading -->
                 <div class="d-flex justify-content-between mb-4">
-
                     <h1 class=" h3 mb-2 text-gray-800 ">Quản lý nguyên liệu</h1>
                     <div class="d-flex">
                         <a href="#" class="btn btn-primary btn-icon-split mr-3">
@@ -45,7 +44,7 @@
                             <span class="text">Dòng sản phẩm</span>
                         </a>
 <!--                        add-->
-                        <a href="#" onclick="importIngredient.addNew()" class="btn btn-outline-primary btn-icon-split">
+                        <a href="javascript:;" onclick="importIngredient.addNew()" class="btn btn-outline-primary btn-icon-split">
                         <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -67,6 +66,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
+
                             <table class="table table-bordered" id="import-ingredients-datatables" width="100%" cellspacing="0">
                                 <tfoot>
                                 <tr>
@@ -101,7 +101,7 @@
                         <!-- Modal body -->
                         <div class="modal-body">
                             <form id="formAddEditIngredients" name="formAddEditIngredients">
-                                <input hidden name="id" id="id" value="0">
+                                <input hidden name="id" id="id">
                                 <div class="row form-group">
                                     <div class="col-3">
                                         <label>Tên nguyên liệu</label>
@@ -119,8 +119,18 @@
                                         <input class="form-control" type="number"
                                                name="price" id="price"
                                                data-rule-required=true>
+                                        <small id="err-price" class="text-danger"></small>
                                     </div>
                                 </div>
+<!--                                <div class="row form-group">-->
+<!--                                    <div class="col col-md-3">-->
+<!--                                        <label  class=" form-control-label"></label>-->
+<!--                                    </div>-->
+<!--                                    <div class="col-12 col-md-9">-->
+<!--                                        <h6 style="color: red" class="alert alert-warning" th:if="${#fields.hasErrors('ingredient.name')}"-->
+<!--                                            th:errors="*{ingredient.name}">Name Error</h6>-->
+<!--                                    </div>-->
+<!--                                </div>-->
 
                                 <div class="row form-group">
                                     <div class="col-3">
@@ -130,17 +140,10 @@
                                         <input class="form-control" type="number"
                                                name="quantity" id="quantity"
                                                data-rule-required=true>
+                                        <small id="err-quantity" class="text-danger"></small>
                                     </div>
                                 </div>
 
-<!--                                <div class="row form-group">-->
-<!--                                    <div class="col-3">-->
-<!--                                        <label>Đơn vị</label>-->
-<!--                                    </div>-->
-<!--                                    <div class="col-9">-->
-<!--                                        <select class="form-control" name="listUnit" id="listUnit"></select>-->
-<!--                                    </div>-->
-<!--                                </div>-->
                                 <div class="row form-group">
                                     <div class="col-3">
                                         <label>Ghi chú</label>
@@ -158,7 +161,7 @@
 
                         <!-- Modal footer -->
                         <div class="modal-footer">
-                            <a href="javascript:" class="btn btn-primary"
+                            <a href="javascript:;" class="btn btn-primary"
                                onclick="importIngredient.save()">Save</a>
 
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -200,8 +203,40 @@
     </div>
 </div>
 
+<!--<div class="row">-->
+<!--    <input type="hidden" id="addMess">-->
+<!--</div>-->
+<!--<div class="row">-->
+<!--    <input type="hidden" id="updMess">-->
+<!--</div>-->
+<!--<div class="row">-->
+<!--    <input type="hidden" id="delMess">-->
+<!--</div>-->
+
 <th:block th:replace="layout/link.html :: scriptImport">
 </th:block>
+
+<!--<script>-->
+<!--    const updMess = $("#updMess").val();-->
+<!--    if(updMess != ""){-->
+<!--        toastr.success(updMess, 'updMess');-->
+<!--    }-->
+<!--</script>-->
+<!--<script>-->
+<!--    const delMess = $("#delMess").val();-->
+<!--    if(delMess != ""){-->
+<!--        toastr.success(delMess, 'delMess');-->
+<!--    }-->
+<!--</script>-->
+<!--<script>-->
+<!--    const addMess = $("#addMess").val();-->
+<!--    if(addMess != ""){-->
+<!--        toastr.success("Thêm mới thành công", "Thêm");-->
+<!--    }-->
+<!--</script>-->
+
+<!--<script src="bower_components/moment/min/moment.min.js"></script>-->
+<!--<script src="bower_components/moment/min/datetime-moment.js"></script>-->
 </body>
 
 </html>

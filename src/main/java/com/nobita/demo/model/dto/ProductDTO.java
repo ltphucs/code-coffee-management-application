@@ -7,8 +7,8 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class DemoDTO {
-    List<Product> productList;
+public class ProductDTO {
+    Product product;
 
     List<ImportProduct> importProductList;
 }

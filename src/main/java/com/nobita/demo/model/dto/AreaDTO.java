@@ -1,4 +1,4 @@
-package com.nobita.demo.dto;
+package com.nobita.demo.model.dto;
 
 import com.nobita.demo.model.Area;
 import com.nobita.demo.model.Table;
