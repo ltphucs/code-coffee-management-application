@@ -1,5 +1,7 @@
 let areas = {};
 
+let tables = {};
+
 areas.initAreas = function () {
     $.ajax({
         url: "http://localhost:8080/api/areas/",
@@ -32,9 +34,41 @@ areas.initAreas = function () {
     })
 }
 
-areas.showTables = function (id) {
+areas.showMenu = function () {
     $.ajax({
-        url: "http://localhost:8080/api/tables/area/" + id,
+        url: "http://localhost:8080/api/menu",
+        method: "GET",
+        dataType: "JSON",
+        success: function (data) {
+            $.each(data, function (i, v) {
+                console.log(v);
+                $('#menuOrder').append(
+                    `<hr>
+                        <p>${v.nameProductLine}</p>
+                        <div class="coffee-search-items d-flex flex-row row">
+                        ${v.productList.map(p =>
+                        `<div class="coffee-search-item p-2 col-3 d-flex flex-column justify-content-center align-items-center">
+                                <div
+                                    class="mx-width-100 mx-height-100 w-100px h-100px bg-size-contain bg-pos-center d-flex flex-column justify-content-between"
+                                    style="background-image: url(assets/img/Tear_of_the_Goddess_Large.jpg);">
+                                    <span class="text-white price">Giá: ${p.price}</span>
+                                </div>
+                                <p class="product-name">${p.name}</p>
+                              </div>`
+                    ).join("")}
+                        </div>
+                    `
+                )
+            })
+        }
+    })
+}
+
+areas.showTables = function (id) {
+    tables.closeOrder();
+    tables.closeTable();
+    $.ajax({
+        url: "http://localhost:8080/api/areas/" + id + "/tables",
         method: "GET",
         dataType: "JSON",
         success: function (data) {
@@ -43,24 +77,88 @@ areas.showTables = function (id) {
                 $('#tables-sql').append(
                     `<div
                             class="d-flex flex-column justify-content-between align-items-center p-3 table-item">
-                            <i class="fl flaticon-table line-height-1" style="font-size: 110px" onclick="areas.showFormAddOrder()">
+                            <i class="fl flaticon-table line-height-1" style="font-size: 110px" onclick="tables.showFormAddOrder()">
                             </i>
                             <h5 class="d-lfex justify-content-center">${v.name}</h5>
                         </div>`
                 )
             })
             $('#tables-sql').append(
-                `<a href="javascript:;" class="d-flex flex-column justify-content-center align-items-center w-200px" onclick="areas.showFormAddTable()">
+                `<a href="javascript:;" class="d-flex flex-column justify-content-center align-items-center w-200px" onclick="tables.showFormAddTable()">
                     <div class="d-flex justify-content-center align-items-center table-add-btn">
                            <i class="fa fa-plus" style="font-size: 30px;" ></i>
                     </div>
-                    </a>`
+                </a>`
             )
         }
     })
 }
 
-areas.showFormAddOrder = function () {
+tables.formAddTable = function () {
+    $('#showOrder').remove();
+    $('#showTables').remove();
+    $('#showOrdersTables').append(
+        `<div class="col table-add-form" id="showTables">
+                <div>
+                    <form method="post" id="formAdd"><h2 class="text-center mt-3">Thêm bàn mới</h2>
+                    <input type="hidden" name="id" id="id">
+                        <div class="form-group"><label>Tên bàn</label><input class="form-control" type="text" name="name" id="name"
+                                                                             placeholder="Mời nhập tên bàn"></div>
+                        <div class="form-group"><label>Mô tả/Ghi chú</label><textarea class="form-control" name="comment" id="comment"
+                                                                                      placeholder="Nhập ghi chú"
+                                                                                      rows="5"></textarea></div>
+                       <div class="form-group">
+                            <div class="form-row row">
+                                    <button class="btn btn-success col-6" type="button" onclick="tables.addTable()">Thực hiện</button>
+                                    <button class="btn btn-danger col-6 table-add-cancel-btn" type="button" onclick="tables.closeTable()">Hủy bỏ</button>
+                                </div>
+                        </div>
+                    </form>
+                </div>
+            </div>`
+    )
+}
+
+tables.OptionArea = function () {
+    $.ajax({
+        url: "http://localhost:8080/api/areas/",
+        method: "GET",
+        dataType: "JSON",
+        success: function (data) {
+            $('#area').append(
+                `<option value="" selected disabled>---Choose Area---</option>`
+            )
+            $.each(data, function (i, v) {
+                $('#area').append(
+                    `<option value="${v.id}">${v.name}</option>`
+                )
+            })
+        }
+    })
+}
+
+tables.initValidation = function () {
+    $('#showTables').validate({
+            rules: {
+                name: {
+                    required: true,
+                    minLength: 5
+                },
+            },
+            messages: {
+                name: {
+                    required: "Please enter table name",
+                    minLength: "Name table must be has 5 characters"
+                },
+            }
+        }
+    )
+}
+
+tables.addTable = function () {
+}
+
+tables.showFormAddOrder = function () {
     $('#showTables').remove();
     $('#showOrder').remove();
     $('#showOrdersTables').append(
@@ -171,103 +269,16 @@ areas.showFormAddOrder = function () {
     )
 }
 
-areas.formAddTable = function () {
-    $('#showOrder').remove();
-    $('#showTables').remove();
-    $('#showOrdersTables').append(
-        `<div class="col table-add-form" id="showTables">
-                <div>
-                    <form method="post" id="formAdd"><h2 class="text-center mt-3">Thêm bàn mới</h2>
-                    <input type="hidden" name="id" id="id">
-                        <div class="form-group"><label>Tên bàn</label><input class="form-control" type="text" name="name" id="name"
-                                                                             placeholder="Mời nhập tên bàn"></div>
-                        <div class="form-group"><label>Khu vực</label><select class="form-control" id="area" required>
-                        </select></div>
-                        <div class="form-group"><label>Mô tả/Ghi chú</label><textarea class="form-control" name="comment" id="comment"
-                                                                                      placeholder="Nhập ghi chú"
-                                                                                      rows="5"></textarea></div>
-                       <div class="form-group">
-                            <div class="form-row row">
-                                    <button class="btn btn-success col-6" type="button" onclick="areas.addTable()">Thực hiện</button>
-                                    <button class="btn btn-danger col-6 table-add-cancel-btn" type="button" onclick="areas.closeTable()">Hủy bỏ</button>
-                                </div>
-                        </div>
-                    </form>
-                </div>
-            </div>`
-    )
+tables.showFormAddTable = function () {
+    tables.formAddTable();
+    tables.OptionArea();
 }
 
-areas.OptionArea = function () {
-    $.ajax({
-        url: "http://localhost:8080/api/areas/",
-        method: "GET",
-        dataType: "JSON",
-        success: function (data) {
-            $('#area').append(
-                `<option value="" selected disabled>---Choose Area---</option>`
-            )
-            $.each(data, function (i, v) {
-                $('#area').append(
-                    `<option value="${v.id}">${v.name}</option>`
-                )
-            })
-        }
-    })
-}
-
-areas.showListByProductline = function (productline) {
-    $.ajax({
-        url: "http://localhost:8080/api/products" + productline,
-        method: "GET",
-        dataType: "JSON",
-        success: function (data) {
-                $.each(data, function (i, v) {
-                    $('#menuOrder').append(
-                    `<div className="coffee-search-items d-flex flex-row row">
-                        <div
-                            className="coffee-search-item p-2 col-3 d-flex flex-column justify-content-center align-items-center">
-                            <div
-                                className="mx-width-100 mx-height-100 w-100px h-100px bg-size-contain bg-pos-center d-flex flex-column justify-content-between"
-                                style="background-image: url(assets/img/Tear_of_the_Goddess_Large.jpg);"><span
-                                className="text-white price">Giá: ${v.price}</span></div>
-                            <p className="product-name">${v.name}</p></div>
-                        <div>`
-                    )
-                })
-        }
-    })
-}
-
-areas.showMenu = function () {
-    $.ajax({
-        url: "http://localhost:8080/api/menu",
-        method: "GET",
-        dataType: "JSON",
-        success: function (data) {
-            $.each(data, function (i, v) {
-                $('#menuOrder').append(
-                    `<hr>
-                        <p>${v.productLineList.name}</p>`
-                )
-            })
-        }
-    })
-}
-
-areas.addTable = function () {
-}
-
-areas.showFormAddTable = function () {
-    areas.formAddTable();
-    areas.OptionArea();
-}
-
-areas.closeTable = function () {
+tables.closeTable = function () {
     $('#showTables').empty();
 }
 
-areas.closeOrder = function () {
+tables.closeOrder = function () {
     $('#showOrder').empty();
 }
 $(document).ready(function () {
