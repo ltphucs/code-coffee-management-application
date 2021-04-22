@@ -96,12 +96,12 @@ function updateProduct(product, id) {
         success: function () {
             console.log("update product success");
         },
-        error: function () {
-            console.log("Toang update product")
+        error: function (mess) {
+            console.log(mess.responseJSON);
         }
     });
-}
 
+}
 
 importProducts.save = function () {
     if ($('#formAddEdit')) {
@@ -124,6 +124,7 @@ importProducts.save = function () {
                     productObj.inventory += Number(importProductObj.quantity);
                     productObj.productStatus = setStatus(productObj.inventory, productObj);
                     productObj.price = data.product.price;
+
                     let productLine = {};
                     productLine.id = data.product.productLine.id;
                     productLine.name = data.product.productLine.name;
@@ -139,6 +140,7 @@ importProducts.save = function () {
                         data: JSON.stringify(importProductObj),
                         success: function () {
                             updateProduct(productObj, productObj.id);
+                            toastr.success("Nhập sản phẩm thành công");
                             $('#modalAddEdit').modal('hide');
                             $("#importProducts-datatables").DataTable().ajax.reload();
 
@@ -151,31 +153,67 @@ importProducts.save = function () {
             });
 
         } else {
-            let importProductObj = {};
-            importProductObj.quantity = Number($('#quantity').val());
-            importProductObj.price = Number($('#price').val());
-            importProductObj.totalPrice = importProductObj.quantity * importProductObj.price;
-            importProductObj.comment = $('#comment').val();
-            importProductObj.id = Number($('#id').val());
-
-            let productObj = {};
-            productObj.id = Number($("#products").val());
-            productObj.name = $("#products option:selected").html();
-            importProductObj.product = productObj;
-
             $.ajax({
-                url: "http://localhost:8080/api/importProducts/" + importProductObj.id,
-                method: "PUT",
+                url: "http://localhost:8080/api/products/" + Number($("#products").val()),
+                method: "GET",
                 dataType: "json",
-                contentType: "application/json",
-                data: JSON.stringify(importProductObj),
                 success: function (data) {
-                    $('#modalAddEdit').modal('hide');
-                    $("#importProducts-datatables").DataTable().ajax.reload();
+                    let importProductObj = {};
+                    importProductObj.quantity = Number($('#quantity').val());
+                    importProductObj.price = Number($('#price').val());
+                    importProductObj.totalPrice = importProductObj.quantity * importProductObj.price;
+                    importProductObj.comment = $('#comment').val();
+                    importProductObj.id = Number($('#id').val());
+
+                    let productObj = {};
+                    productObj.id = Number($("#products").val());
+                    productObj.name = $("#products option:selected").html();
+                    productObj.inventory = data.product.inventory;
+                    productObj.inventory += Number(importProductObj.quantity);
+                    productObj.productStatus = setStatus(productObj.inventory, productObj);
+                    productObj.price = data.product.price;
+
+                    let productLine = {};
+                    productLine.id = data.product.productLine.id;
+                    productLine.name = data.product.productLine.name;
+                    productObj.productLine = productLine;
+                    productObj.image = data.product.image;
+                    importProductObj.product = productObj;
+
+                    $.ajax({
+                        url: "http://localhost:8080/api/importProducts/" + importProductObj.id,
+                        method: "PUT",
+                        dataType: "json",
+                        contentType: "application/json",
+                        data: JSON.stringify(importProductObj),
+                        success: function () {
+                            updateProduct(productObj, productObj.id);
+                            toastr.success(`Cập nhật "nhập sản phẩm" thành công`);
+                            $('#modalAddEdit').modal('hide');
+                            $("#importProducts-datatables").DataTable().ajax.reload();
+                        },
+                        error: function () {
+                            console.log("Toang create import product ");
+                        }
+                    });
                 }
             });
         }
     }
+}
+
+function deleteImportProduct(id){
+    $.ajax({
+        url: "http://localhost:8080/api/importProducts/" + id,
+        method: "DELETE",
+        dataType: "json",
+        success: function (data) {
+            console.log(data);
+            toastr.success(`Xóa "nhập sản phẩm" thành công`);
+            $('#modalAddEdit').modal('hide');
+            $("#importProducts-datatables").DataTable().ajax.reload();
+        }
+    })
 }
 
 importProducts.delete = function (id) {
@@ -194,17 +232,36 @@ importProducts.delete = function (id) {
             // console.log(id);
             if (result) {
                 $.ajax({
-                    url: "http://localhost:8080/api/importProducts/" + id,
-                    method: "DELETE",
+                    url: "http://localhost:8080/api/products/" + Number($("#products").val()),
+                    method: "GET",
                     dataType: "json",
-
                     success: function (data) {
-                        console.log("aaaaaaaa");
-                        $('#modalAddEdit').modal('hide');
-                        $("#importProducts-datatables").DataTable().ajax.reload();
-                        // importProducts.initImportProductTable();
+                        let importProductObj = {};
+                        importProductObj.quantity = Number($('#quantity').val());
+                        importProductObj.price = Number($('#price').val());
+                        importProductObj.totalPrice = importProductObj.quantity * importProductObj.price;
+                        importProductObj.comment = $('#comment').val();
+                        importProductObj.id = Number($('#id').val());
+
+                        let productObj = {};
+                        productObj.id = Number($("#products").val());
+                        productObj.name = $("#products option:selected").html();
+                        productObj.inventory = data.product.inventory;
+                        productObj.inventory -= Number(importProductObj.quantity);
+                        productObj.productStatus = setStatus(productObj.inventory, productObj);
+                        productObj.price = data.product.price;
+
+                        let productLine = {};
+                        productLine.id = data.product.productLine.id;
+                        productLine.name = data.product.productLine.name;
+                        productObj.productLine = productLine;
+                        productObj.image = data.product.image;
+                        importProductObj.product = productObj;
+                        updateProduct(productObj,productObj.id);
+                        console.log("update done");
+                        deleteImportProduct(id);
                     }
-                });
+                })
             }
         }
     });
