@@ -29,32 +29,11 @@ importIngredient.initImportIngredients = function () {
     });
 }
 
-//  format datetime
-importIngredient.formatDateIngredients = function formatDate(dateString, notGetTime) {
-    if (dateString) {
-        try {
-            const d = new Date(Date.parse(dateString));
-            let dateStringFormated = (d.getDate()) + "/" + ConvertStr(d.getMonth() + 1) + "/" + d.getFullYear().toString()
-            if (!notGetTime)
-                dateStringFormated += " " + ConvertStr(d.getHours()) + ":" + ConvertStr(d.getMinutes());
-            return dateStringFormated;
-        } catch (error) {
-            return dateString;
-        }
-    }
-    return dateString;
-}
-
-
-
-
-
 
 // show modal
 importIngredient.addNew = function(){
     $('#modalTitle').html("Thêm mới nguyên liệu")
     $('#modalAddEdit').modal('show');
-
 };
 
 // reset form
@@ -206,5 +185,4 @@ importIngredient.delete = function(id){
 $(document).ready(function () {
     importIngredient.initImportIngredients();
     importIngredient.initListIngredients();
-    importIngredient.formatDateIngredients();
 });

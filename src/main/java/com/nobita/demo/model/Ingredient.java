@@ -19,7 +19,11 @@ public class Ingredient {
 
     @Override
     public String toString() {
-        return "name: " + name;
-
+        return "Ingredient{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", unit=" + unit +
+                ", comment='" + comment + '\'' +
+                '}';
     }
 }

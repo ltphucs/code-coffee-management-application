@@ -21,7 +21,7 @@ public class IngredientDAO implements BaseDAO<com.nobita.demo.model.Ingredient>{
 
     @Override
     public com.nobita.demo.model.Ingredient findByID(Long id) {
-        String sql="select i.* ,u.name as name_unit from ingredient i left join unit u on u.id=i.id_unit";
+        String sql="select i.* ,u.name as name_unit from ingredient i left join unit u on u.id=i.id_unit where i.id = ?";
         Object[]values ={id};
         return jdbcTemplate.queryForObject(sql,new IngredientRowMapper(),values);
     }
