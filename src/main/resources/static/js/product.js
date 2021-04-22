@@ -13,20 +13,111 @@ products.initProductTable = function () {
             {data: "inventory", name: "inventory", title: "Số lượng trong kho"},
             {data: "price", name: "price", title: "Giá"},
             {data: "productLine.name", name: "productLine.name", title: "Dòng sản phẩm"},
-            {data: "productStatus", name: "productStatus", title: "Trạng thái"},
+            {
+                data: "productStatus", name: "productStatus", title: "Trạng thái",
+                "render": function (data, type, row, meta) {
+                    // console.log(row);
+                    return products.setRenderProductStatus(data, row);
+                }
+            },
             {
                 data: "id", name: "action", title: "Chức năng", orderable: false,
                 "render": function (data, type, row, meta) {
                     return "<a class='mr-2' href='javascript:;' title='Chỉnh sửa' onclick='products.get(" + data + ")'><i class='fa fa-edit'></i></a> " +
-                        "<a class='mr-2' href='javascript:;' title='Xóa' onclick='products.delete(" + data + ")' ><i class='fa fa-trash'></i></a>"+
-                       "<a class='mr-2' href='javascript:;' title='Thông tin chi tiết' onclick='products.viewTable(" + data + ")' ><i class='fas fa-eye'></i></a>"
+                        "<a class='mr-2' href='javascript:;' title='Xóa' onclick='products.delete(" + data + ")' ><i class='fa fa-trash'></i></a>" +
+                        "<a class='mr-2' href='javascript:;' title='Thông tin chi tiết' onclick='products.viewTable(" + data + ")' ><i class='fas fa-eye'></i></a>"
                 }
             },
         ],
     });
 }
 
-products.viewTable = function (id){
+products.setRenderProductStatus = function (data, row) {
+    if (data === "OUT_OF_STOCK") {
+        return `<a href="javascript:;" class="btn btn-warning btn-icon-split" onclick="products.switchProductStatus(${row.id})">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </span>
+                    <span class="text">Hết hàng</span>
+                </a>`;
+    }
+    if (data === "STOCKING") {
+        return `<a href="javascript:;" class="btn btn-success btn-icon-split" onclick="products.switchProductStatus(${row.id})">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-check"></i>
+                    </span>
+                    <span class="text">Còn hàng</span>
+                </a>`;
+    }
+    if (data === "STOP_SELLING") {
+        return `<a href="javascript:;" class="btn btn-danger btn-icon-split" onclick="products.switchProductStatus(${row.id})">
+                    <span class="icon text-white-50">
+                        <i class="fas fa-trash"></i>
+                    </span>
+                    <span class="text">Ngừng kinh doanh</span>
+                </a>`;
+    }
+}
+
+products.switchProductStatus = function (id) {
+    $.ajax({
+        url: `http://localhost:8080/api/products/${id}`,
+        method: "GET",
+        dataType: "json",
+        success: function (data) {
+            let productObj = {};
+            productObj.id = data.product.id;
+            productObj.name = data.product.name;
+            productObj.image = data.product.image;
+            productObj.inventory = data.product.inventory;
+            productObj.price = data.product.price;
+            productObj.productStatus = data.product.productStatus;
+            switch (productObj.productStatus) {
+                case `STOCKING`:
+                    productObj.productStatus = `STOP_SELLING`;
+                    break;
+                case `STOP_SELLING`:
+                    if (data.product.inventory > 0)
+                        productObj.productStatus = `STOCKING`;
+                    else productObj.productStatus = `OUT_OF_STOCK`;
+                    break;
+                case `OUT_OF_STOCK`:
+                    if (data.product.inventory > 0)
+                        productObj.productStatus = `STOCKING`;
+                    else productObj.productStatus = `OUT_OF_STOCK`;
+                    break;
+            }
+            let productLineObj = {};
+            productLineObj.id = data.product.productLine.id;
+            productLineObj.name = data.product.productLine.name;
+            productObj.productLine = productLineObj;
+            products.updateProduct(productObj, productObj.id);
+        },
+        error: function (err) {
+            console.log(err.responseJSON);
+        }
+    })
+
+}
+
+
+products.updateProduct =  function (product, id){
+    $.ajax({
+        url: `http://localhost:8080/api/products/${id}`,
+        method: "PUT",
+        dataType: "json",
+        contentType: "application/json",
+        data: JSON.stringify(product),
+        success: function () {
+            $("#products-datatables").DataTable().ajax.reload();
+        },
+        error: function (err) {
+            console.log(err.responseJSON);
+        }
+    })
+}
+
+products.viewTable = function (id) {
     $.ajax({
         url: "http://localhost:8080/api/products/" + id,
         method: "GET",
@@ -47,7 +138,7 @@ products.viewTable = function (id){
     });
 }
 
-products.showView = function (){
+products.showView = function () {
     $('#modalViewTitle').html("Chi tiết sản phẩm");
     products.resetForm()
     $('#modalView').modal('show')
@@ -141,11 +232,10 @@ products.get = function (id) {
     });
 };
 
-function setStatus(inventory, product){
-    if (inventory < 1){
+function setStatus(inventory, product) {
+    if (inventory < 1) {
         return product.productStatus = 'OUT_OF_STOCK';
-    }
-    else {
+    } else {
         return product.productStatus = 'STOCKING';
     }
 }
@@ -184,13 +274,13 @@ products.save = function () {
                 url: `http://localhost:8080/api/products/${$('#id').val()}`,
                 method: "GET",
                 dataType: "json",
-                success: function (data){
+                success: function (data) {
                     let productObj = {};
                     productObj.name = $('#productName').val();
                     productObj.inventory = data.product.inventory;
                     productObj.price = Number($('#price').val());
                     productObj.image = $('#image').val();
-                    productObj.productStatus = setStatus(productObj.inventory,productObj);
+                    productObj.productStatus = setStatus(productObj.inventory, productObj);
                     productObj.id = $('#id').val();
 
                     let productLineObj = {};
@@ -208,7 +298,7 @@ products.save = function () {
                             $('#modalAddEdit').modal('hide');
                             $("#products-datatables").DataTable().ajax.reload();
                         },
-                        error: function (err){
+                        error: function (err) {
                             console.log(err.responseJSON);
                         }
 
