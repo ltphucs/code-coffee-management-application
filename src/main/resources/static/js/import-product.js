@@ -202,7 +202,7 @@ importProducts.save = function () {
     }
 }
 
-function deleteImportProduct(id){
+function deleteImportProduct(id) {
     $.ajax({
         url: "http://localhost:8080/api/importProducts/" + id,
         method: "DELETE",
@@ -229,35 +229,31 @@ importProducts.delete = function (id) {
             }
         },
         callback: function (result) {
-            // console.log(id);
             if (result) {
                 $.ajax({
-                    url: "http://localhost:8080/api/products/" + Number($("#products").val()),
+                    url: `http://localhost:8080/api/importProducts/${id}`,
                     method: "GET",
                     dataType: "json",
                     success: function (data) {
-                        let importProductObj = {};
-                        importProductObj.quantity = Number($('#quantity').val());
-                        importProductObj.price = Number($('#price').val());
-                        importProductObj.totalPrice = importProductObj.quantity * importProductObj.price;
-                        importProductObj.comment = $('#comment').val();
-                        importProductObj.id = Number($('#id').val());
-
-                        let productObj = {};
-                        productObj.id = Number($("#products").val());
-                        productObj.name = $("#products option:selected").html();
-                        productObj.inventory = data.product.inventory;
-                        productObj.inventory -= Number(importProductObj.quantity);
+                        let productObj = data.product;
+                        productObj.inventory -= data.quantity;
+                        if (productObj.inventory < 0)
+                            productObj.inventory = 0;
                         productObj.productStatus = setStatus(productObj.inventory, productObj);
-                        productObj.price = data.product.price;
-
-                        let productLine = {};
-                        productLine.id = data.product.productLine.id;
-                        productLine.name = data.product.productLine.name;
-                        productObj.productLine = productLine;
-                        productObj.image = data.product.image;
-                        importProductObj.product = productObj;
-                        updateProduct(productObj,productObj.id);
+                        // productObj.id = Number(data.product.id)
+                        // productObj.name = $("#products option:selected").html();
+                        // productObj.inventory = data.product.inventory;
+                        // productObj.inventory -= Number(importProductObj.quantity);
+                        // productObj.productStatus = setStatus(productObj.inventory, productObj);
+                        // productObj.price = data.product.price;
+                        //
+                        // let productLine = {};
+                        // productLine.id = data.product.productLine.id;
+                        // productLine.name = data.product.productLine.name;
+                        // productObj.productLine = productLine;
+                        // productObj.image = data.product.image;
+                        // importProductObj.product = productObj;
+                        updateProduct(productObj, productObj.id);
                         console.log("update done");
                         deleteImportProduct(id);
                     }
