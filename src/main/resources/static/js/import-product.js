@@ -30,7 +30,7 @@ importProducts.initImportProductTable = function () {
 importProducts.addNew = function () {
     $('#modalTitle').html("Nhập sản phẩm");
     importProducts.resetForm();
-    $('#modalAddEdit').modal('show');
+    $('#modalAddEditIP').modal('show');
 }
 
 importProducts.resetForm = function () {
@@ -43,21 +43,25 @@ importProducts.resetForm = function () {
 }
 
 importProducts.get = function (id) {
-    console.log('get :' + id);
+    // console.log('get :' + id);
     $.ajax({
         url: "http://localhost:8080/api/importProducts/" + id,
         method: "GET",
         dataType: "json",
         success: function (data) {
-            console.log(data);
+            // console.log(data);
             $('#formAddEdit')[0].reset();
-            $('#modalTitle').html("Edit product");
+            $('#modalTitle').html("Cập nhật");
             $('#productName').val(data.product.id);
+            $('#old-quantity').val(data.quantity);
             $('#quantity').val(data.quantity);
             $('#price').val(data.price);
             $('#comment').val(data.comment);
             $('#id').val(data.id);
-            $('#modalAddEdit').modal('show');
+            $("#products option:selected").html(data.product.name);
+            $("#products").val(data.product.id);
+            $('#modalAddEditIP').modal('show');
+
         }
     });
 };
@@ -104,10 +108,11 @@ function updateProduct(product, id) {
 }
 
 importProducts.save = function () {
+    // console.log(Number($("#products option:selected").html()));
     if ($('#formAddEdit')) {
         if (!$('#id').val()) {
             $.ajax({
-                url: "http://localhost:8080/api/products/" + Number($("#products").val()),
+                url: `http://localhost:8080/api/products/${Number($("#products").val())}`,
                 method: "GET",
                 dataType: "json",
                 success: function (data) {
@@ -117,19 +122,9 @@ importProducts.save = function () {
                     importProductObj.totalPrice = importProductObj.quantity * importProductObj.price;
                     importProductObj.comment = $('#comment').val();
 
-                    let productObj = {};
-                    productObj.id = Number($("#products").val());
-                    productObj.name = $("#products option:selected").html();
-                    productObj.inventory = data.product.inventory;
+                    let productObj = data.product;
                     productObj.inventory += Number(importProductObj.quantity);
                     productObj.productStatus = setStatus(productObj.inventory, productObj);
-                    productObj.price = data.product.price;
-
-                    let productLine = {};
-                    productLine.id = data.product.productLine.id;
-                    productLine.name = data.product.productLine.name;
-                    productObj.productLine = productLine;
-                    productObj.image = data.product.image;
                     importProductObj.product = productObj;
 
                     $.ajax({
@@ -141,12 +136,12 @@ importProducts.save = function () {
                         success: function () {
                             updateProduct(productObj, productObj.id);
                             toastr.success("Nhập sản phẩm thành công");
-                            $('#modalAddEdit').modal('hide');
+                            $('#modalAddEditIP').modal('hide');
                             $("#importProducts-datatables").DataTable().ajax.reload();
 
                         },
-                        error: function () {
-                            console.log("Toang create import product ");
+                        error: function (err) {
+                            console.log(err.responseJSON);
                         }
                     });
                 }
@@ -154,7 +149,7 @@ importProducts.save = function () {
 
         } else {
             $.ajax({
-                url: "http://localhost:8080/api/products/" + Number($("#products").val()),
+                url: `http://localhost:8080/api/products/${Number($("#products").val())}`,
                 method: "GET",
                 dataType: "json",
                 success: function (data) {
@@ -165,19 +160,14 @@ importProducts.save = function () {
                     importProductObj.comment = $('#comment').val();
                     importProductObj.id = Number($('#id').val());
 
-                    let productObj = {};
-                    productObj.id = Number($("#products").val());
-                    productObj.name = $("#products option:selected").html();
-                    productObj.inventory = data.product.inventory;
+                    let productObj = data.product;
+                    // console.log($("#products").val());
+                    let oldInventory = Number($('#old-quantity').val());
+
+                    productObj.inventory -= oldInventory;
                     productObj.inventory += Number(importProductObj.quantity);
                     productObj.productStatus = setStatus(productObj.inventory, productObj);
-                    productObj.price = data.product.price;
 
-                    let productLine = {};
-                    productLine.id = data.product.productLine.id;
-                    productLine.name = data.product.productLine.name;
-                    productObj.productLine = productLine;
-                    productObj.image = data.product.image;
                     importProductObj.product = productObj;
 
                     $.ajax({
@@ -189,7 +179,7 @@ importProducts.save = function () {
                         success: function () {
                             updateProduct(productObj, productObj.id);
                             toastr.success(`Cập nhật "nhập sản phẩm" thành công`);
-                            $('#modalAddEdit').modal('hide');
+                            $('#modalAddEditIP').modal('hide');
                             $("#importProducts-datatables").DataTable().ajax.reload();
                         },
                         error: function () {
@@ -210,7 +200,7 @@ function deleteImportProduct(id) {
         success: function (data) {
             console.log(data);
             toastr.success(`Xóa "nhập sản phẩm" thành công`);
-            $('#modalAddEdit').modal('hide');
+            $('#modalAddEditIP').modal('hide');
             $("#importProducts-datatables").DataTable().ajax.reload();
         }
     })
@@ -240,19 +230,6 @@ importProducts.delete = function (id) {
                         if (productObj.inventory < 0)
                             productObj.inventory = 0;
                         productObj.productStatus = setStatus(productObj.inventory, productObj);
-                        // productObj.id = Number(data.product.id)
-                        // productObj.name = $("#products option:selected").html();
-                        // productObj.inventory = data.product.inventory;
-                        // productObj.inventory -= Number(importProductObj.quantity);
-                        // productObj.productStatus = setStatus(productObj.inventory, productObj);
-                        // productObj.price = data.product.price;
-                        //
-                        // let productLine = {};
-                        // productLine.id = data.product.productLine.id;
-                        // productLine.name = data.product.productLine.name;
-                        // productObj.productLine = productLine;
-                        // productObj.image = data.product.image;
-                        // importProductObj.product = productObj;
                         updateProduct(productObj, productObj.id);
                         console.log("update done");
                         deleteImportProduct(id);

@@ -64,14 +64,8 @@ products.switchProductStatus = function (id) {
         url: `http://localhost:8080/api/products/${id}`,
         method: "GET",
         dataType: "json",
-        success: function (data) {
-            let productObj = {};
-            productObj.id = data.product.id;
-            productObj.name = data.product.name;
-            productObj.image = data.product.image;
-            productObj.inventory = data.product.inventory;
-            productObj.price = data.product.price;
-            productObj.productStatus = data.product.productStatus;
+        success: function (data, type, row, meta) {
+            let productObj = data.product;
             switch (productObj.productStatus) {
                 case `STOCKING`:
                     productObj.productStatus = `STOP_SELLING`;
@@ -87,11 +81,9 @@ products.switchProductStatus = function (id) {
                     else productObj.productStatus = `OUT_OF_STOCK`;
                     break;
             }
-            let productLineObj = {};
-            productLineObj.id = data.product.productLine.id;
-            productLineObj.name = data.product.productLine.name;
-            productObj.productLine = productLineObj;
             products.updateProduct(productObj, productObj.id);
+            $("#products-datatables").DataTable().ajax.reload();
+            // $("#products-datatables").row({selected:true}).data(data);
         },
         error: function (err) {
             console.log(err.responseJSON);
@@ -109,9 +101,9 @@ products.updateProduct =  function (product, id){
         contentType: "application/json",
         data: JSON.stringify(product),
         success: function () {
-            $("#products-datatables").DataTable().ajax.reload();
         },
         error: function (err) {
+            console.log("err update product");
             console.log(err.responseJSON);
         }
     })

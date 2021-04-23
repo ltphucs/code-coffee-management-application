@@ -80,7 +80,7 @@
             <!-- /.container-fluid -->
 
             <!-- The Modal -->
-            <div class="modal" id="modalAddEdit" name="modalAddEdit">
+            <div class="modal" id="modalAddEditIP" name="modalAddEditIP">
                 <div class="modal-dialog">
                     <div class="modal-content">
 
@@ -108,6 +108,9 @@
                                         <label>Số lượng</label>
                                     </div>
                                     <div class="col-9">
+                                        <input class="form-control" type="hidden"
+                                               name="quantity" id="old-quantity"
+                                               data-rule-required=true>
                                         <input class="form-control" type="text"
                                                name="quantity" id="quantity"
                                                data-rule-required=true>
