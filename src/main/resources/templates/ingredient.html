@@ -37,14 +37,14 @@
                 <div class="d-flex justify-content-between mb-4">
                     <h1 class=" h3 mb-2 text-gray-800 ">Quản lý nguyên liệu</h1>
                     <div class="d-flex">
-                        <a href="javascript:;" class="btn btn-primary btn-icon-split mr-3">
+                        <a href="javascript:;" onclick="ingredients.listTable()" class="btn btn-primary btn-icon-split mr-3">
                         <span class="icon text-white-50">
                             <i class="fas fa-plus"></i>
                         </span>
-                            <span class="text">Dòng sản phẩm</span>
+                            <span class="text">Danh sách đơn vị sản phẩm</span>
                         </a>
-<!--                        add-->
-                        <a href="javascript:;" onclick="importIngredient.addNew()" class="btn btn-outline-primary btn-icon-split">
+                        <!--  add-->
+                        <a href="javascript:;" onclick="ingredients.addNew()" class="btn btn-outline-primary btn-icon-split">
                         <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -67,15 +67,11 @@
                     <div class="card-body">
                         <div class="table-responsive">
 
-                            <table class="table table-bordered" id="import-ingredients-datatables" width="100%" cellspacing="0">
+                            <table class="table table-bordered" id="ingredients-datatables" width="100%" cellspacing="0">
                                 <tfoot>
                                 <tr>
                                     <th>Tên nguyên liệu</th>
-                                    <th>Ngày nhập</th>
-                                    <th>Giá</th>
-                                    <th>Số lượng</th>
                                     <th>Đơn vị</th>
-                                    <th>Tổng giá</th>
                                     <th>Ghi chú</th>
                                     <th>Chức năng</th>
                                 </tr>
@@ -85,53 +81,40 @@
                     </div>
                 </div>
             </div>
-            <!-- /.container-fluid -->
 
-            <!-- The Modal -->
-            <div class="modal" id="modalAddEdit" name="modalAddEdit">
+<!--        form mmodal add and save ingredients    -->
+            <div class="modal" id="modalSaveIngredient" name="modalSaveIngredient">
                 <div class="modal-dialog">
                     <div class="modal-content">
 
                         <!-- Modal Header -->
                         <div class="modal-header">
-                            <h4 class="modal-title" id="modalTitle" name="modalTitle"></h4>
+                            <h4 class="modal-title" id="modalTitleIngredient" modalTitleIngredient="modalTitle"></h4>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
 
                         <!-- Modal body -->
                         <div class="modal-body">
-                            <form id="formAddEditIngredients" name="formAddEditIngredients">
-                                <input hidden name="id" id="id">
+                            <form id="formSaveIngredients" name="formSaveIngredients">
+                                <input hidden name="idIngredient" id="idIngredient">
                                 <div class="row form-group">
                                     <div class="col-3">
                                         <label>Tên nguyên liệu</label>
                                     </div>
                                     <div class="col-9">
-                                        <select class="form-control" name="nameIngredients" id="nameIngredients"></select>
+                                        <input class="form-control" type="text"
+                                               name="nameIngredient" id="nameIngredient"
+                                               data-rule-required=true>
+                                        <small id="err-nameIngredient" name="err-nameIngredient" class="text-danger"></small>
                                     </div>
                                 </div>
 
                                 <div class="row form-group">
                                     <div class="col-3">
-                                        <label>Giá</label>
+                                        <label>Tên đơn vị</label>
                                     </div>
                                     <div class="col-9">
-                                        <input class="form-control" type="number"
-                                               name="price" id="price"
-                                               data-rule-required=true>
-                                        <small id="err-price" class="text-danger"></small>
-                                    </div>
-                                </div>
-
-                                <div class="row form-group">
-                                    <div class="col-3">
-                                        <label>Số lượng</label>
-                                    </div>
-                                    <div class="col-9">
-                                        <input class="form-control" type="number"
-                                               name="quantity" id="quantity"
-                                               data-rule-required=true>
-                                        <small id="err-quantity" class="text-danger"></small>
+                                        <select class="form-control" name="nameUnit" id="nameUnit"></select>
                                     </div>
                                 </div>
 
@@ -153,7 +136,97 @@
                         <!-- Modal footer -->
                         <div class="modal-footer">
                             <a href="javascript:;" class="btn btn-primary"
-                               onclick="importIngredient.save()">Save</a>
+                               onclick="ingredients.save()">Save</a>
+
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+<!--         modal table unit   -->
+            <div class="modal" style="overflow-y:auto;" id="modalTableUnit" name="modalTableUnit">
+                <div class="modal-dialog" style="max-width: 80% !important">
+                    <div class="modal-content">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Bảng danh sách đơn vị</h6>
+                                <a href="javascript:;" onclick="ingredients.addNewunit()" class="btn btn-outline-primary btn-icon-split">
+                        <span class="icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8"
+                                                                                                       x2="12"
+                                                                                                       y2="16"></line><line
+                                    x1="8" y1="12" x2="16" y2="12"></line></svg>
+                        </span>
+                                    <span class="text">Thêm mới</span>
+                                </a>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="unit-datatables" width="100%" cellspacing="0">
+                                        <tfoot>
+                                        <tr>
+                                            <th>Tên đơn vị</th>
+                                            <th>Ghi chú</th>
+                                            <th>Chức năng</th>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+<!--          modal add and save unit  -->
+            <div class="modal" id="modalSaveUnit" name="modalSaveUnit">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="modalTitleUnit" name="modalTitleUnit"></h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <form id="formAddEditUnit" name="formAddEditUnit">
+                                <input  type="hidden" id="idUnit">
+                                <div class="row form-group">
+                                    <div class="col-3">
+                                        <label>Tên đơn vị</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input class="form-control" type="text"
+                                               name="nameUnitt" id="nameUnitt"
+                                               data-rule-required=true>
+                                        <small id="err-nameUnit" class="text-danger"></small>
+                                    </div>
+                                </div>
+
+                                <div class="row form-group">
+                                    <div class="col-3">
+                                        <label>Ghi chú</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input class="form-control" type="text"
+                                               name="commentUnit" id="commentUnit"
+                                               data-rule-required=true>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <a href="javascript:;" class="btn btn-primary"
+                               onclick="ingredients.saveUnit()">Save</a>
 
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                         </div>
@@ -194,40 +267,8 @@
     </div>
 </div>
 
-<!--<div class="row">-->
-<!--    <input type="hidden" id="addMess">-->
-<!--</div>-->
-<!--<div class="row">-->
-<!--    <input type="hidden" id="updMess">-->
-<!--</div>-->
-<!--<div class="row">-->
-<!--    <input type="hidden" id="delMess">-->
-<!--</div>-->
-
 <th:block th:replace="layout/link.html :: scriptImport">
 </th:block>
-
-<!--<script>-->
-<!--    const updMess = $("#updMess").val();-->
-<!--    if(updMess != ""){-->
-<!--        toastr.success(updMess, 'updMess');-->
-<!--    }-->
-<!--</script>-->
-<!--<script>-->
-<!--    const delMess = $("#delMess").val();-->
-<!--    if(delMess != ""){-->
-<!--        toastr.success(delMess, 'delMess');-->
-<!--    }-->
-<!--</script>-->
-<!--<script>-->
-<!--    const addMess = $("#addMess").val();-->
-<!--    if(addMess != ""){-->
-<!--        toastr.success("Thêm mới thành công", "Thêm");-->
-<!--    }-->
-<!--</script>-->
-
-<!--<script src="bower_components/moment/min/moment.min.js"></script>-->
-<!--<script src="bower_components/moment/min/datetime-moment.js"></script>-->
 </body>
 
 </html>
