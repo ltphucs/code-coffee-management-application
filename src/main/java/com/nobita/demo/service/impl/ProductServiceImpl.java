@@ -3,15 +3,23 @@ package com.nobita.demo.service.impl;
 import com.nobita.demo.dao.ProductDAO;
 import com.nobita.demo.model.Product;
 import com.nobita.demo.service.ProductService;
+import com.nobita.demo.service.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+
 @Service
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductDAO productDAO;
+
+    @Autowired
+    private UploadService uploadService;
+
 
     @Override
     public List<Product> findAll() {
@@ -24,8 +32,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> findByProductLine(Long id){
+    public List<Product> findByProductLine(Long id) {
         return productDAO.findByProductLine(id);
+    }
+
+    @Override
+    public void uploadAndSaveProductImage(Product product) throws IOException {
+        Map uploadResult = uploadService.upload(product.getMultiImage());
+        String url = (String) uploadResult.get("secure_url");
+        product.setImage(url);
+        productDAO.save(product);
     }
 
     @Override
