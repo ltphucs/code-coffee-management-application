@@ -84,7 +84,6 @@ products.switchProductStatus = function (id) {
                     break;
             }
             products.updateProduct(productObj, productObj.id);
-            $("#products-datatables").DataTable().ajax.reload();
             // $("#products-datatables").row({selected:true}).data(data);
         },
         error: function (err) {
@@ -95,7 +94,7 @@ products.switchProductStatus = function (id) {
 }
 
 
-products.updateProduct =  function (product, id){
+products.updateProduct = function (product, id) {
     $.ajax({
         url: `http://localhost:8080/api/products/${id}`,
         method: "PUT",
@@ -103,6 +102,7 @@ products.updateProduct =  function (product, id){
         contentType: "application/json",
         data: JSON.stringify(product),
         success: function () {
+            $("#products-datatables").DataTable().ajax.reload();
         },
         error: function (err) {
             console.log("err update product");
@@ -128,9 +128,13 @@ products.viewTable = function (id) {
             $('#productStatusView').val(data.product.productStatus);
             $('#idProduct').val(data.product.id);
             $('#modalView').modal('show');
+        }
+    })
+}
+
 
 // datatble product line
-products.innitProductLineTable = function (){
+products.innitProductLineTable = function () {
     $("#productsline-datatables").DataTable({
         ajax: {
             url: "http://localhost:8080/api/productLines",
@@ -143,7 +147,7 @@ products.innitProductLineTable = function (){
             {
                 data: "id", name: "id", title: "Chức năng", orderable: false,
                 "render": function (data, type, row, meta) {
-                    return "<a href='javascript:;' title='edit product' onclick='productline.get("+ data +")'><i class='fa fa-edit'></i></a> "
+                    return "<a href='javascript:;' title='edit product' onclick='productline.get(" + data + ")'><i class='fa fa-edit'></i></a> "
                 }
             },
         ],
@@ -151,12 +155,12 @@ products.innitProductLineTable = function (){
 }
 
 // table product line
-products.listProductLine = function (){
+products.listProductLine = function () {
     // products.resetForm();
     $('#modalProductLine').modal('show')
 
     products.innitProductLineTable();
-    $("#modalProductLine").on("shown.bs.modal", function(e) {
+    $("#modalProductLine").on("shown.bs.modal", function (e) {
         $("#unit-datatables")
             .DataTable()
             .columns.adjust()
@@ -167,14 +171,13 @@ products.listProductLine = function (){
 // table list unit
 
 
-
 // lấy ra productline
-productline.get = function (idProdutLine){
+productline.get = function (idProdutLine) {
     $.ajax({
-       url: "http://localhost:8080/api/productLines/" + idProdutLine,
+        url: "http://localhost:8080/api/productLines/" + idProdutLine,
         method: "GET",
         dataType: "json",
-        success: function (data){
+        success: function (data) {
             $('#formAddEditProductlines')[0].reset();
             $('#modalTitleProductLine').html('Chỉnh sửa dòng sản phẩm');
             $('#name').val(data.name);
@@ -186,81 +189,80 @@ productline.get = function (idProdutLine){
 }
 
 // form add and save productline
-productline.save = function (){
-        if ($('#idProductline-2').val()){
-            let productline = {};
-            productline.name = $('#name').val();
-            productline.id = Number($('#idProductline-2').val());
+productline.save = function () {
+    if ($('#idProductline-2').val()) {
+        let productline = {};
+        productline.name = $('#name').val();
+        productline.id = Number($('#idProductline-2').val());
 
-            $.ajax({
-               url: "http://localhost:8080/api/productLines/" + productline.id,
-               method: "PUT",
-               dataType: "json",
-               contentType : "application/json",
-               data: JSON.stringify(productline),
+        $.ajax({
+            url: "http://localhost:8080/api/productLines/" + productline.id,
+            method: "PUT",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify(productline),
 
-               success: function (data){
-                   toastr.success("Cập nhật thành công");
-                   $('#modalAddEditProductLine').modal('hide');
-                   $("#productsline-datatables").DataTable().ajax.reload();
-               },
-                error: function (data){
-                   $('#err-nameProductline').html(data.responseJSON.name);
-                }
-            });
-        }
-        else {
-            let productline = {};
-            productline.name = $('#name').val();
-            $.ajax({
-               url: "http://localhost:8080/api/productLines",
-                method: "POST",
-                dataType: "json",
-                contentType : "application/json",
-                data : JSON.stringify(productline),
+            success: function (data) {
+                toastr.success("Cập nhật thành công");
+                $('#modalAddEditProductLine').modal('hide');
+                $("#productsline-datatables").DataTable().ajax.reload();
+            },
+            error: function (data) {
+                $('#err-nameProductline').html(data.responseJSON.name);
+            }
+        });
+    } else {
+        let productline = {};
+        productline.name = $('#name').val();
+        $.ajax({
+            url: "http://localhost:8080/api/productLines",
+            method: "POST",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify(productline),
 
-                success: function (){
-                    toastr.success("Thêm mới thành công");
-                    $('#modalAddEditProductLine').modal('hide');
-                    $("#productsline-datatables").DataTable().ajax.reload();
-                },
-                error: function (data){
-                    $('#err-nameProductline').html(data.responseJSON.name);
-                }
+            success: function () {
+                toastr.success("Thêm mới thành công");
+                $('#modalAddEditProductLine').modal('hide');
+                $("#productsline-datatables").DataTable().ajax.reload();
+            },
+            error: function (data) {
+                $('#err-nameProductline').html(data.responseJSON.name);
+            }
 
-            });
-        }
+        });
+    }
     // }
 }
 
 
 // delete dòng sản phẩm
 
-productline.delete = function (data){
+productline.delete = function (data) {
     bootbox.confirm({
-       title: "Xóa dòng sản phẩm",
-       message: "Bạn có chắc chắn muốn xóa dòng sản phẩm này không ???",
-       buttons: {
-           cancel: {
-               label: '<i class="fa fa-times"></i> No'
-           },
-           confirm: {
-               label: '<i class="fa fa-check"></i> Yes'
-           }
-       },
-        callback: function (result){
-           if (result){
-               $.ajax({
-                  url: "http://localhost:8080/api/productLines/" + data,
-                   method: "DELETE",
-                   dataType: "json",
-                   succes: function (){
-                       toastr.success("Xóa thành công");
-                       $('#modalAddEditProductLine').modal('hide');
-                       $("#productsline-datatables").DataTable().ajax.reload();
-                   }
-               });
-           }
+        title: "Xóa dòng sản phẩm",
+        message: "Bạn có chắc chắn muốn xóa dòng sản phẩm này không ???",
+        buttons: {
+            cancel: {
+                label: '<i class="fa fa-times"></i> No'
+            },
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes'
+            }
+        },
+        callback: function (result) {
+            if (result) {
+                $.ajax({
+                    url: "http://localhost:8080/api/productLines/" + data,
+                    method: "DELETE",
+                    dataType: "json",
+                    succes: function () {
+                        toastr.success("Xóa thành công");
+                        $('#modalAddEditProductLine').modal('hide');
+                        $("#productsline-datatables").DataTable().ajax.reload();
+                    }
+                });
+            }
 
         }
     });
@@ -275,7 +277,7 @@ products.showView = function () {
 
 
 // add new product line
-products.addNewProductLine = function(){
+products.addNewProductLine = function () {
     $('#formAddEditProductlines')[0].reset();
     $('#modalTitleProductLine').html("Thêm mới dòng sản phẩm");
     $('#modalAddEditProductLine').modal('show');
@@ -452,8 +454,6 @@ products.save = function () {
         }
     }
 };
-
-
 
 
 products.init = function () {
