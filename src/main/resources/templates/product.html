@@ -44,7 +44,8 @@
                         </span>
                             <span class="text">Dòng sản phẩm</span>
                         </a>
-                        <a href="javascript:;" onclick="products.addNew()" class="btn btn-outline-primary btn-icon-split">
+                        <a href="javascript:;" onclick="products.addNew()"
+                           class="btn btn-outline-primary btn-icon-split">
                         <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -78,6 +79,97 @@
                                 </tr>
                                 </tfoot>
                             </table>
+                        </div>
+                        <!-- The view Modal -->
+                        <div class="modal" id="modalView" name="modalView">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" id="modalViewTitle" name="modalViewTitle"></h4>
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    </div>
+
+                                    <!-- Modal body -->
+                                    <div class="modal-body">
+                                        <form id="formView" name="formView">
+                                            <input hidden name="idProduct" id="idProduct">
+                                            <div class="row form-group">
+                                                <div class="col-3">
+                                                    <label>Tên sản phẩm</label>
+                                                </div>
+                                                <div class="col-4">
+                                                    <input class="form-control" type="text"
+                                                           name="productNameView" id="productNameView"
+                                                           data-rule-required=true disabled>
+                                                </div>
+                                            </div>
+
+                                            <div class="row form-group">
+                                                <div class="col-3">
+                                                    <label>Ảnh</label>
+                                                </div>
+                                                <div class="col-4">
+                                                    <input class="form-control" type="text"
+                                                           name="imageView" id="imageView"
+                                                           data-rule-required=true disabled>
+                                                </div>
+                                            </div>
+
+                                            <div class="row form-group">
+                                                <div class="col-3">
+                                                    <label>Số lượng trong kho</label>
+                                                </div>
+                                                <div class="col-4">
+                                                    <input class="form-control" type="text"
+                                                           name="inventoryView" id="inventoryView"
+                                                           data-rule-required=true disabled>
+                                                </div>
+                                            </div>
+
+                                            <div class="row form-group">
+                                                <div class="col-3">
+                                                    <label>Giá</label>
+                                                </div>
+                                                <div class="col-4">
+                                                    <input class="form-control" type="text"
+                                                           name="priceView" id="priceView"
+                                                           data-rule-required=true disabled>
+                                                </div>
+                                            </div>
+
+                                            <div class="row form-group">
+                                                <div class="col-3">
+                                                    <label>Dòng sản phẩm</label>
+                                                </div>
+                                                <div class="col-4">
+                                                    <input class="form-control" type="text"
+                                                           name="productLineView" id="productLineView"
+                                                           data-rule-required=true disabled>
+                                                </div>
+                                            </div>
+
+                                            <div class="row form-group">
+                                                <div class="col-3">
+                                                    <label>Trạng thái</label>
+                                                </div>
+                                                <div class="col-4">
+                                                    <input class="form-control" type="text"
+                                                           name="productStatusView" id="productStatusView"
+                                                           data-rule-required=true disabled>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    </div>
+
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

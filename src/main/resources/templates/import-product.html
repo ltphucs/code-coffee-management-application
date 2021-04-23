@@ -36,14 +36,8 @@
                 <!-- Page Heading -->
                 <div class="d-flex justify-content-between mb-4">
 
-                    <h1 class=" h3 mb-2 text-gray-800 ">Quản lý sản phẩm</h1>
+                    <h1 class=" h3 mb-2 text-gray-800 ">Quản lý nhập sản phẩm</h1>
                     <div class="d-flex">
-                        <a href="javascript:;" onclick="importProducts.addNew()" class="btn btn-primary btn-icon-split mr-3">
-                        <span class="icon text-white-50">
-                            <i class="fas fa-plus"></i>
-                        </span>
-                            <span class="text">Dòng sản phẩm</span>
-                        </a>
                         <a href="javascript:;" onclick="importProducts.addNew()" class="btn btn-outline-primary btn-icon-split">
                         <span class="icon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -62,7 +56,6 @@
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Bảng sản phẩm</h6>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -87,7 +80,7 @@
             <!-- /.container-fluid -->
 
             <!-- The Modal -->
-            <div class="modal" id="modalAddEdit" name="modalAddEdit">
+            <div class="modal" id="modalAddEditIP" name="modalAddEditIP">
                 <div class="modal-dialog">
                     <div class="modal-content">
 
@@ -115,6 +108,9 @@
                                         <label>Số lượng</label>
                                     </div>
                                     <div class="col-9">
+                                        <input class="form-control" type="hidden"
+                                               name="quantity" id="old-quantity"
+                                               data-rule-required=true>
                                         <input class="form-control" type="text"
                                                name="quantity" id="quantity"
                                                data-rule-required=true>
