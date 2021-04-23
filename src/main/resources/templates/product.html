@@ -114,6 +114,7 @@
                                                     <input class="form-control" type="text"
                                                            name="imageView" id="imageView"
                                                            data-rule-required=true disabled>
+
                                                 </div>
                                             </div>
 
@@ -189,7 +190,7 @@
 
                         <!-- Modal body -->
                         <div class="modal-body">
-                            <form id="formAddEdit" name="formAddEdit">
+                            <form id="formAddEdit" enctype="multipart/form-data" name="formAddEdit">
                                 <input hidden name="id" id="id">
                                 <div class="row form-group">
                                     <div class="col-3">
@@ -220,6 +221,10 @@
                                     <div class="col-9">
                                         <input class="form-control" type="text"
                                                name="image" id="image"
+                                               data-rule-required=true>
+
+                                        <input class="form-control" type="file"
+                                               name="multiImage" id="multiImage" multiple="multiple"
                                                data-rule-required=true>
                                     </div>
                                 </div>
