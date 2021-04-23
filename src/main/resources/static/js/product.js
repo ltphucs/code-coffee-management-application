@@ -164,6 +164,7 @@ productline.delete = function (data){
 
 // add new product line
 products.addNewProductLine = function(){
+    $('#formAddEditProductlines')[0].reset();
     $('#modalTitleProductLine').html("Thêm mới dòng sản phẩm");
     $('#modalAddEditProductLine').modal('show');
 };
@@ -171,6 +172,7 @@ products.addNewProductLine = function(){
 
 // add new product
 products.addNew = function () {
+    $('#formAddEdit')[0].reset();
     $('#modalTitle').html("Thêm sản phẩm mới");
     products.resetForm();
     $('#modalAddEdit').modal('show')

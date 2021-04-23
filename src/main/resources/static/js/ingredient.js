@@ -28,6 +28,7 @@ ingredients.initIngredients = function () {
 
 // thêm nguyên liệu
 ingredients.addNew = function(){
+    $('#formSaveIngredients')[0].reset();
     $('#modalTitleIngredient').html("Thêm mới nguyên liệu")
     $('#modalSaveIngredient').modal('show');
 };
@@ -156,6 +157,9 @@ ingredients.delete = function (id){
                         toastr.success("Xóa thành công");
                         $('#modalSaveIngredient').modal('hide');
                         $("#ingredients-datatables").DataTable().ajax.reload();
+                    },
+                    error: function (){
+                        alert('Bạn phải xóa tất cả các thông tin nhập hàng liên quan đến nguyên liệu này trước khi xóa nó');
                     }
                 });
             }
@@ -190,7 +194,8 @@ ingredients.innitProductLineTable = function (){
             {
                 data: "id", name: "id", title: "Chức năng", orderable: false,
                 "render": function (data, type, row, meta) {
-                    return "<a href='javascript:;' title='edit product' onclick='units.get("+ data +")'><i class='fa fa-edit'></i></a> "
+                    return "<a href='javascript:;' title='edit product' onclick='units.get("+ data +")'><i class='fa fa-edit'></i></a> "+
+                        "<a href='javascript:;' title='remove product' onclick='units.delete("+ data +")' ><i class='fa fa-trash'></i></a>";
                 }
             },
         ],
@@ -199,6 +204,7 @@ ingredients.innitProductLineTable = function (){
 
 // modal add
 ingredients.addNewunit = function (){
+    $('#formAddEditUnit')[0].reset();
     $('#modalTitleUnit').html('Thêm mới đơn vị')
     $('#modalSaveUnit').modal('show');
 }
@@ -261,6 +267,41 @@ ingredients.saveUnit = function (){
             });
         }
     }
+}
+
+// delete unit
+units.delete = function (id){
+    bootbox.confirm({
+        title: "Xóa sản phẩm",
+        message: "Bạn có muốn xóa đơn vị này?",
+        buttons: {
+            cancel: {
+                label: '<i class="fa fa-times"></i> No'
+            },
+            confirm: {
+                label: '<i class="fa fa-check"></i> Yes'
+            }
+        },
+        callback: function (result) {
+            // console.log(id);
+            if (result) {
+                $.ajax({
+                    url: "http://localhost:8080/api/units/" + id,
+                    method: "DELETE",
+                    dataType: "json",
+
+                    success: function (data) {
+                        $('#formAddEditUnit').modal('hide');
+                        $("#unit-datatables").DataTable().ajax.reload();
+                        // importProducts.initImportProductTable();
+                    },
+                    error: function (){
+                        alert('Bạn phải xóa tất cả nguyên liệu có đơn vị này trước khi xóa nó')
+                    }
+                });
+            }
+        }
+    });
 }
 
 $(document).ready(function () {
