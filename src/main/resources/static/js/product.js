@@ -1,4 +1,5 @@
 let products = {};
+let productline = {};
 
 products.initProductTable = function () {
     $("#products-datatables").DataTable({
@@ -25,7 +26,153 @@ products.initProductTable = function () {
     });
 }
 
+// datatble product line
+products.innitProductLineTable = function (){
+    $("#productsline-datatables").DataTable({
+        ajax: {
+            url: "http://localhost:8080/api/productLines",
+            method: "GET",
+            dataType: "json",
+            dataSrc: ""
+        },
+        columns: [
+            {data: "name", name: "name", title: "Tên sản phẩm", orderable: true},
+            {
+                data: "id", name: "id", title: "Chức năng", orderable: false,
+                "render": function (data, type, row, meta) {
+                    return "<a href='javascript:;' title='edit product' onclick='productline.get("+ data +")'><i class='fa fa-edit'></i></a> "
+                }
+            },
+        ],
+    });
+}
+
+// table product line
+products.listProductLine = function (){
+    // products.resetForm();
+    $('#modalProductLine').modal('show')
+
+    products.innitProductLineTable();
+    $("#modalProductLine").on("shown.bs.modal", function(e) {
+        $("#unit-datatables")
+            .DataTable()
+            .columns.adjust()
+            .responsive.recalc();
+    });
+}
+
+// table list unit
+
+
+
+// lấy ra productline
+productline.get = function (idProdutLine){
+    $.ajax({
+       url: "http://localhost:8080/api/productLines/" + idProdutLine,
+        method: "GET",
+        dataType: "json",
+        success: function (data){
+            $('#formAddEditProductlines')[0].reset();
+            $('#modalTitleProductLine').html('Chỉnh sửa dòng sản phẩm');
+            $('#name').val(data.name);
+            $('#idProdutLine').val(data.id);
+            $('#idProductline-2').val(data.id);
+            $('#modalAddEditProductLine').modal('show');
+        }
+    });
+}
+
+// form add and save productline
+productline.save = function (){
+        if ($('#idProductline-2').val()){
+            let productline = {};
+            productline.name = $('#name').val();
+            productline.id = Number($('#idProductline-2').val());
+
+            $.ajax({
+               url: "http://localhost:8080/api/productLines/" + productline.id,
+               method: "PUT",
+               dataType: "json",
+               contentType : "application/json",
+               data: JSON.stringify(productline),
+
+               success: function (data){
+                   toastr.success("Cập nhật thành công");
+                   $('#modalAddEditProductLine').modal('hide');
+                   $("#productsline-datatables").DataTable().ajax.reload();
+               },
+                error: function (data){
+                   $('#err-nameProductline').html(data.responseJSON.name);
+                }
+            });
+        }
+        else {
+            let productline = {};
+            productline.name = $('#name').val();
+            $.ajax({
+               url: "http://localhost:8080/api/productLines",
+                method: "POST",
+                dataType: "json",
+                contentType : "application/json",
+                data : JSON.stringify(productline),
+
+                success: function (){
+                    toastr.success("Thêm mới thành công");
+                    $('#modalAddEditProductLine').modal('hide');
+                    $("#productsline-datatables").DataTable().ajax.reload();
+                },
+                error: function (data){
+                    $('#err-nameProductline').html(data.responseJSON.name);
+                }
+
+            });
+        }
+    // }
+}
+
+
+// delete dòng sản phẩm
+
+productline.delete = function (data){
+    bootbox.confirm({
+       title: "Xóa dòng sản phẩm",
+       message: "Bạn có chắc chắn muốn xóa dòng sản phẩm này không ???",
+       buttons: {
+           cancel: {
+               label: '<i class="fa fa-times"></i> No'
+           },
+           confirm: {
+               label: '<i class="fa fa-check"></i> Yes'
+           }
+       },
+        callback: function (result){
+           if (result){
+               $.ajax({
+                  url: "http://localhost:8080/api/productLines/" + data,
+                   method: "DELETE",
+                   dataType: "json",
+                   succes: function (){
+                       toastr.success("Xóa thành công");
+                       $('#modalAddEditProductLine').modal('hide');
+                       $("#productsline-datatables").DataTable().ajax.reload();
+                   }
+               });
+           }
+        }
+    });
+}
+
+// add new product line
+products.addNewProductLine = function(){
+    $('#formAddEditProductlines')[0].reset();
+    $('#modalTitleProductLine').html("Thêm mới dòng sản phẩm");
+    $('#modalAddEditProductLine').modal('show');
+};
+
+
+// add new product
 products.addNew = function () {
+    $('#formAddEdit')[0].reset();
     $('#modalTitle').html("Thêm sản phẩm mới");
     products.resetForm();
     $('#modalAddEdit').modal('show')
@@ -41,6 +188,7 @@ products.resetForm = function () {
 
 }
 
+// select option productline
 products.initProductLines = function () {
     $.ajax({
         url: "http://localhost:8080/api/productLines/",
@@ -57,6 +205,8 @@ products.initProductLines = function () {
     });
 };
 
+
+// delete product
 products.delete = function (id) {
     bootbox.confirm({
         title: "Xóa sản phẩm",
@@ -187,6 +337,9 @@ products.save = function () {
         }
     }
 };
+
+
+
 
 products.init = function () {
     products.initProductTable();

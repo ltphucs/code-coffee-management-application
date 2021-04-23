@@ -31,5 +31,9 @@ public class Staff {
             message = "Tên nhân viên phải trong khoảng[3-25] và không được có ký tự đặc biệt")
     private String username;
 
+    @Pattern(regexp = "^[a-z][a-z0-9_\\.]{4,50}@[a-z0-9]{2,}(\\.[a-z0-9]{2,4}){1,2}$",
+        message = "Độ dài email phải trong khoảng[4-50] và phải đúng định dạng của nó"
+    )
+    private String email;
     private String password;
 }

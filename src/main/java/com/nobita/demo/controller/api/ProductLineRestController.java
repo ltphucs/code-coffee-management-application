@@ -74,7 +74,7 @@ public class ProductLineRestController {
         ProductLine productLine1 = productLineService.findByID(id);
         if (productLine1 != null){
             productLine1.setName(productLine.getName());
-            productLineService.save(productLine);
+            productLineService.update(productLine1);
             return new ResponseEntity<>(productLine1,HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
