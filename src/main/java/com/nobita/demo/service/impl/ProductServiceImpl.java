@@ -29,6 +29,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> findAllNotIngredient() {
+        return productDAO.findAllNotIngredient();
+    }
+
+    @Override
     public boolean save(Product product) {
         return productDAO.save(product);
     }

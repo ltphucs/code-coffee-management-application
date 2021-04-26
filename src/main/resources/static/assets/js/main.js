@@ -12,6 +12,14 @@ function clearArr() {
     }
 }
 
+function setStatusTable()  {
+    if(arrOrderDetailsTest.length >0){
+        return "USING";
+    }else {
+        return "EMPTY";
+    }
+}
+
 areas.initAreas = function () {
     $.ajax({
         url: "http://localhost:8080/api/areas/",
@@ -74,9 +82,8 @@ areas.showMenu = function () {
 }
 
 areas.showTables = function (id) {
-    tables.closeOrder();
-    $('#showTables').empty();
-    $('#showTables').hide();
+    $('#showOrder').empty().hide();
+    $('#showTables').empty().hide();
     $('#tables-sql').empty();
     $.ajax({
         url: "http://localhost:8080/api/areas/" + id + "/tables",
@@ -151,9 +158,6 @@ tables.addTable = function (idArea) {
     })
 }
 
-tables.setStatus = function () {
-}
-
 tables.showFormAddOrder = function (idTable) {
     clearArr();
     $.ajax({
@@ -218,7 +222,7 @@ tables.showFormAddOrder = function (idTable) {
                         <div class="form-group">
                             <div class="row">
                                 <button class="btn btn-success col-6 pt-2 pb-2" type="button" onclick="orders.addOrder(${idTable})">Cập nhật</button>
-                                <button class="btn btn-danger col-6 pt-2 pb-2 order-list-cancel-btn" type="button" onclick="tables.closeOrder()">Hủy
+                                <button class="btn btn-danger col-6 pt-2 pb-2 order-list-cancel-btn" type="button" onclick="tables.closeOrder(${idTable})">Hủy
                                     bỏ
                                 </button>
                             </div>
@@ -429,15 +433,16 @@ orders.showOrderAndOrderDetails = function (idTable) {
     })
 }
 
-tables.closeTable = function (id) {
-    $('#showTables').empty();
-    $('#showTables').hide();
+tables.closeTable = function (idTable) {
+    $('#showTables').empty().hide();
     $('#tables-sql').empty();
-    areas.showTables(id);
+    areas.showTables(idTable);
 }
 
-tables.closeOrder = function () {
-    $('#showOrder').empty();
+tables.closeOrder = function (idTable) {
+    $('#showOrder').empty().hide();
+    $('#tables-sql').empty();
+    areas.showTables(idTable);
 }
 
 $(document).ready(function () {

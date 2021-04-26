@@ -20,6 +20,11 @@ public class ProductDAO implements BaseDAO<Product> {
         return jdbcTemplate.query(sql, new ProductResultSet());
     }
 
+    public List<Product> findAllNotIngredient(){
+        String sql = "select p.* ,pl.name as name_productline from product p left join productline pl on pl.id =p.id_productline where p.is_ingredient=0";
+        return jdbcTemplate.query(sql,new ProductResultSet());
+    }
+
     @Override
     public Product findByID(Long id) {
         String sql = "select p.* ,pl.name as name_productline from product p left join productline pl on pl.id =p.id_productline where p.id=?";
@@ -29,7 +34,7 @@ public class ProductDAO implements BaseDAO<Product> {
 
 
     public List<Product> findByProductLine(Long id){
-        String sql = "select p.* ,pl.name as name_productline from product p left join productline pl on pl.id =p.id_productline where p.id_productline=?";
+        String sql = "select p.* ,pl.name as name_productline from product p left join productline pl on pl.id =p.id_productline where p.id_productline=? and p.status ='STOCKING'";
         Object [] values={id};
         return jdbcTemplate.query(sql,new ProductResultSet(),values);
     }

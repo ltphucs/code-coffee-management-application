@@ -68,7 +68,7 @@ importProducts.get = function (id) {
 
 importProducts.initProduct = function (data) {
     $.ajax({
-        url: "http://localhost:8080/api/products/",
+        url: "http://localhost:8080/api/products/notIngredient",
         method: "GET",
         dataType: "json",
         success: function (data) {
