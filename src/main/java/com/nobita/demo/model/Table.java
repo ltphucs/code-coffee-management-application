@@ -13,4 +13,5 @@ public class Table {
     private String name;
     private Area area;
     private TableStatus tableStatus;
+    private String comment;
 }

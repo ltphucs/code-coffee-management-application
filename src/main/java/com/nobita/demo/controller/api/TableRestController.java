@@ -1,6 +1,8 @@
 package com.nobita.demo.controller.api;
 
+import com.nobita.demo.model.Order;
 import com.nobita.demo.model.Table;
+import com.nobita.demo.service.OrderService;
 import com.nobita.demo.service.TableService;
 import com.nobita.demo.service.impl.TableServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class TableRestController {
     @Autowired
     TableService tableService;
 
+    @Autowired
+    OrderService orderService;
+
     @GetMapping
     public ResponseEntity<?> list() {
         List<Table> tables = tableService.findAll();
@@ -41,6 +46,15 @@ public class TableRestController {
         return new ResponseEntity<Table>(HttpStatus.NOT_FOUND);
     }
 
+    @GetMapping(value = "/{idTable}/order",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getOrder(@PathVariable("idTable") Long idTable){
+        Order order=orderService.findByTable(idTable);
+        if(order != null){
+            return new ResponseEntity<>(order,HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
     @PostMapping
     public ResponseEntity<?> save(@Valid @RequestBody Table table, BindingResult result) {
         if (result.hasErrors()){
@@ -52,7 +66,7 @@ public class TableRestController {
             return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
         tableService.save(table);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(table,HttpStatus.OK);
     }
 
     @PutMapping(value = "/{id}")
