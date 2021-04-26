@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "application.uploader")
 @Data
 class CloudinaryConfig {
-    @Value("domia39")
+    @Value("code-coffee")
     private String cloudName;
     @Value("application.uploader.api-key")
     private String apiKey;
