@@ -46,18 +46,18 @@ public class TableRestController {
         return new ResponseEntity<Table>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping(value = "/{idTable}/order",produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getOrder(@PathVariable("idTable") Long idTable){
-        Order order=orderService.findByTable(idTable);
-        if(order != null){
-            return new ResponseEntity<>(order,HttpStatus.OK);
+    @GetMapping(value = "/{idTable}/order", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getOrder(@PathVariable("idTable") Long idTable) {
+        Order order = orderService.findByTable(idTable);
+        if (order != null) {
+            return new ResponseEntity<>(order, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping
     public ResponseEntity<?> save(@Valid @RequestBody Table table, BindingResult result) {
-        if (result.hasErrors()){
+        if (result.hasErrors()) {
             List<FieldError> fieldErrors = result.getFieldErrors();
             Map<String, String> errors = new HashMap<>();
             for (FieldError fieldError : fieldErrors) {
@@ -66,12 +66,12 @@ public class TableRestController {
             return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
         tableService.save(table);
-        return new ResponseEntity<>(table,HttpStatus.OK);
+        return new ResponseEntity<>(table, HttpStatus.OK);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> update( @PathVariable("id") Long id,@Valid @RequestBody Table table,BindingResult result) {
-        if (result.hasErrors()){
+    public ResponseEntity<?> update(@PathVariable("id") Long id, @Valid @RequestBody Table table, BindingResult result) {
+        if (result.hasErrors()) {
             List<FieldError> fieldErrors = result.getFieldErrors();
             Map<String, String> errors = new HashMap<>();
             for (FieldError fieldError : fieldErrors) {
@@ -80,20 +80,20 @@ public class TableRestController {
             return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
         Table table1 = tableService.findByID(id);
-        if (table1 != null){
+        if (table1 != null) {
             table1.setName(table.getName());
             table1.setArea(table.getArea());
             table1.setTableStatus(table.getTableStatus());
             tableService.update(table1);
-            return new ResponseEntity<>(table1,HttpStatus.OK);
+            return new ResponseEntity<>(table1, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") long id){
+    public ResponseEntity<?> delete(@PathVariable("id") long id) {
         Table table = tableService.findByID(id);
-        if (table != null){
+        if (table != null) {
             tableService.delete(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

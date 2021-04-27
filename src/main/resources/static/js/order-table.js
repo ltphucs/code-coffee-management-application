@@ -12,13 +12,16 @@ function clearArr() {
     }
 }
 
-function setStatusTable()  {
-    if(arrOrderDetailsTest.length >0){
+function setStatusTable() {
+    if (arrOrderDetailsTest.length > 0) {
         return "USING";
-    }else {
+    } else {
         return "EMPTY";
     }
 }
+
+// #1cc88a
+
 
 areas.initAreas = function () {
     $.ajax({
@@ -44,12 +47,14 @@ areas.initAreas = function () {
             $.each(data, function (i, v) {
                 $('#area-sql').append(
                     `<li class="nav-item w-100px">
-                            <a class="nav-link" role="tab" data-toggle="pill" href="#tab" onclick="areas.showTables(${v.id})">${v.name}</a>
+                            <a class="nav-link" id="area-${v.id}" role="tab" data-toggle="pill" href="#tab" onclick="areas.showTables(${v.id})">${v.name}</a>
                         </li>`
                 );
-            })
+            });
+            $("#area-1").click();
         }
     })
+
 }
 
 areas.showMenu = function () {
@@ -67,7 +72,7 @@ areas.showMenu = function () {
                         `<div class="coffee-search-item p-2 col-3 d-flex flex-column justify-content-center align-items-center">
                                 <div
                                     class="mx-width-100 mx-height-100 w-100px h-100px bg-size-contain bg-pos-center d-flex flex-column justify-content-between"
-                                    style="background-image: url(assets/img/Tear_of_the_Goddess_Large.jpg);" onclick="orders.addArrOrderDetails(${p.id})">
+                                    style="background-image: url(https://static.wikia.nocookie.net/leagueoflegends/images/6/66/Tear_of_the_Goddess_item_HD.png/revision/latest?cb=20201111004755);" onclick="orders.addArrOrderDetails(${p.id})">
                                     <span class="text-white price">Giá: ${p.price}</span>
                                 </div>
                                 <p class="product-name">${p.name}</p>
@@ -84,7 +89,6 @@ areas.showMenu = function () {
 areas.showTables = function (id) {
     $('#showOrder').empty().hide();
     $('#showTables').empty().hide();
-    $('#tables-sql').empty();
     $.ajax({
         url: "http://localhost:8080/api/areas/" + id + "/tables",
         method: "GET",
@@ -120,8 +124,12 @@ tables.showFormAddTable = function (id) {
                 <div>
                     <form method="post" id="formAddEdit" name="formAddEdit"><h2 class="text-center mt-3">Thêm bàn mới</h2>
                     <input type="hidden" name="id" id="id">
-                        <div class="form-group"><label>Tên bàn</label><input class="form-control" type="text" name="name" id="name"
-                                                                             placeholder="Mời nhập tên bàn" required></div>
+                        <div class="form-group"><label>Tên bàn</label>
+                        <input class="form-control" type="text" name="name" id="name"
+                                                                             placeholder="Mời nhập tên bàn" required>
+                        <small id="err-add-table-name" class="text-danger"></small>
+
+                        </div>
                         <div class="form-group"><label>Mô tả/Ghi chú</label><textarea class="form-control" name="comment" id="comment"
                                                                                       placeholder="Nhập ghi chú"
                                                                                       rows="5" required></textarea></div>                                                                             
@@ -151,25 +159,35 @@ tables.addTable = function (idArea) {
         contentType: "application/json",
         data: JSON.stringify(tableObj),
         success: function (data) {
+            toastr.success("Thêm bàn mới thành công");
             tables.closeTable();
             $("#showTables").empty();
             areas.showTables(idArea);
+        },
+        error: function (err) {
+            $("#err-add-table-name").html(err.responseJSON.name);
         }
     })
 }
 
 tables.showFormAddOrder = function (idTable) {
+    console.log(idTable);
     clearArr();
     $.ajax({
         url: "http://localhost:8080/api/tables/" + idTable,
         method: "GET",
         dataType: "JSON",
         success: function (data) {
+            console.log(data)
             $('#showTables').remove();
             $('#showOrder').remove();
             $('#showOrdersTables').append(
                 `<div class="col order-list" id="showOrder">
-                <div>
+                <div class="card">
+                 <div class="card-header">
+                    <i class="fas fa-cog"></i>
+                    
+                </div>
                 <div class="form-row">
                     <div class="col">
                         <div>
@@ -222,12 +240,12 @@ tables.showFormAddOrder = function (idTable) {
                         <div class="form-group">
                             <div class="row">
                                 <button class="btn btn-success col-6 pt-2 pb-2" type="button" onclick="orders.addOrder(${idTable})">Cập nhật</button>
-                                <button class="btn btn-danger col-6 pt-2 pb-2 order-list-cancel-btn" type="button" onclick="tables.closeOrder(${idTable})">Hủy
-                                    bỏ
+                                <button class="btn btn-danger col-6 pt-2 pb-2 order-list-cancel-btn" type="button" onclick="tables.closeOrder(${data.area.id})">
+                                Hủy bỏ
                                 </button>
                             </div>
                         </div>
-                        </div>
+                    </div>
             </div>`
             )
             orders.showOrderAndOrderDetails(idTable);
@@ -307,8 +325,8 @@ orders.showOrderDetails = function (arrOrderDetailsTest) {
                     </strong>
                 </td>
                 <td class="d-xl-flex justify-content-xl-center align-items-xl-center col-1">
-                    <input
-                        class="form-check" type="checkbox">
+                    <i class="fas fa-check text-success" style="width: 50%"></i>
+                    <i class="fas fa-redo text-danger" style="width: 50%"></i>
                 </td>
             </tr>`
         )
@@ -317,10 +335,10 @@ orders.showOrderDetails = function (arrOrderDetailsTest) {
 
 orders.addOrder = function (idTable) {
     $.ajax({
-        url:"http://localhost:8080/api/tables/"+idTable+"/order",
-        method:"GET",
-        dataType:"JSON",
-        error:function (data){
+        url: "http://localhost:8080/api/tables/" + idTable + "/order",
+        method: "GET",
+        dataType: "JSON",
+        error: function (data) {
             let tableObj = {};
             tableObj.id = idTable;
             let accountObj = {};
@@ -341,7 +359,7 @@ orders.addOrder = function (idTable) {
                 }
             })
         },
-        success:function (data){
+        success: function (data) {
             orders.addOrderDetails(idTable);
         }
     })
@@ -386,7 +404,7 @@ orders.showOrderAndOrderDetails = function (idTable) {
         dataType: "JSON",
         success: function (data) {
             $.ajax({
-                url: "http://localhost:8080/api/orders/" + data.id+"/orderDetails",
+                url: "http://localhost:8080/api/orders/" + data.id + "/orderDetails",
                 method: "GET",
                 dataType: "JSON",
                 success: function (data) {
@@ -422,7 +440,8 @@ orders.showOrderAndOrderDetails = function (idTable) {
                                      <strong>${v.priceEach * v.quantity} đ</strong>
                                 </td>
                                 <td class="d-xl-flex justify-content-xl-center align-items-xl-center col-1">
-                                     <input class="form-check" type="checkbox">
+                                     <i class="fas fa-check text-success" style="width: 50%"></i>
+                                     <i class="fas fa-redo text-danger" style="width: 50%"></i>
                                 </td>
                             </tr>`
                         )
