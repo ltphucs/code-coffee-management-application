@@ -386,14 +386,31 @@ function setStatus(inventory, product) {
     }
 }
 
+products.saveImage =function (){
+
+    let form = new FormData();
+    form.append("file", $('#multiImage')[0].files[0]);
+    $.ajax({
+        url: "http://localhost:8080/api/upload",
+        type: "POST",
+        data: form,
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            $("#done-upload").html(
+                `<img src="${data.url}" alt="" width="100px">`
+            )
+        }
+    });
+}
+
 products.save = function () {
     if ($("#formAddEdit")) {
         if (!$('#id').val()) {
-            const form = new FormData();
-            form.append("multiImage", $('#multiImage').val())
-            form.append("name", $('#productName').val());
-            form.append("price", Number($('#price').val()));
-            form.append("image", $('#productName').val());
+
+            // form.append("name", $('#productName').val());
+            // form.append("price", Number($('#price').val()));
+            // form.append("image", $('#productName').val());
 
             // let productObj = {};
             // productObj.name = $('#productName').val();
@@ -407,20 +424,37 @@ products.save = function () {
             // productLineObj.id = $("#productLine").val();
             // productLineObj.name = $("#productLine option:selected").html();
             // productObj.productLine = productLineObj;
-
+            console.log(form);
             $.ajax({
-                url: "http://localhost:8080/api/products/",
-                method: "POST",
-                dataType: "json",
-                contentType: "application/json",
+                url: "http://localhost:8080/api/upload",
+                type: "POST",
                 data: form,
+                processData: false,
+                contentType: false,
                 success: function (data) {
-                    console.log(data);
-                    $('#modalAddEdit').modal('hide');
-                    $("#products-datatables").DataTable().ajax.reload();
+                    $("#done-upload").append(
+                        `<img src="${data.url}" alt="">`
+                    )
+
+                    // toastr.success("Thêm mới thành công")
+                    // $('#modalAddEdit').modal('hide');
+                    // $("#products-datatables").DataTable().ajax.reload();
 
                 }
             });
+            // $.ajax({
+            //     url: "http://localhost:8080/api/products/",
+            //     method: "POST",
+            //     dataType: "json",
+            //     contentType: "application/json",
+            //     data: form,
+            //     success: function (data) {
+            //         toastr.success("Thêm mới thành công")
+            //         $('#modalAddEdit').modal('hide');
+            //         $("#products-datatables").DataTable().ajax.reload();
+            //
+            //     }
+            // });
         } else {
             $.ajax({
                 url: `http://localhost:8080/api/products/${$('#id').val()}`,
@@ -442,7 +476,6 @@ products.save = function () {
                     productLineObj.id = Number($("#productLine").val());
                     productLineObj.name = $("#productLine option:selected").html();
                     productObj.productLine = productLineObj;
-
                     $.ajax({
                         url: "http://localhost:8080/api/products/" + productObj.id,
                         method: "PUT",
@@ -456,7 +489,6 @@ products.save = function () {
                         error: function (err) {
                             console.log(err.responseJSON);
                         }
-
                     });
                 }
             })

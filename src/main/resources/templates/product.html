@@ -191,7 +191,7 @@
 
                         <!-- Modal body -->
                         <div class="modal-body">
-                            <form id="formAddEdit" enctype="multipart/form-data" name="formAddEdit">
+                            <form id="formAddEdit" name="formAddEdit">
                                 <input hidden name="id" id="id">
                                 <div class="row form-group">
                                     <div class="col-3">
@@ -221,8 +221,10 @@
                                     </div>
                                     <div class="col-9">
                                         <input class="form-control" type="file"
-                                               name="multiImage" id="multiImage" multiple="multiple"
-                                               data-rule-required=true>
+                                               name="multiImage" id="multiImage"
+                                               data-rule-required=true onchange="products.saveImage()">
+                                        <div id="done-upload">
+                                        </div>
                                     </div>
                                 </div>
 
