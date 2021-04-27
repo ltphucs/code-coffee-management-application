@@ -27,9 +27,9 @@ public class OrderDetailsDAO implements BaseDAO<OrderDetail> {
         return null;
     }
 
-    public OrderDetail findByIdProduct(Long idProduct) {
-        String sql = "select od.*,p.name as name_product from orderdetail od left join product p on p.id =od.id_product where od.id_product =?";
-        Object[] values = {idProduct};
+    public OrderDetail findByIdProductAndIdOrder(Long idProduct,Long idOrder) {
+        String sql = "select od.*,p.name as name_product from orderdetail od left join product p on p.id =od.id_product where od.id_product =? and od.id_order=?";
+        Object[] values = {idProduct,idOrder};
         return jdbcTemplate.queryForObject(sql, new OrderDetailRowMapper(), values);
     }
 
@@ -58,9 +58,15 @@ public class OrderDetailsDAO implements BaseDAO<OrderDetail> {
         return false;
     }
 
-    public boolean deleteByIdProduct(Long idProduct) {
-        String sql = "delete from orderdetail where id_product =?";
-        Object[] values = {idProduct};
+    public boolean deleteByIdProductAndIdOrder(Long idProduct,Long idOrder) {
+        String sql = "delete from orderdetail where id_product =? and id_order=?";
+        Object[] values = {idProduct,idOrder};
+        return jdbcTemplate.update(sql, values) > 0;
+    }
+
+    public boolean deleteByIdOrder(Long idOrder) {
+        String sql = "delete from orderdetail where id_order =?";
+        Object[] values ={idOrder};
         return jdbcTemplate.update(sql, values) > 0;
     }
 }

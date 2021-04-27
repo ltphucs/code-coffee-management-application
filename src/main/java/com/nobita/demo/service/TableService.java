@@ -8,5 +8,7 @@ public interface TableService extends BaseService<Table>{
 
     public List<Table> findByArea(Long id);
 
+    public boolean updateStatus(Table table);
+
 
 }

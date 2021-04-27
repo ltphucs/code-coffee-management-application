@@ -90,6 +90,17 @@ public class TableRestController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @PutMapping(value = "/{id}/tableStatus")
+    public ResponseEntity<?> updateStatus(@PathVariable("id") Long id,@RequestBody Table table){
+        Table tableCurrent=tableService.findByID(id);
+        if( tableCurrent != null){
+            tableCurrent.setTableStatus(table.getTableStatus());
+            tableService.updateStatus(tableCurrent);
+            return new ResponseEntity<>(tableCurrent,HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
     @DeleteMapping("{id}")
     public ResponseEntity<?> delete(@PathVariable("id") long id){
         Table table = tableService.findByID(id);

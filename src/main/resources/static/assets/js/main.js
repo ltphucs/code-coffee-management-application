@@ -12,11 +12,17 @@ function clearArr() {
     }
 }
 
-function setStatusTable()  {
-    if(arrOrderDetailsTest.length >0){
-        return "USING";
-    }else {
-        return "EMPTY";
+function setStatusTable() {
+    if (arrOrderDetailsTest.length > 0) {
+        $('#tableStatus').empty().append(
+            `<b>Trạng thái:</b>
+            <span id="status">USING</span>`
+        )
+    } else {
+        $('#tableStatus').empty().append(
+            `<b>Trạng thái:</b>
+            <span id="status">EMPTY</span>`
+        )
     }
 }
 
@@ -81,12 +87,12 @@ areas.showMenu = function () {
     })
 }
 
-areas.showTables = function (id) {
+areas.showTables = function (idArea) {
     $('#showOrder').empty().hide();
     $('#showTables').empty().hide();
     $('#tables-sql').empty();
     $.ajax({
-        url: "http://localhost:8080/api/areas/" + id + "/tables",
+        url: "http://localhost:8080/api/areas/" + idArea + "/tables",
         method: "GET",
         dataType: "JSON",
         success: function (data) {
@@ -102,7 +108,7 @@ areas.showTables = function (id) {
                 )
             })
             $('#tables-sql').append(
-                `<a href="javascript:;" class="d-flex flex-column justify-content-center align-items-center w-200px" onclick="tables.showFormAddTable(${id})">
+                `<a href="javascript:;" class="d-flex flex-column justify-content-center align-items-center w-200px" onclick="tables.showFormAddTable(${idArea})">
                     <div class="d-flex justify-content-center align-items-center table-add-btn">
                            <i class="fa fa-plus" style="font-size: 30px;" ></i>
                     </div>
@@ -112,7 +118,7 @@ areas.showTables = function (id) {
     })
 }
 
-tables.showFormAddTable = function (id) {
+tables.showFormAddTable = function (idTable) {
     $('#showOrder').remove();
     $('#showTables').remove();
     $('#showOrdersTables').append(
@@ -127,8 +133,8 @@ tables.showFormAddTable = function (id) {
                                                                                       rows="5" required></textarea></div>                                                                             
                        <div class="form-group">
                             <div class="form-row row">
-                                    <button class="btn btn-success col-6" type="button" onclick="tables.addTable(${id})">Thực hiện</button>
-                                    <button class="btn btn-danger col-6 table-add-cancel-btn" type="button" onclick="tables.closeTable(${id})">Hủy bỏ</button>
+                                    <button class="btn btn-success col-6" type="button" onclick="tables.addTable(${idTable})">Thực hiện</button>
+                                    <button class="btn btn-danger col-6 table-add-cancel-btn" type="button" onclick="tables.closeTable(${idTable})">Hủy bỏ</button>
                                 </div>
                         </div>
                     </form>
@@ -158,8 +164,25 @@ tables.addTable = function (idArea) {
     })
 }
 
+tables.updateTable = function (idTable) {
+    let tableObj = {};
+    tableObj.id = idTable;
+    tableObj.tableStatus = document.getElementById("status").innerHTML;
+    $.ajax({
+        url: "http://localhost:8080/api/tables/" + idTable + "/tableStatus",
+        method: "PUT",
+        dataType: "JSON",
+        contentType: "application/json",
+        data: JSON.stringify(tableObj),
+        success: function (data) {
+            console.log("add table vao r")
+        }
+    })
+}
+
 tables.showFormAddOrder = function (idTable) {
     clearArr();
+    console.log(arrOrderDetailsTest);
     $.ajax({
         url: "http://localhost:8080/api/tables/" + idTable,
         method: "GET",
@@ -180,9 +203,7 @@ tables.showFormAddOrder = function (idTable) {
                     </div>
                     <div class="col">
                         <div>
-                            <h4>
-                                <b>Trạng thái:</b>
-                                <span>${data.tableStatus}</span>
+                            <h4 id="tableStatus">
                             </h4>
                         </div>
                     </div>
@@ -221,7 +242,7 @@ tables.showFormAddOrder = function (idTable) {
                     <hr>
                         <div class="form-group">
                             <div class="row">
-                                <button class="btn btn-success col-6 pt-2 pb-2" type="button" onclick="orders.addOrder(${idTable})">Cập nhật</button>
+                                <button class="btn btn-success col-6 pt-2 pb-2" type="button" onclick="orders.addOrder(${idTable})" id="btnSuccess">Cập nhật</button>
                                 <button class="btn btn-danger col-6 pt-2 pb-2 order-list-cancel-btn" type="button" onclick="tables.closeOrder(${idTable})">Hủy
                                     bỏ
                                 </button>
@@ -259,18 +280,37 @@ orders.addArrOrderDetails = function (idProduct) {
                 }
             })
             console.log(arrOrderDetailsTest);
-            orders.showOrderDetails(arrOrderDetailsTest);
+            orders.showArrOrderDetails(arrOrderDetailsTest);
         }
     })
 }
 
-orders.showOrderDetails = function (arrOrderDetailsTest) {
+orders.minusQuantity = function (idProduct) {
+    $.each(arrOrderDetailsTest, function (i, v) {
+        if (v.id === idProduct) {
+            v.quantity = v.quantity - 1;
+        }
+    })
+    console.log(arrOrderDetailsTest);
+}
+
+orders.plusQuantity = function (idProduct) {
+    $.each(arrOrderDetailsTest, function (i, v) {
+        if (v.id === idProduct) {
+            v.quantity = v.quantity + 1;
+        }
+    })
+    console.log(arrOrderDetailsTest);
+}
+
+orders.showArrOrderDetails = function (arrOrderDetailsTest) {
+    setStatusTable();
     $('#list-orderdetail').empty();
     $.each(arrOrderDetailsTest, function (i, v) {
         $('#list-orderdetail').append(
             `<tr class="row">
                 <td class="d-xl-flex justify-content-xl-center align-items-xl-center order-item-trash col-1">
-                    <i class="far fa-trash-alt d-xl-flex justify-content-xl-center align-items-xl-center"></i>
+                    <i class="far fa-trash-alt d-xl-flex justify-content-xl-center align-items-xl-center" onclick="orders.removeArrOrderDetail(${v.id})"></i>
                 </td>
                 <td class="d-xl-flex justify-content-xl-left align-items-xl-center col-3">
                     <div>
@@ -286,7 +326,7 @@ orders.showOrderDetails = function (arrOrderDetailsTest) {
                     <div class="quantity clearfix d-flex justify-content-center">
                         <input
                             id="quantity-left-minus"
-                            onClick="this.parentNode.querySelector('input[type=number]').stepDown()"
+                            onclick="this.parentNode.querySelector('input[type=number]').stepDown();orders.minusQuantity(${v.id})"
                             type="button" value="-" class="minus btn">
                             <input id="quantity"
                                    type="number" step="1"
@@ -297,7 +337,7 @@ orders.showOrderDetails = function (arrOrderDetailsTest) {
                                    size="4" value="${v.quantity}" disabled>
                                 <input
                                     id="quantity-right-plus"
-                                    onClick="this.parentNode.querySelector('input[type=number]').stepUp()"
+                                    onclick="this.parentNode.querySelector('input[type=number]').stepUp();orders.plusQuantity(${v.id})"
                                     type="button" value="+" class="plus btn">
                     </div>
                 </td>
@@ -317,10 +357,10 @@ orders.showOrderDetails = function (arrOrderDetailsTest) {
 
 orders.addOrder = function (idTable) {
     $.ajax({
-        url:"http://localhost:8080/api/tables/"+idTable+"/order",
-        method:"GET",
-        dataType:"JSON",
-        error:function (data){
+        url: "http://localhost:8080/api/tables/" + idTable + "/order",
+        method: "GET",
+        dataType: "JSON",
+        error: function (data) {
             let tableObj = {};
             tableObj.id = idTable;
             let accountObj = {};
@@ -341,7 +381,7 @@ orders.addOrder = function (idTable) {
                 }
             })
         },
-        success:function (data){
+        success: function (data) {
             orders.addOrderDetails(idTable);
         }
     })
@@ -353,27 +393,35 @@ orders.addOrderDetails = function (idTable) {
         method: "GET",
         dataType: "JSON",
         success: function (data) {
-            $.each(arrOrderDetailsTest, function (i, v) {
-                let orderObj = {};
-                orderObj.id = data.id;
-                let productObj = {};
-                productObj.id = v.id;
-                let orderDetailObj = {};
-                orderDetailObj.order = orderObj;
-                orderDetailObj.product = productObj;
-                orderDetailObj.quantity = v.quantity;
-                orderDetailObj.priceEach = v.price;
-                orderDetailObj.totalPrice = v.price * v.quantity;
-                $.ajax({
-                    url: "http://localhost:8080/api/orderDetails/",
-                    method: "POST",
-                    dataType: "JSON",
-                    contentType: "application/json",
-                    data: JSON.stringify(orderDetailObj),
-                    success: function (data) {
-                        console.log("thanh cong details");
-                    }
-                })
+            $.ajax({
+                url: "http://localhost:8080/api/orderDetails/" + data.id + "/order",
+                method: "DELETE",
+                dataType: "JSON",
+                success: function (dataCurrent) {
+                    $.each(arrOrderDetailsTest, function (i, v) {
+                        let orderObj = {};
+                        orderObj.id = data.id;
+                        let productObj = {};
+                        productObj.id = v.id;
+                        let orderDetailObj = {};
+                        orderDetailObj.order = orderObj;
+                        orderDetailObj.product = productObj;
+                        orderDetailObj.quantity = v.quantity;
+                        orderDetailObj.priceEach = v.price;
+                        orderDetailObj.totalPrice = v.price * v.quantity;
+                        $.ajax({
+                            url: "http://localhost:8080/api/orderDetails/",
+                            method: "POST",
+                            dataType: "JSON",
+                            contentType: "application/json",
+                            data: JSON.stringify(orderDetailObj),
+                            success: function (data) {
+                                console.log("thanh cong details");
+                                tables.updateTable(idTable);
+                            }
+                        })
+                    })
+                }
             })
         }
     })
@@ -385,8 +433,9 @@ orders.showOrderAndOrderDetails = function (idTable) {
         method: "GET",
         dataType: "JSON",
         success: function (data) {
+            setStatusTable();
             $.ajax({
-                url: "http://localhost:8080/api/orders/" + data.id+"/orderDetails",
+                url: "http://localhost:8080/api/orders/" + data.id + "/orderDetails",
                 method: "GET",
                 dataType: "JSON",
                 success: function (data) {
@@ -398,10 +447,11 @@ orders.showOrderAndOrderDetails = function (idTable) {
                         detailObj.price = v.priceEach;
                         detailObj.quantity = v.quantity;
                         arrOrderDetailsTest.push(detailObj);
+                        setStatusTable();
                         $('#list-orderdetail').append(
                             `<tr class="row">
                                 <td class="d-xl-flex justify-content-xl-center align-items-xl-center order-item-trash col-1">
-                                    <i class="far fa-trash-alt d-xl-flex justify-content-xl-center align-items-xl-center"></i>
+                                    <i class="far fa-trash-alt d-xl-flex justify-content-xl-center align-items-xl-center" onclick="orders.removeOrderDetail(${v.product.id},${idTable})"></i>
                                 </td>
                                 <td class="d-xl-flex justify-content-xl-left align-items-xl-center col-3">
                                      <div>
@@ -413,9 +463,9 @@ orders.showOrderAndOrderDetails = function (idTable) {
                                 <td class="d-xl-flex justify-content-xl-left align-items-xl-center col-2">${v.priceEach} đ</td>
                                 <td class="d-xl-flex justify-content-xl-center align-items-xl-center col-3">
                                      <div class="quantity clearfix d-flex justify-content-center">
-                                          <input id="quantity-left-minus" onClick="this.parentNode.querySelector('input[type=number]').stepDown()" type="button" value="-" class="minus btn">
+                                          <input id="quantity-left-minus" onclick="this.parentNode.querySelector('input[type=number]').stepDown();orders.minusQuantity(${v.product.id})" type="button" value="-" class="minus btn">
                                           <input id="quantity" type="number" step="1" min="1" max="99" name="quantity" title="Qty" class="qty form-control d-inline-block" size="4" value="${v.quantity}" disabled>
-                                          <input id="quantity-right-plus" onClick="this.parentNode.querySelector('input[type=number]').stepUp()" type="button" value="+" class="plus btn">
+                                          <input id="quantity-right-plus" onclick="this.parentNode.querySelector('input[type=number]').stepUp();orders.plusQuantity(${v.product.id})" type="button" value="+" class="plus btn">
                                      </div>
                                 </td>
                                 <td class="d-xl-flex justify-content-xl-left align-items-xl-center col-2">
@@ -429,8 +479,50 @@ orders.showOrderAndOrderDetails = function (idTable) {
                     })
                 }
             })
+        },
+        error: function (data) {
+            setStatusTable();
+            console.log("vao loi")
+            orders.showArrOrderDetails(arrOrderDetailsTest);
         }
     })
+}
+
+orders.removeOrderDetail = function (idProduct, idTable) {
+    $.ajax({
+        url: "http://localhost:8080/api/tables/" + idTable + "/order",
+        method: "GET",
+        dataType: "JSON",
+        success: function (data) {
+            $.ajax({
+                url: "http://localhost:8080/api/orderDetails/" + data.id + "/product/" + idProduct,
+                method: "DELETE",
+                dataType: "json",
+                success: function (data) {
+                    $.each(arrOrderDetailsTest, function (i, v) {
+                        if (v.id === idProduct) {
+                            console.log("xoa arr roi");
+                            arrOrderDetailsTest.splice(i, 1);
+                        }
+                    })
+                    console.log("xoa thanh cong");
+                    orders.showOrderAndOrderDetails(idTable);
+
+                }
+            });
+        }
+    });
+}
+
+orders.removeArrOrderDetail = function (idProduct) {
+    $.each(arrOrderDetailsTest, function (i, v) {
+        if (v.id === idProduct) {
+            console.log(i);
+            arrOrderDetailsTest.splice(i, 1);
+            console.log("vao roi");
+        }
+    })
+    orders.showArrOrderDetails(arrOrderDetailsTest);
 }
 
 tables.closeTable = function (idTable) {
