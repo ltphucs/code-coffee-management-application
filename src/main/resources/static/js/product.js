@@ -368,6 +368,7 @@ products.get = function (id) {
             $('#inventory').val(data.product.inventory);
             $('#price').val(data.product.price);
             $('#image').val(data.product.image);
+            $('#multiImage').val(data.product.multiImage);
             $('#productLine').val(data.product.productLine.id);
             $('#productStatus').val(data.product.productStatus);
             $('#id').val(data.product.id);
@@ -388,27 +389,33 @@ function setStatus(inventory, product) {
 products.save = function () {
     if ($("#formAddEdit")) {
         if (!$('#id').val()) {
+            const form = new FormData();
+            form.append("multiImage", $('#multiImage').val())
+            form.append("name", $('#productName').val());
+            form.append("price", Number($('#price').val()));
+            form.append("image", $('#productName').val());
 
-            let productObj = {};
-            productObj.name = $('#productName').val();
-            // productObj.inventory = Number(0);
-            productObj.price = Number($('#price').val());
-            productObj.image = $('#image').val();
-            // productObj.productStatus = setStatus(productObj.inventory, productObj);
-            //
-            let productLineObj = {};
-            productLineObj.id = $("#productLine").val();
-            productLineObj.name = $("#productLine option:selected").html();
-            productObj.productLine = productLineObj;
+            // let productObj = {};
+            // productObj.name = $('#productName').val();
+            // // productObj.inventory = Number(0);
+            // productObj.price = Number($('#price').val());
+            // productObj.image = $('#image').val();
+            // productObj.multiImage = $('#multiImage').val();
+            // // productObj.productStatus = setStatus(productObj.inventory, productObj);
+            // //
+            // let productLineObj = {};
+            // productLineObj.id = $("#productLine").val();
+            // productLineObj.name = $("#productLine option:selected").html();
+            // productObj.productLine = productLineObj;
 
             $.ajax({
                 url: "http://localhost:8080/api/products/",
                 method: "POST",
                 dataType: "json",
                 contentType: "application/json",
-                data: JSON.stringify(productObj),
+                data: form,
                 success: function (data) {
-                    console.log("POST success");
+                    console.log(data);
                     $('#modalAddEdit').modal('hide');
                     $("#products-datatables").DataTable().ajax.reload();
 
@@ -425,7 +432,10 @@ products.save = function () {
                     productObj.inventory = data.product.inventory;
                     productObj.price = Number($('#price').val());
                     productObj.image = $('#image').val();
-                    productObj.productStatus = setStatus(productObj.inventory, productObj);
+
+                    productObj.multiImage = $('#multiImage').val();
+                    productObj.productStatus = setStatus(productObj.inventory,productObj);
+
                     productObj.id = $('#id').val();
 
                     let productLineObj = {};

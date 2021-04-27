@@ -12,8 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,8 +63,11 @@ public class ProductRestController {
         return new ResponseEntity<Product>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping
-    public ResponseEntity<?> save(@Valid @RequestBody Product product, BindingResult result) {
+    @PostMapping(
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> save(@Valid @ModelAttribute Product product, BindingResult result, HttpServletRequest request) throws IOException {
         if (result.hasErrors()){
             List<FieldError> fieldErrors = result.getFieldErrors();
             Map<String, String> errors = new HashMap<>();
@@ -75,7 +81,8 @@ public class ProductRestController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") Long id,@Valid @RequestBody Product product,BindingResult result) {
+    public ResponseEntity<?> update(@PathVariable("id") Long id,@Valid @RequestBody Product product,
+                                    BindingResult result,HttpServletRequest request) throws IOException {
         if (result.hasErrors()){
             List<FieldError> fieldErrors = result.getFieldErrors();
             Map<String, String> errors = new HashMap<>();
