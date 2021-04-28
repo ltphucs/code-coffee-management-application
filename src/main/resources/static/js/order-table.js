@@ -545,6 +545,7 @@ orders.removeOrderDetail=function (idOrder,idProduct,idTable){
         dataType:"JSON",
         success:function (data){
             console.log("xoa thanh cong");
+            orders.updateTotalPriceOrder(idTable,idOrder,-data.totalPrice)
             orders.checkOrderDetails(idOrder,idTable);
         }
     })
