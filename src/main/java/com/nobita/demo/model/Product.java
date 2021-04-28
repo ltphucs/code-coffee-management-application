@@ -4,6 +4,7 @@ import com.nobita.demo.model.en.ProductStatus;
 import lombok.Data;
 import org.springframework.data.annotation.Transient;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -23,8 +24,7 @@ public class Product {
     private Long price;
     private ProductLine productLine;
 
-    @Transient
-    private MultipartFile[] multiImage;
+    private MultipartFile multiImage;
 
     @NotBlank(message = "Image be not null")
     private String image;
