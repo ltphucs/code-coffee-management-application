@@ -14,6 +14,7 @@ function clearArr() {
 
 function setStatusTable() {
     if (arrOrderDetailsTest.length > 0) {
+
         $('#tableStatus').empty().append(
             `<b>Trạng thái:</b>
             <span id="status">USING</span>`
@@ -23,6 +24,7 @@ function setStatusTable() {
             `<b>Trạng thái:</b>
             <span id="status">EMPTY</span>`
         )
+
     }
 }
 
@@ -37,10 +39,10 @@ areas.initAreas = function () {
             $('#showOrdersTables').append(
                 `<div class="col mt-5">
                             <div class="d-xl-flex align-items-xl-start">
-                                <ul class="nav nav-pills text-capitalize border rounded-0 d-xl-flex flex-column" id="area-sql"></ul>
-                                <div class="tab-content">
-                                    <div class="tab-pane fade show active" role="tabpanel" id="tab">
-                                        <div class="col d-flex flex-wrap" id="tables-sql">
+                                <ul class="nav nav-pills text-capitalize border rounded-0 d-xl-flex flex-column shadow" id="area-sql"></ul>
+                                <div class="tab-content shadow">
+                                    <div class="tab-pane fade show active card" role="tabpanel" id="tab">
+                                        <div class="col d-flex flex-wrap pt-4 pb-4" id="tables-sql">
                                         </div>
                                     </div>
                                 </div>
@@ -50,10 +52,11 @@ areas.initAreas = function () {
             $.each(data, function (i, v) {
                 $('#area-sql').append(
                     `<li class="nav-item w-100px">
-                            <a class="nav-link" role="tab" data-toggle="pill" href="#tab" onclick="areas.showTables(${v.id})">${v.name}</a>
+                            <a class="nav-link" id="area-${v.id}" role="tab" data-toggle="pill" href="#tab" onclick="areas.showTables(${v.id})">${v.name}</a>
                         </li>`
                 );
-            })
+            });
+            $("#area-1").click();
         }
     })
 }
@@ -70,10 +73,10 @@ areas.showMenu = function () {
                         <p>${v.nameProductLine}</p>
                         <div class="coffee-search-items d-flex flex-row row">
                         ${v.productList.map(p =>
-                        `<div class="coffee-search-item p-2 col-3 d-flex flex-column justify-content-center align-items-center">
+                        `<div class="coffee-search-item p-2 col-3 d-flex flex-column align-items-center">
                                 <div
                                     class="mx-width-100 mx-height-100 w-100px h-100px bg-size-contain bg-pos-center d-flex flex-column justify-content-between"
-                                    style="background-image: url(assets/img/Tear_of_the_Goddess_Large.jpg);" onclick="orders.addArrOrderDetails(${p.id})">
+                                    style="background-image: url(https://static.wikia.nocookie.net/leagueoflegends/images/6/66/Tear_of_the_Goddess_item_HD.png/revision/latest?cb=20201111004755);" onclick="orders.addArrOrderDetails(${p.id})">
                                     <span class="text-white price">Giá: ${p.price}</span>
                                 </div>
                                 <p class="product-name">${p.name}</p>
@@ -90,7 +93,6 @@ areas.showMenu = function () {
 areas.showTables = function (idArea) {
     $('#showOrder').empty().hide();
     $('#showTables').empty().hide();
-    $('#tables-sql').empty();
     $.ajax({
         url: "http://localhost:8080/api/areas/" + idArea + "/tables",
         method: "GET",
@@ -98,14 +100,26 @@ areas.showTables = function (idArea) {
         success: function (data) {
             $('#tables-sql').empty();
             $.each(data, function (i, v) {
-                $('#tables-sql').append(
-                    `<div
+                if (v.tableStatus === "USING") {
+                    $('#tables-sql').append(
+                        `<div
+                            class="d-flex flex-column justify-content-between align-items-center p-3 table-item">
+                            <i class="fl flaticon-table line-height-1 text-success" style="font-size: 110px" onclick="tables.showFormAddOrder(${v.id})">
+                            </i>
+                            <h5 class="d-lfex justify-content-center">${v.name}</h5>
+                        </div>`
+                    )
+                } else {
+                    $('#tables-sql').append(
+                        `<div
                             class="d-flex flex-column justify-content-between align-items-center p-3 table-item">
                             <i class="fl flaticon-table line-height-1" style="font-size: 110px" onclick="tables.showFormAddOrder(${v.id})">
                             </i>
                             <h5 class="d-lfex justify-content-center">${v.name}</h5>
                         </div>`
-                )
+                    )
+                }
+
             })
             $('#tables-sql').append(
                 `<a href="javascript:;" class="d-flex flex-column justify-content-center align-items-center w-200px" onclick="tables.showFormAddTable(${idArea})">
@@ -118,26 +132,47 @@ areas.showTables = function (idArea) {
     })
 }
 
-tables.showFormAddTable = function (idTable) {
+tables.showFormAddTable = function (idArea) {
     $('#showOrder').remove();
     $('#showTables').remove();
     $('#showOrdersTables').append(
-        `<div class="col table-add-form" id="showTables">
-                <div>
-                    <form method="post" id="formAddEdit" name="formAddEdit"><h2 class="text-center mt-3">Thêm bàn mới</h2>
-                    <input type="hidden" name="id" id="id">
-                        <div class="form-group"><label>Tên bàn</label><input class="form-control" type="text" name="name" id="name"
-                                                                             placeholder="Mời nhập tên bàn" required></div>
-                        <div class="form-group"><label>Mô tả/Ghi chú</label><textarea class="form-control" name="comment" id="comment"
-                                                                                      placeholder="Nhập ghi chú"
-                                                                                      rows="5" required></textarea></div>                                                                             
+        `<div class="col table-add-form mt-5" id="showTables">
+                <div class="card shadow">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Thêm bàn mới</h6>
+                        <div>
+                            <a href="javascript:;" class="btn btn-warning btn-circle mr-2">
+                                  <i class="fas fa-cog"></i>
+                             </a>       
+                             <a href="javascript:;" class="btn btn-danger btn-circle" onclick="tables.closeTable(${idArea})">
+                                 <i class="fas fa-times"></i>
+                             </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <input type="hidden" name="id" id="id">
+                            <div class="form-group"><label>Tên bàn</label>
+                            <input class="form-control" type="text" name="name" id="name"
+                                                                                 placeholder="Mời nhập tên bàn" required>
+                            <small id="err-add-table-name" class="text-danger"></small>
+    
+                            </div>
+                            <div class="form-group"><label>Mô tả/Ghi chú</label><textarea class="form-control" name="comment" id="comment"
+                                                                                          placeholder="Nhập ghi chú"
+                                                                                          rows="5" required></textarea>
+                            </div>      
+                    </div>
+                    <div class="card-footer">
                        <div class="form-group">
                             <div class="form-row row">
-                                    <button class="btn btn-success col-6" type="button" onclick="tables.addTable(${idTable})">Thực hiện</button>
-                                    <button class="btn btn-danger col-6 table-add-cancel-btn" type="button" onclick="tables.closeTable(${idTable})">Hủy bỏ</button>
-                                </div>
+
+                                    <button class="btn btn-success col" type="button" onclick="tables.addTable(${idArea})">Thực hiện</button>
+                            </div>
+
                         </div>
-                    </form>
+                 
+                    </div>
+                    
                 </div>
             </div>`
     )
@@ -157,9 +192,13 @@ tables.addTable = function (idArea) {
         contentType: "application/json",
         data: JSON.stringify(tableObj),
         success: function (data) {
+            toastr.success("Thêm bàn mới thành công");
             tables.closeTable();
             $("#showTables").empty();
             areas.showTables(idArea);
+        },
+        error: function (err) {
+            $("#err-add-table-name").html(err.responseJSON.name);
         }
     })
 }
@@ -181,6 +220,7 @@ tables.updateTableStatus = function (idTable) {
 }
 
 tables.showFormAddOrder = function (idTable) {
+    console.log(idTable);
     clearArr();
     console.log(arrOrderDetailsTest);
     $.ajax({
@@ -188,67 +228,82 @@ tables.showFormAddOrder = function (idTable) {
         method: "GET",
         dataType: "JSON",
         success: function (data) {
+            console.log(data)
             $('#showTables').remove();
             $('#showOrder').remove();
             $('#showOrdersTables').append(
-                `<div class="col order-list" id="showOrder">
-                <div>
-                <div class="form-row">
-                    <div class="col">
+                `<div class="col order-list mt-5" id="showOrder">
+                <div class="card shadow">
+                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Đặt món</h6>
                         <div>
-                            <h4>
-                                <b>Bàn ${data.name}</b>
-                            </h4>
+                            <a href="javascript:;" class="btn btn-warning btn-circle mr-2">
+                                  <i class="fas fa-cog"></i>
+                             </a>       
+                             <a href="javascript:;" class="btn btn-danger btn-circle" onclick="tables.closeOrder(${data.area.id})">
+                                 <i class="fas fa-times"></i>
+                             </a>
                         </div>
+                         
                     </div>
+                    <div class="card-body">
+                        <div class="form-row flex-column">
+                            <div class="col">
+                                <div>
+                                    <h4>
+                                        <b>Bàn ${data.name}</b>
+                                    </h4>
+                                </div>
+                            </div>
+               
                     <div class="col">
                         <div>
                             <h4 id="tableStatus">
                             </h4>
+
                         </div>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col">
-                        <div class="table">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr class="row order-table-title">
-                                        <th class="col-1">&nbsp;</th>
-                                        <th class="col-3">Sản phẩm</th>
-                                        <th class="col-2">Đơn giá</th>
-                                        <th class="col-3 justify-content-center">Số lượng</th>
-                                        <th class="col-2">Tổng</th>
-                                        <th class="col-1">Trạng thái</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="" id="list-orderdetail">
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <hr>
-                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
-                        <a href="#"
-                           data-toggle="modal"
-                           data-target="#exampleModalCenter"
-                           class="d-xl-flex justify-content-xl-center align-items-xl-center"
-                           style="  border-radius: 50%;  border: 2px solid;  width: 50px;  height: 50px; " onclick="areas.showMenu()">
-                            <i
-                                class="fa fa-plus" style="font-size: 30px;"></i>
-                        </a>
-                    </div>
-                    <hr>
-                        <div class="form-group">
-                            <div class="row">
-                                <button class="btn btn-success col-6 pt-2 pb-2" type="button" onclick="orders.addOrder(${idTable})" id="btnSuccess">Cập nhật</button>
-                                <button class="btn btn-danger col-6 pt-2 pb-2 order-list-cancel-btn" type="button" onclick="tables.closeOrder(${idTable})">Hủy
-                                    bỏ
-                                </button>
+                        <div class="form-row">
+                            <div class="col">
+                                <div class="table">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr class="row order-table-title">
+                                                <th class="col-1">&nbsp;</th>
+                                                <th class="col-3">Sản phẩm</th>
+                                                <th class="col-2">Đơn giá</th>
+                                                <th class="col-3 justify-content-center">Số lượng</th>
+                                                <th class="col-2">Tổng</th>
+                                                <th class="col-1">Trạng thái</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="" id="list-orderdetail">
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
+                        <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
+                            <a href="javascript:;"
+                               data-toggle="modal"
+                               data-target="#exampleModalCenter"
+                               class="d-xl-flex justify-content-xl-center align-items-xl-center"
+                               style="  border-radius: 50%;  border: 2px solid;  width: 50px;  height: 50px; " onclick="areas.showMenu()">
+                                <i
+                                    class="fa fa-plus" style="font-size: 30px;"></i>
+                            </a>
                         </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="form-group">
+
+                                <div class="row">
+                                    <button class="btn btn-success col pt-2 pb-2" type="button" onclick="orders.addOrder(${idTable})">Cập nhật</button>
+                                    
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
             </div>`
             )
             orders.showOrderAndOrderDetails(idTable);
@@ -259,26 +314,24 @@ tables.showFormAddOrder = function (idTable) {
 orders.addArrOrderDetails = function (idProduct) {
     let hasProduct = false;
     $.ajax({
-        url: "http://localhost:8080/api/products/" + idProduct,
+            url: "http://localhost:8080/api/products/" + idProduct,
         method: "GET",
         dataType: "JSON",
         success: function (data) {
-            $.each(data, function (i, vCurrent) {
                 $.each(arrOrderDetailsTest, function (i, v) {
-                    if (v.id === vCurrent.id) {
+                    if (v.id === data.id) {
                         v.quantity = v.quantity + 1;
                         hasProduct = true;
                     }
                 })
                 if (!hasProduct) {
                     let detailObj = {};
-                    detailObj.id = vCurrent.id;
-                    detailObj.name = vCurrent.name;
-                    detailObj.price = vCurrent.price;
+                    detailObj.id = data.id;
+                    detailObj.name = data.name;
+                    detailObj.price = data.price;
                     detailObj.quantity = 1;
                     arrOrderDetailsTest.push(detailObj);
                 }
-            })
             console.log(arrOrderDetailsTest);
             orders.showArrOrderDetails(arrOrderDetailsTest);
         }
@@ -347,8 +400,8 @@ orders.showArrOrderDetails = function (arrOrderDetailsTest) {
                     </strong>
                 </td>
                 <td class="d-xl-flex justify-content-xl-center align-items-xl-center col-1">
-                    <input
-                        class="form-check" type="checkbox">
+                    <i class="fas fa-check text-success" style="width: 50%"></i>
+                    <i class="fas fa-redo text-danger" style="width: 50%"></i>
                 </td>
             </tr>`
         )
@@ -497,7 +550,8 @@ orders.showOrderAndOrderDetails = function (idTable) {
                                      <strong>${v.priceEach * v.quantity} đ</strong>
                                 </td>
                                 <td class="d-xl-flex justify-content-xl-center align-items-xl-center col-1">
-                                     <input class="form-check" type="checkbox">
+                                     <i class="fas fa-check text-success" style="width: 50%"></i>
+                                     <i class="fas fa-redo text-danger" style="width: 50%"></i>
                                 </td>
                             </tr>`
                         )
