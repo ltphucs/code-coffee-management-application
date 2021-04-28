@@ -164,7 +164,7 @@ tables.addTable = function (idArea) {
     })
 }
 
-tables.updateTable = function (idTable) {
+tables.updateTableStatus = function (idTable) {
     let tableObj = {};
     tableObj.id = idTable;
     tableObj.tableStatus = document.getElementById("status").innerHTML;
@@ -417,7 +417,32 @@ orders.addOrderDetails = function (idTable) {
                             data: JSON.stringify(orderDetailObj),
                             success: function (data) {
                                 console.log("thanh cong details");
-                                tables.updateTable(idTable);
+                                tables.updateTableStatus(idTable);
+                            }
+                        })
+                    })
+                },
+                error:function (){
+                    $.each(arrOrderDetailsTest, function (i, v) {
+                        let orderObj = {};
+                        orderObj.id = data.id;
+                        let productObj = {};
+                        productObj.id = v.id;
+                        let orderDetailObj = {};
+                        orderDetailObj.order = orderObj;
+                        orderDetailObj.product = productObj;
+                        orderDetailObj.quantity = v.quantity;
+                        orderDetailObj.priceEach = v.price;
+                        orderDetailObj.totalPrice = v.price * v.quantity;
+                        $.ajax({
+                            url: "http://localhost:8080/api/orderDetails/",
+                            method: "POST",
+                            dataType: "JSON",
+                            contentType: "application/json",
+                            data: JSON.stringify(orderDetailObj),
+                            success: function (data) {
+                                console.log("thanh cong details");
+                                tables.updateTableStatus(idTable);
                             }
                         })
                     })
@@ -505,13 +530,88 @@ orders.removeOrderDetail = function (idProduct, idTable) {
                             arrOrderDetailsTest.splice(i, 1);
                         }
                     })
+                    tables.updateTableStatus(idTable);
                     console.log("xoa thanh cong");
                     orders.showOrderAndOrderDetails(idTable);
-
                 }
             });
         }
     });
+}
+
+orders.addBill=function (idTable){
+    $.ajax({
+        url:"http://localhost:8080/api/tables/"+idTable+"/order",
+        method:"GET",
+        dataType:"JSON",
+        success:function (data){
+            let billObj={};
+            billObj.idOrder=data.id;
+            billObj.dateJoin=data.dateJoin;
+            billObj.nameTable=data.table.name;
+            billObj.totalPrice=data.totalAllPrice;
+            $.ajax({
+                url:"http://localhost:8080/api/bills/",
+                method: "POST",
+                dataType: "JSON",
+                contentType: "application/json",
+                data: JSON.stringify(billObj),
+                success:function (data){
+                    console.log("vao bill");
+                    orders.addBillDetails(data.id);
+                }
+            })
+        }
+    })
+}
+
+orders.addBillDetails=function (idOrder){
+    $.ajax({
+        url:"http://localhost:8080/api/orders/"+idOrder+"/orderDetails",
+        method:"GET",
+        dataType:"JSON",
+        success:function (data){
+            $.each(data,function (i,v){
+                let billDetailObj={};
+                billDetailObj.idOrder=v.idOrder;
+                billDetailObj.nameProdcut=v.product.name;
+                billDetailObj.quantity=v.quantity;
+                billDetailObj.priceEach=v.priceEach;
+                $.ajax({
+                    url:"http://localhost:8080/api/billDetails/",
+                    method: "POST",
+                    dataType: "JSON",
+                    contentType: "application/json",
+                    data: JSON.stringify(billDetailObj),
+                    success:function (data){
+                        console.log("vao bill details");
+                        orders.removeAllOrderDetails(idOrder);
+                    }
+                })
+            })
+        }
+})
+}
+
+orders.removeAllOrderDetails=function (idOrder){
+    $.ajax({
+        url:"http://localhost:8080/api/orders/"+idOrder+"/orderDetails",
+        method:"DELETE",
+        dataType:function (data){
+            console.log("xoa details r");
+            orders.removeOrder(idOrder);
+        }
+    })
+}
+
+orders.removeOrder=function (idOrder){
+    $.ajax({
+        url:"http://localhost:8080/api/orders/"+idOrder,
+        method:"DELETE",
+        dataType:function (data){
+            console.log("xoa order roi")
+        }
+    })
 }
 
 orders.removeArrOrderDetail = function (idProduct) {
