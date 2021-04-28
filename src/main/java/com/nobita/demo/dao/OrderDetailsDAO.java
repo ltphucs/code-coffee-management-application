@@ -49,7 +49,7 @@ public class OrderDetailsDAO implements BaseDAO<OrderDetail> {
     @Override
     public boolean update(OrderDetail orderDetail) {
         String sql = "update orderdetail set quantity=?,total_price=? where id_product=?";
-        Object[] values = {orderDetail.getQuantity(), orderDetail.getTotalPrice()};
+        Object[] values = {orderDetail.getQuantity(), orderDetail.getTotalPrice(),orderDetail.getProduct().getId()};
         return jdbcTemplate.update(sql, values) > 0;
     }
 
