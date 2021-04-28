@@ -63,11 +63,8 @@ public class ProductRestController {
         return new ResponseEntity<Product>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping(
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public ResponseEntity<?> save(@Valid @ModelAttribute Product product, BindingResult result, HttpServletRequest request) throws IOException {
+    @PostMapping
+    public ResponseEntity<?> save(@Valid @RequestBody Product product, BindingResult result, HttpServletRequest request) throws IOException {
         if (result.hasErrors()){
             List<FieldError> fieldErrors = result.getFieldErrors();
             Map<String, String> errors = new HashMap<>();

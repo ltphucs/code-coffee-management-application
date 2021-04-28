@@ -220,10 +220,14 @@
                                         <label>Ảnh</label>
                                     </div>
                                     <div class="col-9">
+                                        <input class="form-control" type="hidden"
+                                               name="imgUrl" id="imgUrl">
+
                                         <input class="form-control" type="file"
                                                name="multiImage" id="multiImage"
                                                data-rule-required=true onchange="products.saveImage()">
                                         <div id="done-upload">
+
                                         </div>
                                     </div>
                                 </div>
@@ -241,8 +245,7 @@
 
                         <!-- Modal footer -->
                         <div class="modal-footer">
-                            <a href="javascript:;" class="btn btn-primary"
-                               onclick="products.save()">Save</a>
+                            <div id="save"></div>
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                         </div>
 
@@ -252,7 +255,7 @@
 
             <!--            The modal listProductLine-->
             <div class="modal" id="modalProductLine" name="modalProductLine">
-                <div class="modal-dialog" style="max-width: 80% !important">
+                <div class="modal-dialog" style="max-width: 80% !important;  max-height: calc(100vh - 210px)">
                     <div class="modal-content">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
