@@ -578,15 +578,21 @@ orders.removeOrderDetail = function (idProduct, idTable) {
                 method: "DELETE",
                 dataType: "json",
                 success: function (data) {
+                    console.log("truoc khi xoa");
+                    console.log(arrOrderDetailsTest);
                     $.each(arrOrderDetailsTest, function (i, v) {
                         if (v.id === idProduct) {
                             console.log("xoa arr roi");
                             arrOrderDetailsTest.splice(i, 1);
                         }
                     })
+                    console.log("sau khi xoa");
+                    console.log(arrOrderDetailsTest);
                     tables.updateTableStatus(idTable);
                     console.log("xoa thanh cong");
                     orders.showOrderAndOrderDetails(idTable);
+                    console.log("sau khi load function");
+                    console.log(arrOrderDetailsTest);
                 }
             });
         }
