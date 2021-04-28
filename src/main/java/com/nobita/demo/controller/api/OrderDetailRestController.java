@@ -64,11 +64,4 @@ public class OrderDetailRestController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-
-    @DeleteMapping("/{idOrder}/order")
-    public ResponseEntity<?> deleteByIdOrder(@PathVariable("idOrder") long idOrder) {
-        List<OrderDetail> orderDetails=orderDetailService.findByIdOrder(idOrder);
-        orderDetailService.deleteByIdOrder(idOrder);
-        return new ResponseEntity<>(orderDetails,HttpStatus.OK);
-    }
 }
