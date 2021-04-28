@@ -75,9 +75,10 @@ areas.showTables = function (idArea) {
         method: "GET",
         dataType: "JSON",
         success: function (data) {
+            $('#tables-sql').empty();
             $.each(data, function (i, v) {
                 if (v.tableStatus === "USING") {
-                    $('#tables-sql').empty().append(
+                    $('#tables-sql').append(
                         `<div
                             class="d-flex flex-column justify-content-between align-items-center p-3 table-item">
                             <i class="fl flaticon-table line-height-1 text-success" style="font-size: 110px" onclick="tables.showFormAddOrder(${v.id})">
@@ -86,7 +87,7 @@ areas.showTables = function (idArea) {
                         </div>`
                     )
                 } else {
-                    $('#tables-sql').empty().append(
+                    $('#tables-sql').append(
                         `<div
                             class="d-flex flex-column justify-content-between align-items-center p-3 table-item">
                             <i class="fl flaticon-table line-height-1" style="font-size: 110px" onclick="tables.showFormAddOrder(${v.id})">
@@ -95,6 +96,7 @@ areas.showTables = function (idArea) {
                         </div>`
                     )
                 }
+
             })
             $('#tables-sql').append(
                 `<a href="javascript:;" class="d-flex flex-column justify-content-center align-items-center w-200px" onclick="tables.showFormAddTable(${idArea})">
