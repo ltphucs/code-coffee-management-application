@@ -13,8 +13,7 @@ areas.initAreas = function () {
         dataType: "json",
         success: function (data) {
             $('#area-sql').empty();
-            $('#showOrdersTables').empty();
-            $('#showOrdersTables').append(
+            $('#showOrdersTables').empty().append(
                 `<div class="col mt-5">
                             <div class="d-xl-flex align-items-xl-start">
                                 <ul class="nav nav-pills text-capitalize border rounded-0 d-xl-flex flex-column shadow" id="area-sql"></ul>
@@ -76,10 +75,9 @@ areas.showTables = function (idArea) {
         method: "GET",
         dataType: "JSON",
         success: function (data) {
-            $('#tables-sql').empty();
             $.each(data, function (i, v) {
                 if (v.tableStatus === "USING") {
-                    $('#tables-sql').append(
+                    $('#tables-sql').empty().append(
                         `<div
                             class="d-flex flex-column justify-content-between align-items-center p-3 table-item">
                             <i class="fl flaticon-table line-height-1 text-success" style="font-size: 110px" onclick="tables.showFormAddOrder(${v.id})">
@@ -88,7 +86,7 @@ areas.showTables = function (idArea) {
                         </div>`
                     )
                 } else {
-                    $('#tables-sql').append(
+                    $('#tables-sql').empty().append(
                         `<div
                             class="d-flex flex-column justify-content-between align-items-center p-3 table-item">
                             <i class="fl flaticon-table line-height-1" style="font-size: 110px" onclick="tables.showFormAddOrder(${v.id})">
@@ -97,7 +95,6 @@ areas.showTables = function (idArea) {
                         </div>`
                     )
                 }
-
             })
             $('#tables-sql').append(
                 `<a href="javascript:;" class="d-flex flex-column justify-content-center align-items-center w-200px" onclick="tables.showFormAddTable(${idArea})">
@@ -219,7 +216,6 @@ tables.showFormAddOrder = function (idTable) {
         method: "GET",
         dataType: "JSON",
         success: function (data) {
-            console.log(data)
             $('#showTables').remove();
             $('#showOrder').remove();
             $('#showOrdersTables').append(
