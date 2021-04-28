@@ -1,6 +1,5 @@
 package com.nobita.demo.controller.api;
 
-import com.nobita.demo.model.Order;
 import com.nobita.demo.model.OrderDetail;
 import com.nobita.demo.service.OrderDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,12 +55,12 @@ public class OrderDetailRestController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") long id) {
-        OrderDetail orderDetail = orderDetailService.findByID(id);
+    @DeleteMapping("/{idOrder}/product/{idProduct}")
+    public ResponseEntity<?> deleteByIdProduct(@PathVariable("idProduct") long idProduct,@PathVariable("idOrder") Long idOrder) {
+        OrderDetail orderDetail = orderDetailService.findByIdProductAndIdOrder(idProduct,idOrder);
         if (orderDetail != null) {
-            orderDetailService.delete(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            orderDetailService.deleteByIdProductAndIdOrder(idProduct,idOrder);
+            return new ResponseEntity<>(orderDetail, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

@@ -1,7 +1,11 @@
 package com.nobita.demo.controller.api;
 
+import com.nobita.demo.model.Bill;
+import com.nobita.demo.model.BillDetail;
 import com.nobita.demo.model.Order;
 import com.nobita.demo.model.OrderDetail;
+import com.nobita.demo.service.BillDetailsService;
+import com.nobita.demo.service.BillService;
 import com.nobita.demo.service.OrderDetailService;
 import com.nobita.demo.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +25,12 @@ public class OrderRestController {
 
     @Autowired
     OrderDetailService orderDetailService;
+
+    @Autowired
+    BillService billService;
+
+    @Autowired
+    BillDetailsService billDetailsService;
 
     @GetMapping
     public ResponseEntity<?> list() {
@@ -71,5 +81,25 @@ public class OrderRestController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping(value = "/{idOrder}/bill",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getBillByIdOrder(@PathVariable("idOrder") Long idOrder){
+        Bill bill=billService.findByIdOrder(idOrder);
+        return new ResponseEntity<>(bill,HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/{idOrder}/billDetails",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getBillDetailsByIdOrder(@PathVariable("idOrder") Long idOrder){
+        List<BillDetail> billDetails=billDetailsService.findByIdOrder(idOrder);
+        return new ResponseEntity<>(billDetails,HttpStatus.OK);
+    }
+
+
+    @DeleteMapping("/{idOrder}/orderDetails")
+    public ResponseEntity<?> deleteByIdOrder(@PathVariable("idOrder") long idOrder) {
+        List<OrderDetail> orderDetails=orderDetailService.findByIdOrder(idOrder);
+        orderDetailService.deleteByIdOrder(idOrder);
+        return new ResponseEntity<>(orderDetails,HttpStatus.OK);
     }
 }
