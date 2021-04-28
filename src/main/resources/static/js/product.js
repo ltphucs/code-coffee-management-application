@@ -156,7 +156,7 @@ products.innitProductLineTable = function () {
 
 // table product line
 products.listProductLine = function () {
-    // products.resetForm();
+    products.resetForm();
     $('#modalProductLine').modal('show')
 
     products.innitProductLineTable();
@@ -294,14 +294,22 @@ products.addNew = function () {
 
 products.resetForm = function () {
     $('#formAddEdit')[0].reset();
+    $('#multiImage').val('');
+    $('#imgUrl').val('');
+    $('#done-upload').empty();
     $('#productName').val('');
     $('#inventory').val('');
     $('#image').val('');
     $('#price').val('');
     $('#productLine.name').val('');
 
-}
-
+};
+// reset form
+// hidden.modal = function (){
+//     $('#formAddEdit')[0].reset();
+//     $('#multiImage').val('');
+//     $('#imgUrl').val('');
+// };
 // select option productline
 products.initProductLines = function () {
     $.ajax({
@@ -362,12 +370,15 @@ products.get = function (id) {
         success: function (data) {
             console.log(data);
             $('#formAddEdit')[0].reset();
-            //
             $('#modalTitle').html("Sửa sản phẩm");
             $('#productName').val(data.product.name);
             $('#inventory').val(data.product.inventory);
+            $('#done-upload').html(
+                `<img src="${data.product.image}" style="width: 100px" alt="">`
+            );
             $('#price').val(data.product.price);
             $('#image').val(data.product.image);
+            $('#multiImage').val(data.product.multiImage);
             $('#productLine').val(data.product.productLine.id);
             $('#productStatus').val(data.product.productStatus);
             $('#id').val(data.product.id);
@@ -385,72 +396,88 @@ function setStatus(inventory, product) {
     }
 }
 
+products.saveImage =function (){
+    let form = new FormData();
+    form.append("file", $('#multiImage')[0].files[0]);
+    $.ajax({
+        url: "http://localhost:8080/api/upload",
+        type: "POST",
+        data: form,
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            products.resetForm();
+            $('#formAddEdit')[0].reset();
+            $("#imgUrl").val(data.url);
+            $("#done-upload").html(
+                `<img src="${data.url}" alt="" width="100px">`
+            );
+            $("#save").html(
+                `<a href="javascript:;" class="btn btn-primary"
+                               onclick="products.save()">Save</a>`
+            );
+        }
+    });
+}
+
 products.save = function () {
     if ($("#formAddEdit")) {
         if (!$('#id').val()) {
+            let objProduts = {};
+            objProduts.id = Number($('#id').val());
+            objProduts.name = $('#productName').val();
+            objProduts.price = Number($('#price').val());
+            objProduts.image = $('#imgUrl').val();
 
-            let productObj = {};
-            productObj.name = $('#productName').val();
-            // productObj.inventory = Number(0);
-            productObj.price = Number($('#price').val());
-            productObj.image = $('#image').val();
-            // productObj.productStatus = setStatus(productObj.inventory, productObj);
-            //
-            let productLineObj = {};
-            productLineObj.id = $("#productLine").val();
-            productLineObj.name = $("#productLine option:selected").html();
-            productObj.productLine = productLineObj;
+            let objProductLine = {};
+            objProductLine.id = Number($('#productLine').val());
+            objProductLine.name = $("#productLine option:selected").html();
+            objProduts.productLine = objProductLine;
+            console.log(objProduts);
 
             $.ajax({
-                url: "http://localhost:8080/api/products/",
-                method: "POST",
-                dataType: "json",
-                contentType: "application/json",
-                data: JSON.stringify(productObj),
+                url: "http://localhost:8080/api/products",
+                method : "POST",
+                dataType : "json",
+                contentType : "application/json",
+                data : JSON.stringify(objProduts),
                 success: function (data) {
-                    console.log("POST success");
+                    toastr.success("Thêm mới thành công")
                     $('#modalAddEdit').modal('hide');
                     $("#products-datatables").DataTable().ajax.reload();
-
+                },
+                error: function (){
+                    console.log('loi')
                 }
             });
         } else {
+            let objProduts = {};
+            objProduts.id = Number($('#id').val());
+            objProduts.name = $('#productName').val();
+            objProduts.price = Number($('#price').val());
+            objProduts.image = $('#imgUrl').val();
+
+            let objProductLine = {};
+            objProductLine.id = Number($('#productLine').val());
+            objProductLine.name = $("#productLine option:selected").html();
+            objProduts.productLine = objProductLine;
+            console.log(objProduts);
+
             $.ajax({
-                url: `http://localhost:8080/api/products/${$('#id').val()}`,
-                method: "GET",
-                dataType: "json",
+                url: "http://localhost:8080/api/products" + objProduts.id,
+                method : "PUT",
+                dataType : "json",
+                contentType : "application/json",
+                data : JSON.stringify(objProduts),
                 success: function (data) {
-                    let productObj = {};
-                    productObj.name = $('#productName').val();
-                    productObj.inventory = data.product.inventory;
-                    productObj.price = Number($('#price').val());
-                    productObj.image = $('#image').val();
-                    productObj.productStatus = setStatus(productObj.inventory, productObj);
-                    productObj.id = $('#id').val();
-
-                    let productLineObj = {};
-                    productLineObj.id = Number($("#productLine").val());
-                    productLineObj.name = $("#productLine option:selected").html();
-                    productObj.productLine = productLineObj;
-
-                    $.ajax({
-                        url: "http://localhost:8080/api/products/" + productObj.id,
-                        method: "PUT",
-                        dataType: "json",
-                        contentType: "application/json",
-                        data: JSON.stringify(productObj),
-                        success: function (data) {
-                            $('#modalAddEdit').modal('hide');
-                            $("#products-datatables").DataTable().ajax.reload();
-                        },
-                        error: function (err) {
-                            console.log(err.responseJSON);
-                        }
-
-                    });
+                    toastr.success("Cập nhật thành công")
+                    $('#modalAddEdit').modal('hide');
+                    $("#products-datatables").DataTable().ajax.reload();
+                },
+                error: function (){
+                    console.log('loi')
                 }
-            })
-
+            });
         }
     }
 };

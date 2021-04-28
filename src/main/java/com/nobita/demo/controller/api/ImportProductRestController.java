@@ -67,13 +67,6 @@ public class ImportProductRestController {
         }
         ImportProduct importProduct1 = importProductService.findByID(id);
         if (importProduct1 != null){
-            System.out.println(importProduct);
-//            importProduct1.setDateJoin(importProduct.getDateJoin());
-//            importProduct1.setProduct(importProduct.getProduct());
-//            importProduct1.setQuantity(importProduct.getQuantity());
-//            importProduct1.setPrice(importProduct.getPrice());
-//            importProduct1.setTotalPrice(importProduct.getTotalPrice());
-//            importProduct1.setComment(importProduct.getComment());
             importProductService.update(importProduct);
             return new ResponseEntity<>(importProduct,HttpStatus.OK);
         }
