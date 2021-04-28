@@ -31,8 +31,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity https) throws Exception {
         https   .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/","/products","/importProducts","/ingredients","/importingredients").hasAuthority("ADMIN")
-                .antMatchers("/order").hasAnyAuthority("ADMIN","CASHIER")
+                .antMatchers("/","/products","/importProducts","/ingredients","/importingredients").permitAll()
+                .antMatchers("/order").permitAll()
                 .and()
                 .formLogin()
                 .loginPage("/login")

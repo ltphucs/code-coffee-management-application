@@ -28,9 +28,6 @@ function setStatusTable() {
     }
 }
 
-// #1cc88a
-
-
 areas.initAreas = function () {
     $.ajax({
         url: "http://localhost:8080/api/areas/",
@@ -135,7 +132,7 @@ areas.showTables = function (idArea) {
     })
 }
 
-tables.showFormAddTable = function (idTable) {
+tables.showFormAddTable = function (idArea) {
     $('#showOrder').remove();
     $('#showTables').remove();
     $('#showOrdersTables').append(
@@ -147,7 +144,7 @@ tables.showFormAddTable = function (idTable) {
                             <a href="javascript:;" class="btn btn-warning btn-circle mr-2">
                                   <i class="fas fa-cog"></i>
                              </a>       
-                             <a href="javascript:;" class="btn btn-danger btn-circle" onclick="tables.closeTable(${id})">
+                             <a href="javascript:;" class="btn btn-danger btn-circle" onclick="tables.closeTable(${idArea})">
                                  <i class="fas fa-times"></i>
                              </a>
                         </div>
@@ -169,11 +166,11 @@ tables.showFormAddTable = function (idTable) {
                        <div class="form-group">
                             <div class="form-row row">
 
-                                    <button class="btn btn-success col" type="button" onclick="tables.addTable(${id})">Thực hiện</button>
+                                    <button class="btn btn-success col" type="button" onclick="tables.addTable(${idArea})">Thực hiện</button>
                             </div>
 
                         </div>
-                    
+                 
                     </div>
                     
                 </div>
@@ -250,7 +247,7 @@ tables.showFormAddOrder = function (idTable) {
                          
                     </div>
                     <div class="card-body">
-                        <div class="form-row">
+                        <div class="form-row flex-column">
                             <div class="col">
                                 <div>
                                     <h4>
@@ -317,26 +314,24 @@ tables.showFormAddOrder = function (idTable) {
 orders.addArrOrderDetails = function (idProduct) {
     let hasProduct = false;
     $.ajax({
-        url: "http://localhost:8080/api/products/" + idProduct,
+            url: "http://localhost:8080/api/products/" + idProduct,
         method: "GET",
         dataType: "JSON",
         success: function (data) {
-            $.each(data, function (i, vCurrent) {
                 $.each(arrOrderDetailsTest, function (i, v) {
-                    if (v.id === vCurrent.id) {
+                    if (v.id === data.id) {
                         v.quantity = v.quantity + 1;
                         hasProduct = true;
                     }
                 })
                 if (!hasProduct) {
                     let detailObj = {};
-                    detailObj.id = vCurrent.id;
-                    detailObj.name = vCurrent.name;
-                    detailObj.price = vCurrent.price;
+                    detailObj.id = data.id;
+                    detailObj.name = data.name;
+                    detailObj.price = data.price;
                     detailObj.quantity = 1;
                     arrOrderDetailsTest.push(detailObj);
                 }
-            })
             console.log(arrOrderDetailsTest);
             orders.showArrOrderDetails(arrOrderDetailsTest);
         }
