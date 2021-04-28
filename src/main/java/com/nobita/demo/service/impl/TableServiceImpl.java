@@ -33,6 +33,10 @@ public class TableServiceImpl implements TableService {
         return tableDAO.update(table);
     }
 
+    public boolean updateStatus(Table table) {
+        return tableDAO.updateStatus(table);
+    }
+
     @Override
     public boolean delete(Long id) {
         return tableDAO.delete(id);

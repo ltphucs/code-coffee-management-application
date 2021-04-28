@@ -25,8 +25,8 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
 
     @Override
-    public OrderDetail findByIdProduct(Long idProduct) {
-        return orderDetailsDAO.findByIdProduct(idProduct);
+    public OrderDetail findByIdProductAndIdOrder(Long idProduct,Long idOrder) {
+        return orderDetailsDAO.findByIdProductAndIdOrder(idProduct,idOrder);
     }
 
     @Override
@@ -51,7 +51,12 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
 
     @Override
-    public boolean deleteByIdProduct(Long idProduct) {
-        return orderDetailsDAO.deleteByIdProduct(idProduct);
+    public boolean deleteByIdProductAndIdOrder(Long idProduct,Long idOrder) {
+        return orderDetailsDAO.deleteByIdProductAndIdOrder(idProduct,idOrder);
+    }
+
+    @Override
+    public boolean deleteByIdOrder(Long idOrder) {
+        return orderDetailsDAO.deleteByIdOrder(idOrder);
     }
 }

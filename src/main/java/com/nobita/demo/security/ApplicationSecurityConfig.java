@@ -31,23 +31,24 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity https) throws Exception {
         https   .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/dashboard").hasRole("ADMIN")
-                .antMatchers("/api/**").permitAll()
+                .antMatchers("/").hasAnyRole("ADMIN","CASHIER")
                 .antMatchers("/order/**").permitAll()
                 .and()
                 .formLogin()
                 .loginPage("/login")
                 .usernameParameter("username")
                 .passwordParameter("password")
-                .defaultSuccessUrl("/order")
+                .defaultSuccessUrl("/order",true)
                 .failureUrl("/login?error=true")
                 .and()
+//                .exceptionHandling().accessDeniedPage("/Access_Denied")
+//                .and()
                 .logout()
                 .logoutUrl("/logout")
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
                 .clearAuthentication(true)
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID", "remember-me")
-                .logoutSuccessUrl("/admin");
+                .logoutSuccessUrl("/login");
     }
 }

@@ -5,9 +5,11 @@ import com.nobita.demo.model.OrderDetail;
 import java.util.List;
 
 public interface OrderDetailService extends BaseService<OrderDetail> {
-    OrderDetail findByIdProduct(Long idProduct);
+    OrderDetail findByIdProductAndIdOrder(Long idProduct,Long idOrder);
 
     List<OrderDetail> findByIdOrder(Long idOrder);
 
-    boolean deleteByIdProduct(Long idProduct);
+    boolean deleteByIdProductAndIdOrder(Long idProduct,Long idOrder);
+
+    boolean deleteByIdOrder(Long idOrder);
 }

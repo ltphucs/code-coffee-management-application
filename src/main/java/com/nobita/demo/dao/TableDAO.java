@@ -36,16 +36,22 @@ public class TableDAO implements BaseDAO<Table>{
 
     @Override
     public boolean save(Table table) {
-        String sql ="insert into `table`(name,id_area,comment) values (?,?,?)";
+        String sql ="insert into `table`(name,id_area,comment) values (?,?,?) on duplicate key";
         Object [] values ={table.getName(),table.getArea().getId(),table.getComment()};
         return jdbcTemplate.update(sql,values) > 0;
     }
 
     @Override
     public boolean update(Table table) {
-        String sql = "update `table` set name =?,id_area =?,comment=? where id= ?";
-        Object[] values ={table.getName(),table.getArea().getId(),table.getComment(),table.getId()};
+        String sql = "update `table` set name =?,comment=? where id= ?";
+        Object[] values ={table.getName(),table.getComment(),table.getId()};
         return jdbcTemplate.update(sql,values) > 0;
+    }
+
+    public boolean updateStatus(Table table){
+        String sql="update `table` set status =? where id=?";
+        Object [] values={table.getTableStatus().toString(),table.getId()};
+        return jdbcTemplate.update(sql,values) >0 ;
     }
 
     @Override
