@@ -4,7 +4,7 @@ let tables = {};
 
 let orders = {};
 
-let bills={};
+let bills = {};
 
 areas.initAreas = function () {
     $.ajax({
@@ -313,12 +313,12 @@ tables.showFormAddOrder = function (idTable) {
     orders.showOrderAndOrderDetails(idTable);
 }
 
-orders.getButtonSuccess=function (table){
-    if(table.tableStatus === "USING") {
+orders.getButtonSuccess = function (table) {
+    if (table.tableStatus === "USING") {
         $('#btnSuccess').empty().append(
             `<button class="btn btn-success col pt-2 pb-2" type="button" onclick="bills.addBill(${table.id})">Thanh toán</button>`
         )
-    }else {
+    } else {
         $('#btnSuccess').empty().append(
             `<button class="btn btn-success col pt-2 pb-2" type="button" disabled>Thanh toán</button>`
         )
@@ -407,8 +407,8 @@ orders.plusQuantity = function (orderDetail, idTable) {
         contentType: "application/json",
         data: JSON.stringify(orderDetailObj),
         success: function (data) {
-            orders.updateTotalPriceOrder(idTable,orderObj.id,orderDetail.priceEach);
-            console.log("them quantity thanh cong");
+            orders.updateTotalPriceOrder(idTable, orderObj.id, orderDetail.priceEach);
+            toastr.success("Đã cập nhật số lượng");
         }
     })
 }
@@ -431,28 +431,28 @@ orders.addOrderDetail = function (idOrder, productCurrent, idTable) {
         contentType: "application/json",
         data: JSON.stringify(orderDetailObj),
         success: function (data) {
-            console.log("them detail thanh cong");
-            orders.updateTotalPriceOrder(idTable,idOrder,orderDetailObj.priceEach);
+            toastr.success("Đã thêm sản phẩm mới");
+            orders.updateTotalPriceOrder(idTable, idOrder, orderDetailObj.priceEach);
         }
     })
 }
 
-orders.updateTotalPriceOrder=function (idTable,idOrder,totalPrice){
+orders.updateTotalPriceOrder = function (idTable, idOrder, totalPrice) {
     $.ajax({
-        url:"http://localhost:8080/api/orders/"+idOrder,
-        method:"GET",
-        dataType:"JSON",
-        success:function (data){
-            let orderObj={};
-            orderObj.id=idOrder;
-            orderObj.totalAllPrice=totalPrice+data.totalAllPrice;
+        url: "http://localhost:8080/api/orders/" + idOrder,
+        method: "GET",
+        dataType: "JSON",
+        success: function (data) {
+            let orderObj = {};
+            orderObj.id = idOrder;
+            orderObj.totalAllPrice = totalPrice + data.totalAllPrice;
             $.ajax({
-                url: "http://localhost:8080/api/orders/"+idOrder,
+                url: "http://localhost:8080/api/orders/" + idOrder,
                 method: "PUT",
                 dataType: "JSON",
                 contentType: "application/json",
                 data: JSON.stringify(orderObj),
-                success:function (data){
+                success: function (data) {
                     tables.usingTable(idTable);
                 }
             })
@@ -489,7 +489,7 @@ orders.showOrderAndOrderDetails = function (idTable) {
                                 <td class="d-xl-flex justify-content-xl-center align-items-xl-center col-3">
                                      <div class="quantity clearfix d-flex justify-content-center">
                                           <input id="quantity-left-minus" onclick="this.parentNode.querySelector('input[type=number]').stepDown();orders.showBtnQuantity(${v.product.id},${v.quantity},${v.order.id},${v.priceEach},${idTable})" type="button" value="-" class="minus btn">
-                                          <input id="quantity${v.product.id}" type="number" step="1" min="1" max="99" name="quantity${v.product.id}" title="Qty" class="qty form-control d-inline-block" size="4" value="${v.quantity}" readonly>
+                                          <input id="quantity${v.product.id}" type="number" step="1" min="1" max="99" name="quantity${v.product.id}" title="Qty" class="qty form-control d-inline-block quantity-orderdetail" size="4" value="${v.quantity}" readonly>
                                           <input id="quantity-right-plus" onclick="this.parentNode.querySelector('input[type=number]').stepUp();orders.showBtnQuantity(${v.product.id},${v.quantity},${v.order.id},${v.priceEach},${idTable})" type="button" value="+" class="plus btn">
                                      </div>
                                 </td>
@@ -507,13 +507,13 @@ orders.showOrderAndOrderDetails = function (idTable) {
     })
 }
 
-orders.showBtnQuantity=function (idProduct,quantity,idOrder,priceEach,idTable){
-    let idBtn='#btnCheck'+idProduct;
-    let idQuantity='quantity'+idProduct;
-    let quantityCurrent=Number(document.getElementById(idQuantity).value);
-    if(quantityCurrent ===quantity){
+orders.showBtnQuantity = function (idProduct, quantity, idOrder, priceEach, idTable) {
+    let idBtn = '#btnCheck' + idProduct;
+    let idQuantity = 'quantity' + idProduct;
+    let quantityCurrent = Number(document.getElementById(idQuantity).value);
+    if (quantityCurrent === quantity) {
         $(idBtn).empty();
-    }else {
+    } else {
         $(idBtn).empty().append(
             `<i class="fas fa-check text-success" style="width: 50%" onclick="orders.updateQuantity(${idProduct},${quantityCurrent},${idOrder},${priceEach},${idTable},${quantity})"></i>
              <i class="fas fa-redo text-danger" style="width: 50%" onclick="orders.resetQuantity(${idProduct},${quantity})"></i>`
@@ -521,7 +521,7 @@ orders.showBtnQuantity=function (idProduct,quantity,idOrder,priceEach,idTable){
     }
 }
 
-orders.updateQuantity=function (idProduct,quantityUpdate,idOrder,priceEach,idTable,quantityBefore){
+orders.updateQuantity = function (idProduct, quantityUpdate, idOrder, priceEach, idTable, quantityBefore) {
     let orderObj = {};
     orderObj.id = idOrder;
     let productObj = {};
@@ -530,7 +530,7 @@ orders.updateQuantity=function (idProduct,quantityUpdate,idOrder,priceEach,idTab
     orderDetailObj.order = orderObj;
     orderDetailObj.product = productObj;
     orderDetailObj.quantity = quantityUpdate;
-    orderDetailObj.totalPrice = quantityUpdate*priceEach;
+    orderDetailObj.totalPrice = quantityUpdate * priceEach;
     $.ajax({
         url: "http://localhost:8080/api/orders/" + orderObj.id + "/product/" + productObj.id,
         method: "PUT",
@@ -554,134 +554,134 @@ orders.updateQuantity=function (idProduct,quantityUpdate,idOrder,priceEach,idTab
                     console.log("sau khi xoa");
                     console.log(arrOrderDetailsTest);
                     tables.updateTableStatus(idTable);
-                    console.log("xoa thanh cong");
+                    toastr.success("Xóa thành công");
                     orders.showOrderAndOrderDetails(idTable);
                     console.log("sau khi load function");
                     console.log(arrOrderDetailsTest);
                 }
             });
-            console.log("them quantity thanh cong");
-            orders.updateTotalPriceOrder(idTable,idOrder,priceEach*(quantityUpdate-quantityBefore))
+            toastr.success("them quantity thanh cong");
+            orders.updateTotalPriceOrder(idTable, idOrder, priceEach * (quantityUpdate - quantityBefore))
         }
     })
 }
 
-orders.resetQuantity=function (idProduct,quantity){
-    let idBtn='#btnCheck'+idProduct;
-    let idQuantity='quantity'+idProduct;
-    document.getElementById(idQuantity).value=quantity;
+orders.resetQuantity = function (idProduct, quantity) {
+    let idBtn = '#btnCheck' + idProduct;
+    let idQuantity = 'quantity' + idProduct;
+    document.getElementById(idQuantity).value = quantity;
     $(idBtn).empty();
 }
 
-orders.removeOrderDetail=function (idOrder,idProduct,idTable){
+orders.removeOrderDetail = function (idOrder, idProduct, idTable) {
     $.ajax({
-        url:"http://localhost:8080/api/orders/" + idOrder + "/product/" + idProduct,
-        method:"DELETE",
-        dataType:"JSON",
-        success:function (data){
-            console.log("xoa thanh cong");
-            orders.updateTotalPriceOrder(idTable,idOrder,-data.totalPrice)
-            orders.checkOrderDetails(idOrder,idTable);
+        url: "http://localhost:8080/api/orders/" + idOrder + "/product/" + idProduct,
+        method: "DELETE",
+        dataType: "JSON",
+        success: function (data) {
+            toastr.success("xoa thanh cong");
+            orders.updateTotalPriceOrder(idTable, idOrder, -data.totalPrice)
+            orders.checkOrderDetails(idOrder, idTable);
         }
     })
 }
 
-orders.checkOrderDetails=function (idOrder,idTable){
+orders.checkOrderDetails = function (idOrder, idTable) {
     $.ajax({
-        url:"http://localhost:8080/api/orders/"+idOrder+"/orderDetails",
-        method:"GET",
-        dataType:"JSON",
-        success:function (data){
+        url: "http://localhost:8080/api/orders/" + idOrder + "/orderDetails",
+        method: "GET",
+        dataType: "JSON",
+        success: function (data) {
             orders.showOrderAndOrderDetails(idTable)
         },
-        error:function (){
-            orders.removeOrder(idOrder,idTable);
+        error: function () {
+            orders.removeOrder(idOrder, idTable);
         }
     })
 }
 
-orders.removeOrder=function (idOrder,idTable){
+orders.removeOrder = function (idOrder, idTable) {
     $.ajax({
-        url:"http://localhost:8080/api/orders/"+idOrder,
-        method:"DELETE",
-        dataType:"JSON",
-        success:function (data){
+        url: "http://localhost:8080/api/orders/" + idOrder,
+        method: "DELETE",
+        dataType: "JSON",
+        success: function (data) {
             tables.emptyTable(idTable);
         },
-        error:function (){
+        error: function () {
             tables.emptyTable(idTable);
         }
     })
 }
 
-bills.addBill=function (idTable){
+bills.addBill = function (idTable) {
     $.ajax({
-        url:"http://localhost:8080/api/tables/"+idTable+"/order",
-        method:"GET",
-        dataType:"JSON",
-        success:function (data){
-            let billObj={};
-            billObj.idOrder=data.id;
-            billObj.dateJoin=data.dateJoin;
-            billObj.nameTable=data.table.name;
-            billObj.totalPrice=data.totalAllPrice;
+        url: "http://localhost:8080/api/tables/" + idTable + "/order",
+        method: "GET",
+        dataType: "JSON",
+        success: function (data) {
+            let billObj = {};
+            billObj.idOrder = data.id;
+            billObj.dateJoin = data.dateJoin;
+            billObj.nameTable = data.table.name;
+            billObj.totalPrice = data.totalAllPrice;
             console.log(billObj);
             $.ajax({
-                url:"http://localhost:8080/api/bills/",
-                method:"POST",
-                dataType:"JSON",
+                url: "http://localhost:8080/api/bills/",
+                method: "POST",
+                dataType: "JSON",
                 contentType: "application/json",
                 data: JSON.stringify(billObj),
-                success:function (dataBill){
-                    bills.addBillDetail(data.id,idTable);
+                success: function (dataBill) {
+                    bills.addBillDetail(data.id, idTable);
                 },
-                error:function (){
-                    bills.addBillDetail(billObj.idOrder,idTable);
+                error: function () {
+                    bills.addBillDetail(billObj.idOrder, idTable);
                 }
             })
         }
     })
 }
 
-bills.addBillDetail=function (idOrder,idTable){
+bills.addBillDetail = function (idOrder, idTable) {
     $.ajax({
-        url:"http://localhost:8080/api/orders/"+idOrder+"/orderDetails",
-        method:"GET",
-        dataType:"JSON",
-        success:function (data){
-            $.each(data,function (i,v){
-                let billDetailObj={};
-                billDetailObj.idOrder=v.order.id;
-                billDetailObj.nameProduct=v.product.name;
-                billDetailObj.quantity=v.quantity;
-                billDetailObj.priceEach=v.priceEach;
+        url: "http://localhost:8080/api/orders/" + idOrder + "/orderDetails",
+        method: "GET",
+        dataType: "JSON",
+        success: function (data) {
+            $.each(data, function (i, v) {
+                let billDetailObj = {};
+                billDetailObj.idOrder = v.order.id;
+                billDetailObj.nameProduct = v.product.name;
+                billDetailObj.quantity = v.quantity;
+                billDetailObj.priceEach = v.priceEach;
                 $.ajax({
-                    url:"http://localhost:8080/api/billDetails/",
-                    method:"POST",
-                    dataType:"JSON",
+                    url: "http://localhost:8080/api/billDetails/",
+                    method: "POST",
+                    dataType: "JSON",
                     contentType: "application/json",
                     data: JSON.stringify(billDetailObj),
-                    success:function (dataBillDetails){
+                    success: function (dataBillDetails) {
                     }
                 })
             })
-            bills.removeAllOrderDetails(idOrder,idTable);
+            bills.removeAllOrderDetails(idOrder, idTable);
         }
     })
 }
 
-bills.removeAllOrderDetails=function (idOrder,idTable){
+bills.removeAllOrderDetails = function (idOrder, idTable) {
     $.ajax({
-        url:"http://localhost:8080/api/orders/"+idOrder+"/orderDetails",
-        method:"DELETE",
-        dataType:"JSON",
-        success:function (data){
-            console.log("thanh toan thanh cong");
-            orders.removeOrder(idOrder,idTable);
+        url: "http://localhost:8080/api/orders/" + idOrder + "/orderDetails",
+        method: "DELETE",
+        dataType: "JSON",
+        success: function (data) {
+            toastr.success("thanh toan thanh cong");
+            orders.removeOrder(idOrder, idTable);
         },
-        error:function (){
-            console.log("thanh toan thanh cong");
-            orders.removeOrder(idOrder,idTable);
+        error: function () {
+            toastr.success("thanh toan thanh cong");
+            orders.removeOrder(idOrder, idTable);
         }
     })
 }

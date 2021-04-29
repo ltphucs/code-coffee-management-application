@@ -29,8 +29,8 @@ a:hover {
     text-decoration: none;
 }
 
-#quantity {
-    max-width: 2.6rem;
+.quantity-orderdetail {
+    max-width: 3rem;
 }
 
 .w-100px {
