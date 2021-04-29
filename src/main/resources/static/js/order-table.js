@@ -15,22 +15,22 @@ areas.initAreas = function () {
             $('#area-sql').empty();
             $('#showOrdersTables').empty().append(
                 `<div class="col mt-5">
-                            <div class="d-xl-flex align-items-xl-start">
-                                <ul class="nav nav-pills text-capitalize border rounded-0 d-xl-flex flex-column shadow" id="area-sql"></ul>
-                                <div class="tab-content shadow">
-                                    <div class="tab-pane fade show active card" role="tabpanel" id="tab">
-                                        <div class="col d-flex flex-wrap pt-4 pb-4" id="tables-sql">
-                                        </div>
-                                    </div>
+                    <div class="d-xl-flex align-items-xl-start">
+                        <ul class="nav nav-pills text-capitalize border rounded-0 d-xl-flex flex-column shadow" id="area-sql"></ul>
+                        <div class="tab-content shadow">
+                            <div class="tab-pane fade show active card" role="tabpanel" id="tab">
+                                <div class="col d-flex flex-wrap pt-4 pb-4" id="tables-sql">
                                 </div>
                             </div>
-                        </div>`
+                        </div>
+                    </div>
+                </div>`
             );
             $.each(data, function (i, v) {
                 $('#area-sql').append(
                     `<li class="nav-item w-100px">
-                            <a class="nav-link" id="area-${v.id}" role="tab" data-toggle="pill" href="#tab" onclick="areas.showTables(${v.id})">${v.name}</a>
-                        </li>`
+                        <a class="nav-link" id="area-${v.id}" role="tab" data-toggle="pill" href="#tab" onclick="areas.showTables(${v.id})">${v.name}</a>
+                    </li>`
                 );
             });
             $("#area-1").click();
@@ -51,13 +51,13 @@ areas.showMenu = function (idTable) {
                         <div class="coffee-search-items d-flex flex-row row">
                         ${v.productList.map(p =>
                         `<div class="coffee-search-item p-2 col-3 d-flex flex-column align-items-center">
-                                <div
-                                    class="mx-width-100 mx-height-100 w-100px h-100px bg-size-contain bg-pos-center d-flex flex-column justify-content-between"
-                                    style="background-image: url(https://static.wikia.nocookie.net/leagueoflegends/images/6/66/Tear_of_the_Goddess_item_HD.png/revision/latest?cb=20201111004755);" onclick="orders.addOrder(${idTable},${p.id})">
-                                    <span class="text-white price">Giá: ${p.price}</span>
-                                </div>
-                                <p class="product-name">${p.name}</p>
-                              </div>`
+                             <div
+                                 class="mx-width-100 mx-height-100 w-100px h-100px bg-size-contain bg-pos-center d-flex flex-column justify-content-between"
+                                 style="background-image: url(https://static.wikia.nocookie.net/leagueoflegends/images/6/66/Tear_of_the_Goddess_item_HD.png/revision/latest?cb=20201111004755);" onclick="orders.addOrder(${idTable},${p.id})">
+                                 <span class="text-white price">Giá: ${p.price}</span>
+                             </div>
+                             <p class="product-name">${p.name}</p>
+                        </div>`
                     ).join("")}
                         </div>
                     `
