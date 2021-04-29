@@ -118,9 +118,6 @@ tables.showFormAddTable = function (idArea) {
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                         <h6 class="m-0 font-weight-bold text-primary">Thêm bàn mới</h6>
                         <div>
-                            <a href="javascript:;" class="btn btn-warning btn-circle mr-2">
-                                  <i class="fas fa-cog"></i>
-                             </a>       
                              <a href="javascript:;" class="btn btn-danger btn-circle" onclick="tables.closeTable(${idArea})">
                                  <i class="fas fa-times"></i>
                              </a>
@@ -225,10 +222,26 @@ tables.showFormAddOrder = function (idTable) {
                 <div class="card shadow">
                      <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                         <h6 class="m-0 font-weight-bold text-primary">Đặt món</h6>
-                        <div>
-                            <a href="javascript:;" class="btn btn-warning btn-circle mr-2">
-                                  <i class="fas fa-cog"></i>
-                             </a>       
+                        <div class="d-flex">
+                            <li class="nav-item dropdown no-arrow">
+                                <a class="nav-link dropdown-toggle btn btn-warning btn-circle mr-2" href="javascript:;" id="userDropdown" role="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-cog"></i>
+                                </a>
+                               
+                            <!-- Dropdown - User Information -->
+                                <div class="dropdown-menu dropdown-menu-right shadow "
+                                    aria-labelledby="userDropdown">
+                                    <a class="dropdown-item" href="javascript:;">
+                                        <i class="fas fa-exclamation-triangle fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Cập nhật bàn
+                                    </a>
+                                    <a class="dropdown-item" href="javascript:;">
+                                        <i class="fas fa-trash fa-sm fa-fw mr-2 text-gray-400"></i>
+                                        Xóa bàn
+                                    </a>
+                                </div>
+                            </li>     
                              <a href="javascript:;" class="btn btn-danger btn-circle" onclick="tables.closeOrder(${data.area.id})">
                                  <i class="fas fa-times"></i>
                              </a>
