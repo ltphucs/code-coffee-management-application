@@ -282,7 +282,7 @@ tables.showFormAddOrder = function (idTable) {
                                 </div>
                             </div>
                         </div>
-                        <div class="col d-xl-flex justify-content-xl-center align-items-xl-center">
+                        <div class="col d-xl-flex justify-content-xl-center align-items-xl-center mb-3">
                             <a href="javascript:;"
                                data-toggle="modal"
                                data-target="#exampleModalCenter"
