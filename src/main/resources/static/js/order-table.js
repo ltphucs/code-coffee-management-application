@@ -4,29 +4,7 @@ let tables = {};
 
 let orders = {};
 
-let arrOrderDetailsTest = [];
-
-function clearArr() {
-    while (arrOrderDetailsTest.length > 0) {
-        arrOrderDetailsTest.pop();
-    }
-}
-
-function setStatusTable() {
-    if (arrOrderDetailsTest.length > 0) {
-
-        $('#tableStatus').empty().append(
-            `<b>Trạng thái:</b>
-            <span id="status">USING</span>`
-        )
-    } else {
-        $('#tableStatus').empty().append(
-            `<b>Trạng thái:</b>
-            <span id="status">EMPTY</span>`
-        )
-
-    }
-}
+let bills={};
 
 areas.initAreas = function () {
     $.ajax({
@@ -35,8 +13,7 @@ areas.initAreas = function () {
         dataType: "json",
         success: function (data) {
             $('#area-sql').empty();
-            $('#showOrdersTables').empty();
-            $('#showOrdersTables').append(
+            $('#showOrdersTables').empty().append(
                 `<div class="col mt-5">
                             <div class="d-xl-flex align-items-xl-start">
                                 <ul class="nav nav-pills text-capitalize border rounded-0 d-xl-flex flex-column shadow" id="area-sql"></ul>
@@ -61,7 +38,7 @@ areas.initAreas = function () {
     })
 }
 
-areas.showMenu = function () {
+areas.showMenu = function (idTable) {
     $.ajax({
         url: "http://localhost:8080/api/menu",
         method: "GET",
@@ -76,7 +53,7 @@ areas.showMenu = function () {
                         `<div class="coffee-search-item p-2 col-3 d-flex flex-column align-items-center">
                                 <div
                                     class="mx-width-100 mx-height-100 w-100px h-100px bg-size-contain bg-pos-center d-flex flex-column justify-content-between"
-                                    style="background-image: url(https://static.wikia.nocookie.net/leagueoflegends/images/6/66/Tear_of_the_Goddess_item_HD.png/revision/latest?cb=20201111004755);" onclick="orders.addArrOrderDetails(${p.id})">
+                                    style="background-image: url(https://static.wikia.nocookie.net/leagueoflegends/images/6/66/Tear_of_the_Goddess_item_HD.png/revision/latest?cb=20201111004755);" onclick="orders.addOrder(${idTable},${p.id})">
                                     <span class="text-white price">Giá: ${p.price}</span>
                                 </div>
                                 <p class="product-name">${p.name}</p>
@@ -203,10 +180,10 @@ tables.addTable = function (idArea) {
     })
 }
 
-tables.updateTableStatus = function (idTable) {
+tables.usingTable = function (idTable) {
     let tableObj = {};
     tableObj.id = idTable;
-    tableObj.tableStatus = document.getElementById("status").innerHTML;
+    tableObj.tableStatus = "USING";
     $.ajax({
         url: "http://localhost:8080/api/tables/" + idTable + "/tableStatus",
         method: "PUT",
@@ -214,21 +191,33 @@ tables.updateTableStatus = function (idTable) {
         contentType: "application/json",
         data: JSON.stringify(tableObj),
         success: function (data) {
-            console.log("add table vao r")
+            tables.showFormAddOrder(idTable);
+        }
+    })
+}
+
+tables.emptyTable = function (idTable) {
+    let tableObj = {};
+    tableObj.id = idTable;
+    tableObj.tableStatus = "EMPTY";
+    $.ajax({
+        url: "http://localhost:8080/api/tables/" + idTable + "/tableStatus",
+        method: "PUT",
+        dataType: "JSON",
+        contentType: "application/json",
+        data: JSON.stringify(tableObj),
+        success: function (data) {
+            tables.showFormAddOrder(idTable);
         }
     })
 }
 
 tables.showFormAddOrder = function (idTable) {
-    console.log(idTable);
-    clearArr();
-    console.log(arrOrderDetailsTest);
     $.ajax({
         url: "http://localhost:8080/api/tables/" + idTable,
         method: "GET",
         dataType: "JSON",
         success: function (data) {
-            console.log(data)
             $('#showTables').remove();
             $('#showOrder').remove();
             $('#showOrdersTables').append(
@@ -258,7 +247,9 @@ tables.showFormAddOrder = function (idTable) {
                
                     <div class="col">
                         <div>
-                            <h4 id="tableStatus">
+                            <h4>
+                               <b>Trạng thái:</b>
+                               <span>${data.tableStatus}</span>
                             </h4>
 
                         </div>
@@ -287,7 +278,7 @@ tables.showFormAddOrder = function (idTable) {
                                data-toggle="modal"
                                data-target="#exampleModalCenter"
                                class="d-xl-flex justify-content-xl-center align-items-xl-center"
-                               style="  border-radius: 50%;  border: 2px solid;  width: 50px;  height: 50px; " onclick="areas.showMenu()">
+                               style="  border-radius: 50%;  border: 2px solid;  width: 50px;  height: 50px; " onclick="areas.showMenu(${idTable})">
                                 <i
                                     class="fa fa-plus" style="font-size: 30px;"></i>
                             </a>
@@ -295,210 +286,161 @@ tables.showFormAddOrder = function (idTable) {
                     </div>
                     <div class="card-footer">
                         <div class="form-group">
-
-                                <div class="row">
-                                    <button class="btn btn-success col pt-2 pb-2" type="button" onclick="orders.addOrder(${idTable})">Cập nhật</button>
-                                    
+                                <div class="row" id="btnSuccess">
+                                   
                                 </div>
-
                             </div>
                         </div>
                     </div>
             </div>`
             )
-            orders.showOrderAndOrderDetails(idTable);
+            orders.getButtonSuccess(data);
         }
     })
+    orders.showOrderAndOrderDetails(idTable);
 }
 
-orders.addArrOrderDetails = function (idProduct) {
-    let hasProduct = false;
-    $.ajax({
-            url: "http://localhost:8080/api/products/" + idProduct,
-        method: "GET",
-        dataType: "JSON",
-        success: function (data) {
-                $.each(arrOrderDetailsTest, function (i, v) {
-                    if (v.id === data.id) {
-                        v.quantity = v.quantity + 1;
-                        hasProduct = true;
-                    }
-                })
-                if (!hasProduct) {
-                    let detailObj = {};
-                    detailObj.id = data.id;
-                    detailObj.name = data.name;
-                    detailObj.price = data.price;
-                    detailObj.quantity = 1;
-                    arrOrderDetailsTest.push(detailObj);
-                }
-            console.log(arrOrderDetailsTest);
-            orders.showArrOrderDetails(arrOrderDetailsTest);
-        }
-    })
-}
-
-orders.minusQuantity = function (idProduct) {
-    $.each(arrOrderDetailsTest, function (i, v) {
-        if (v.id === idProduct) {
-            v.quantity = v.quantity - 1;
-        }
-    })
-    console.log(arrOrderDetailsTest);
-}
-
-orders.plusQuantity = function (idProduct) {
-    $.each(arrOrderDetailsTest, function (i, v) {
-        if (v.id === idProduct) {
-            v.quantity = v.quantity + 1;
-        }
-    })
-    console.log(arrOrderDetailsTest);
-}
-
-orders.showArrOrderDetails = function (arrOrderDetailsTest) {
-    setStatusTable();
-    $('#list-orderdetail').empty();
-    $.each(arrOrderDetailsTest, function (i, v) {
-        $('#list-orderdetail').append(
-            `<tr class="row">
-                <td class="d-xl-flex justify-content-xl-center align-items-xl-center order-item-trash col-1">
-                    <i class="far fa-trash-alt d-xl-flex justify-content-xl-center align-items-xl-center" onclick="orders.removeArrOrderDetail(${v.id})"></i>
-                </td>
-                <td class="d-xl-flex justify-content-xl-left align-items-xl-center col-3">
-                    <div>
-                        <div>
-                            <h5>${v.name}</h5>
-                        </div>
-                    </div>
-                </td>
-                <td class="d-xl-flex justify-content-xl-left align-items-xl-center col-2">${v.price}
-                    đ
-                </td>
-                <td class="d-xl-flex justify-content-xl-center align-items-xl-center col-3">
-                    <div class="quantity clearfix d-flex justify-content-center">
-                        <input
-                            id="quantity-left-minus"
-                            onclick="this.parentNode.querySelector('input[type=number]').stepDown();orders.minusQuantity(${v.id})"
-                            type="button" value="-" class="minus btn">
-                            <input id="quantity"
-                                   type="number" step="1"
-                                   min="1" max="99"
-                                   name="quantity"
-                                   title="Qty"
-                                   class="qty form-control d-inline-block"
-                                   size="4" value="${v.quantity}" disabled>
-                                <input
-                                    id="quantity-right-plus"
-                                    onclick="this.parentNode.querySelector('input[type=number]').stepUp();orders.plusQuantity(${v.id})"
-                                    type="button" value="+" class="plus btn">
-                    </div>
-                </td>
-                <td class="d-xl-flex justify-content-xl-left align-items-xl-center col-2">
-                    <strong>${v.price * v.quantity}
-                        đ
-                    </strong>
-                </td>
-                <td class="d-xl-flex justify-content-xl-center align-items-xl-center col-1">
-                    <i class="fas fa-check text-success" style="width: 50%"></i>
-                    <i class="fas fa-redo text-danger" style="width: 50%"></i>
-                </td>
-            </tr>`
+orders.getButtonSuccess=function (table){
+    if(table.tableStatus === "USING") {
+        $('#btnSuccess').empty().append(
+            `<button class="btn btn-success col pt-2 pb-2" type="button" onclick="bills.addBill(${table.id})">Thanh toán</button>`
         )
+    }else {
+        $('#btnSuccess').empty().append(
+            `<button class="btn btn-success col pt-2 pb-2" type="button" disabled>Thanh toán</button>`
+        )
+    }
+}
+
+orders.addOrder = function (idTable, idProduct) {
+    let tableObj = {};
+    tableObj.id = idTable;
+    let accountObj = {};
+    accountObj.id = 1;
+    let orderObj = {};
+    orderObj.table = tableObj;
+    orderObj.account = accountObj;
+    $.ajax({
+        url: "http://localhost:8080/api/orders/",
+        method: "POST",
+        dataType: "JSON",
+        contentType: "application/json",
+        data: JSON.stringify(orderObj),
+        success: function (data) {
+            orders.getProduct(data.id, idProduct, idTable);
+        },
+        error: function (data) {
+            orders.getOrder(idTable, idProduct);
+        }
     })
 }
 
-orders.addOrder = function (idTable) {
+orders.getOrder = function (idTable, idProduct) {
     $.ajax({
         url: "http://localhost:8080/api/tables/" + idTable + "/order",
         method: "GET",
         dataType: "JSON",
-        error: function (data) {
-            let tableObj = {};
-            tableObj.id = idTable;
-            let accountObj = {};
-            accountObj.id = 1;
-            let orderObj = {};
-            orderObj.table = tableObj;
-            orderObj.totalAllPrice = 0;
-            orderObj.account = accountObj;
+        success: function (data) {
+            orders.getProduct(data.id, idProduct, idTable);
+        }
+    })
+}
+
+orders.getProduct = function (idOrder, idProduct, idTable) {
+    $.ajax({
+        url: "http://localhost:8080/api/products/" + idProduct,
+        method: "GET",
+        dataType: "JSON",
+        success: function (data) {
+            let productObj = {};
+            productObj.id = data.id;
+            productObj.priceEach = data.price;
+            orders.findOrderDetailByIdOrderAndIdProduct(idOrder, productObj, idTable);
+        }
+    })
+}
+
+orders.findOrderDetailByIdOrderAndIdProduct = function (idOrder, productObj, idTable) {
+    console.log(productObj);
+    $.ajax({
+        url: "http://localhost:8080/api/orders/" + idOrder + "/product/" + productObj.id + "/orderDetail",
+        method: "GET",
+        dataType: "JSON",
+        success: function (data) {
+            orders.plusQuantity(data, idTable);
+        },
+        error: function () {
+            orders.addOrderDetail(idOrder, productObj, idTable);
+        }
+    })
+}
+
+orders.plusQuantity = function (orderDetail, idTable) {
+    console.log(orderDetail);
+    let orderObj = {};
+    orderObj.id = orderDetail.order.id;
+    let productObj = {};
+    productObj.id = orderDetail.product.id;
+    let orderDetailObj = {};
+    orderDetailObj.order = orderObj;
+    orderDetailObj.product = productObj;
+    orderDetailObj.quantity = orderDetail.quantity + 1;
+    orderDetailObj.totalPrice = orderDetailObj.quantity * orderDetail.priceEach;
+    console.log(orderDetailObj);
+    $.ajax({
+        url: "http://localhost:8080/api/orders/" + orderObj.id + "/product/" + productObj.id,
+        method: "PUT",
+        dataType: "JSON",
+        contentType: "application/json",
+        data: JSON.stringify(orderDetailObj),
+        success: function (data) {
+            orders.updateTotalPriceOrder(idTable,orderObj.id,orderDetail.priceEach);
+            console.log("them quantity thanh cong");
+        }
+    })
+}
+
+orders.addOrderDetail = function (idOrder, productCurrent, idTable) {
+    let orderObj = {};
+    orderObj.id = idOrder;
+    let productObj = {};
+    productObj.id = productCurrent.id;
+    let orderDetailObj = {};
+    orderDetailObj.order = orderObj;
+    orderDetailObj.product = productObj;
+    orderDetailObj.quantity = 1;
+    orderDetailObj.priceEach = productCurrent.priceEach;
+    orderDetailObj.totalPrice = productCurrent.priceEach * orderDetailObj.quantity;
+    $.ajax({
+        url: "http://localhost:8080/api/orderDetails/",
+        method: "POST",
+        dataType: "JSON",
+        contentType: "application/json",
+        data: JSON.stringify(orderDetailObj),
+        success: function (data) {
+            console.log("them detail thanh cong");
+            orders.updateTotalPriceOrder(idTable,idOrder,orderDetailObj.priceEach);
+        }
+    })
+}
+
+orders.updateTotalPriceOrder=function (idTable,idOrder,totalPrice){
+    $.ajax({
+        url:"http://localhost:8080/api/orders/"+idOrder,
+        method:"GET",
+        dataType:"JSON",
+        success:function (data){
+            let orderObj={};
+            orderObj.id=idOrder;
+            orderObj.totalAllPrice=totalPrice+data.totalAllPrice;
             $.ajax({
-                url: "http://localhost:8080/api/orders/",
-                method: "POST",
+                url: "http://localhost:8080/api/orders/"+idOrder,
+                method: "PUT",
                 dataType: "JSON",
                 contentType: "application/json",
                 data: JSON.stringify(orderObj),
-                success: function (data) {
-                    console.log("thanh cong");
-                    orders.addOrderDetails(idTable);
-                }
-            })
-        },
-        success: function (data) {
-            orders.addOrderDetails(idTable);
-        }
-    })
-}
-
-orders.addOrderDetails = function (idTable) {
-    $.ajax({
-        url: "http://localhost:8080/api/tables/" + idTable + "/order",
-        method: "GET",
-        dataType: "JSON",
-        success: function (data) {
-            $.ajax({
-                url: "http://localhost:8080/api/orderDetails/" + data.id + "/order",
-                method: "DELETE",
-                dataType: "JSON",
-                success: function (dataCurrent) {
-                    $.each(arrOrderDetailsTest, function (i, v) {
-                        let orderObj = {};
-                        orderObj.id = data.id;
-                        let productObj = {};
-                        productObj.id = v.id;
-                        let orderDetailObj = {};
-                        orderDetailObj.order = orderObj;
-                        orderDetailObj.product = productObj;
-                        orderDetailObj.quantity = v.quantity;
-                        orderDetailObj.priceEach = v.price;
-                        orderDetailObj.totalPrice = v.price * v.quantity;
-                        $.ajax({
-                            url: "http://localhost:8080/api/orderDetails/",
-                            method: "POST",
-                            dataType: "JSON",
-                            contentType: "application/json",
-                            data: JSON.stringify(orderDetailObj),
-                            success: function (data) {
-                                console.log("thanh cong details");
-                                tables.updateTableStatus(idTable);
-                            }
-                        })
-                    })
-                },
-                error:function (){
-                    $.each(arrOrderDetailsTest, function (i, v) {
-                        let orderObj = {};
-                        orderObj.id = data.id;
-                        let productObj = {};
-                        productObj.id = v.id;
-                        let orderDetailObj = {};
-                        orderDetailObj.order = orderObj;
-                        orderDetailObj.product = productObj;
-                        orderDetailObj.quantity = v.quantity;
-                        orderDetailObj.priceEach = v.price;
-                        orderDetailObj.totalPrice = v.price * v.quantity;
-                        $.ajax({
-                            url: "http://localhost:8080/api/orderDetails/",
-                            method: "POST",
-                            dataType: "JSON",
-                            contentType: "application/json",
-                            data: JSON.stringify(orderDetailObj),
-                            success: function (data) {
-                                console.log("thanh cong details");
-                                tables.updateTableStatus(idTable);
-                            }
-                        })
-                    })
+                success:function (data){
+                    tables.usingTable(idTable);
                 }
             })
         }
@@ -511,7 +453,6 @@ orders.showOrderAndOrderDetails = function (idTable) {
         method: "GET",
         dataType: "JSON",
         success: function (data) {
-            setStatusTable();
             $.ajax({
                 url: "http://localhost:8080/api/orders/" + data.id + "/orderDetails",
                 method: "GET",
@@ -519,17 +460,10 @@ orders.showOrderAndOrderDetails = function (idTable) {
                 success: function (data) {
                     $('#list-orderdetail').empty();
                     $.each(data, function (i, v) {
-                        let detailObj = {};
-                        detailObj.id = v.product.id;
-                        detailObj.name = v.product.name;
-                        detailObj.price = v.priceEach;
-                        detailObj.quantity = v.quantity;
-                        arrOrderDetailsTest.push(detailObj);
-                        setStatusTable();
                         $('#list-orderdetail').append(
                             `<tr class="row">
                                 <td class="d-xl-flex justify-content-xl-center align-items-xl-center order-item-trash col-1">
-                                    <i class="far fa-trash-alt d-xl-flex justify-content-xl-center align-items-xl-center" onclick="orders.removeOrderDetail(${v.product.id},${idTable})"></i>
+                                    <i class="far fa-trash-alt d-xl-flex justify-content-xl-center align-items-xl-center" onclick="orders.removeOrderDetail(${v.order.id},${v.product.id},${idTable})"></i>
                                 </td>
                                 <td class="d-xl-flex justify-content-xl-left align-items-xl-center col-3">
                                      <div>
@@ -541,37 +475,55 @@ orders.showOrderAndOrderDetails = function (idTable) {
                                 <td class="d-xl-flex justify-content-xl-left align-items-xl-center col-2">${v.priceEach} đ</td>
                                 <td class="d-xl-flex justify-content-xl-center align-items-xl-center col-3">
                                      <div class="quantity clearfix d-flex justify-content-center">
-                                          <input id="quantity-left-minus" onclick="this.parentNode.querySelector('input[type=number]').stepDown();orders.minusQuantity(${v.product.id})" type="button" value="-" class="minus btn">
-                                          <input id="quantity" type="number" step="1" min="1" max="99" name="quantity" title="Qty" class="qty form-control d-inline-block" size="4" value="${v.quantity}" disabled>
-                                          <input id="quantity-right-plus" onclick="this.parentNode.querySelector('input[type=number]').stepUp();orders.plusQuantity(${v.product.id})" type="button" value="+" class="plus btn">
+                                          <input id="quantity-left-minus" onclick="this.parentNode.querySelector('input[type=number]').stepDown();orders.showBtnQuantity(${v.product.id},${v.quantity},${v.order.id},${v.priceEach},${idTable})" type="button" value="-" class="minus btn">
+                                          <input id="quantity${v.product.id}" type="number" step="1" min="1" max="99" name="quantity${v.product.id}" title="Qty" class="qty form-control d-inline-block" size="4" value="${v.quantity}" readonly>
+                                          <input id="quantity-right-plus" onclick="this.parentNode.querySelector('input[type=number]').stepUp();orders.showBtnQuantity(${v.product.id},${v.quantity},${v.order.id},${v.priceEach},${idTable})" type="button" value="+" class="plus btn">
                                      </div>
                                 </td>
                                 <td class="d-xl-flex justify-content-xl-left align-items-xl-center col-2">
                                      <strong>${v.priceEach * v.quantity} đ</strong>
                                 </td>
-                                <td class="d-xl-flex justify-content-xl-center align-items-xl-center col-1">
-                                     <i class="fas fa-check text-success" style="width: 50%"></i>
-                                     <i class="fas fa-redo text-danger" style="width: 50%"></i>
+                                <td class="d-xl-flex justify-content-xl-center align-items-xl-center col-1" id="btnCheck${v.product.id}">
                                 </td>
                             </tr>`
                         )
                     })
                 }
             })
-        },
-        error: function (data) {
-            setStatusTable();
-            console.log("vao loi")
-            orders.showArrOrderDetails(arrOrderDetailsTest);
         }
     })
 }
 
-orders.removeOrderDetail = function (idProduct, idTable) {
+orders.showBtnQuantity=function (idProduct,quantity,idOrder,priceEach,idTable){
+    let idBtn='#btnCheck'+idProduct;
+    let idQuantity='quantity'+idProduct;
+    let quantityCurrent=Number(document.getElementById(idQuantity).value);
+    if(quantityCurrent ===quantity){
+        $(idBtn).empty();
+    }else {
+        $(idBtn).empty().append(
+            `<i class="fas fa-check text-success" style="width: 50%" onclick="orders.updateQuantity(${idProduct},${quantityCurrent},${idOrder},${priceEach},${idTable},${quantity})"></i>
+             <i class="fas fa-redo text-danger" style="width: 50%" onclick="orders.resetQuantity(${idProduct},${quantity})"></i>`
+        )
+    }
+}
+
+orders.updateQuantity=function (idProduct,quantityUpdate,idOrder,priceEach,idTable,quantityBefore){
+    let orderObj = {};
+    orderObj.id = idOrder;
+    let productObj = {};
+    productObj.id = idProduct;
+    let orderDetailObj = {};
+    orderDetailObj.order = orderObj;
+    orderDetailObj.product = productObj;
+    orderDetailObj.quantity = quantityUpdate;
+    orderDetailObj.totalPrice = quantityUpdate*priceEach;
     $.ajax({
-        url: "http://localhost:8080/api/tables/" + idTable + "/order",
-        method: "GET",
+        url: "http://localhost:8080/api/orders/" + orderObj.id + "/product/" + productObj.id,
+        method: "PUT",
         dataType: "JSON",
+        contentType: "application/json",
+        data: JSON.stringify(orderDetailObj),
         success: function (data) {
             $.ajax({
                 url: "http://localhost:8080/api/orderDetails/" + data.id + "/product/" + idProduct,
@@ -595,11 +547,61 @@ orders.removeOrderDetail = function (idProduct, idTable) {
                     console.log(arrOrderDetailsTest);
                 }
             });
+            console.log("them quantity thanh cong");
+            orders.updateTotalPriceOrder(idTable,idOrder,priceEach*(quantityUpdate-quantityBefore))
         }
-    });
+    })
 }
 
-orders.addBill=function (idTable){
+orders.resetQuantity=function (idProduct,quantity){
+    let idBtn='#btnCheck'+idProduct;
+    let idQuantity='quantity'+idProduct;
+    document.getElementById(idQuantity).value=quantity;
+    $(idBtn).empty();
+}
+
+orders.removeOrderDetail=function (idOrder,idProduct,idTable){
+    $.ajax({
+        url:"http://localhost:8080/api/orders/" + idOrder + "/product/" + idProduct,
+        method:"DELETE",
+        dataType:"JSON",
+        success:function (data){
+            console.log("xoa thanh cong");
+            orders.updateTotalPriceOrder(idTable,idOrder,-data.totalPrice)
+            orders.checkOrderDetails(idOrder,idTable);
+        }
+    })
+}
+
+orders.checkOrderDetails=function (idOrder,idTable){
+    $.ajax({
+        url:"http://localhost:8080/api/orders/"+idOrder+"/orderDetails",
+        method:"GET",
+        dataType:"JSON",
+        success:function (data){
+            orders.showOrderAndOrderDetails(idTable)
+        },
+        error:function (){
+            orders.removeOrder(idOrder,idTable);
+        }
+    })
+}
+
+orders.removeOrder=function (idOrder,idTable){
+    $.ajax({
+        url:"http://localhost:8080/api/orders/"+idOrder,
+        method:"DELETE",
+        dataType:"JSON",
+        success:function (data){
+            tables.emptyTable(idTable);
+        },
+        error:function (){
+            tables.emptyTable(idTable);
+        }
+    })
+}
+
+bills.addBill=function (idTable){
     $.ajax({
         url:"http://localhost:8080/api/tables/"+idTable+"/order",
         method:"GET",
@@ -610,22 +612,25 @@ orders.addBill=function (idTable){
             billObj.dateJoin=data.dateJoin;
             billObj.nameTable=data.table.name;
             billObj.totalPrice=data.totalAllPrice;
+            console.log(billObj);
             $.ajax({
                 url:"http://localhost:8080/api/bills/",
-                method: "POST",
-                dataType: "JSON",
+                method:"POST",
+                dataType:"JSON",
                 contentType: "application/json",
                 data: JSON.stringify(billObj),
-                success:function (data){
-                    console.log("vao bill");
-                    orders.addBillDetails(data.id);
+                success:function (dataBill){
+                    bills.addBillDetail(data.id,idTable);
+                },
+                error:function (){
+                    bills.addBillDetail(billObj.idOrder,idTable);
                 }
             })
         }
     })
 }
 
-orders.addBillDetails=function (idOrder){
+bills.addBillDetail=function (idOrder,idTable){
     $.ajax({
         url:"http://localhost:8080/api/orders/"+idOrder+"/orderDetails",
         method:"GET",
@@ -633,56 +638,39 @@ orders.addBillDetails=function (idOrder){
         success:function (data){
             $.each(data,function (i,v){
                 let billDetailObj={};
-                billDetailObj.idOrder=v.idOrder;
-                billDetailObj.nameProdcut=v.product.name;
+                billDetailObj.idOrder=v.order.id;
+                billDetailObj.nameProduct=v.product.name;
                 billDetailObj.quantity=v.quantity;
                 billDetailObj.priceEach=v.priceEach;
                 $.ajax({
                     url:"http://localhost:8080/api/billDetails/",
-                    method: "POST",
-                    dataType: "JSON",
+                    method:"POST",
+                    dataType:"JSON",
                     contentType: "application/json",
                     data: JSON.stringify(billDetailObj),
-                    success:function (data){
-                        console.log("vao bill details");
-                        orders.removeAllOrderDetails(idOrder);
+                    success:function (dataBillDetails){
                     }
                 })
             })
+            bills.removeAllOrderDetails(idOrder,idTable);
         }
-})
+    })
 }
 
-orders.removeAllOrderDetails=function (idOrder){
+bills.removeAllOrderDetails=function (idOrder,idTable){
     $.ajax({
         url:"http://localhost:8080/api/orders/"+idOrder+"/orderDetails",
         method:"DELETE",
-        dataType:function (data){
-            console.log("xoa details r");
-            orders.removeOrder(idOrder);
+        dataType:"JSON",
+        success:function (data){
+            console.log("thanh toan thanh cong");
+            orders.removeOrder(idOrder,idTable);
+        },
+        error:function (){
+            console.log("thanh toan thanh cong");
+            orders.removeOrder(idOrder,idTable);
         }
     })
-}
-
-orders.removeOrder=function (idOrder){
-    $.ajax({
-        url:"http://localhost:8080/api/orders/"+idOrder,
-        method:"DELETE",
-        dataType:function (data){
-            console.log("xoa order roi")
-        }
-    })
-}
-
-orders.removeArrOrderDetail = function (idProduct) {
-    $.each(arrOrderDetailsTest, function (i, v) {
-        if (v.id === idProduct) {
-            console.log(i);
-            arrOrderDetailsTest.splice(i, 1);
-            console.log("vao roi");
-        }
-    })
-    orders.showArrOrderDetails(arrOrderDetailsTest);
 }
 
 tables.closeTable = function (idTable) {

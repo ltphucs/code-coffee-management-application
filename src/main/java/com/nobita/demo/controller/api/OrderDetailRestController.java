@@ -45,15 +45,15 @@ public class OrderDetailRestController {
         }
     }
 
-    @PutMapping(value = "/{id}")
-    public ResponseEntity<?> update(@PathVariable("id") long id, @RequestBody OrderDetail orderDetail) {
-        OrderDetail orderDetailCurrent = orderDetailService.findByID(id);
-        if (orderDetailCurrent != null) {
-            orderDetailService.update(orderDetail);
-            return new ResponseEntity<>(orderDetail, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
+//    @PutMapping(value = "/{idOder}/product/{idProduct}")
+//    public ResponseEntity<?> update(@PathVariable("idProduct") long idProduct, @RequestBody OrderDetail orderDetail) {
+//        OrderDetail orderDetailCurrent = orderDetailService.findByID(idProduct);
+//        if (orderDetailCurrent != null) {
+//            orderDetailService.update(orderDetail);
+//            return new ResponseEntity<>(orderDetail, HttpStatus.OK);
+//        }
+//        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//    }
 
     @DeleteMapping("/{idOrder}/product/{idProduct}")
     public ResponseEntity<?> deleteByIdProduct(@PathVariable("idProduct") long idProduct,@PathVariable("idOrder") Long idOrder) {

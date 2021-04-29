@@ -42,8 +42,8 @@ public class OrderDAO implements BaseDAO<Order>{
 
     @Override
     public boolean update(Order order) {
-        String sql ="update `order` set id_table=?,total_all_price=? values (?,?)";
-        Object[] values={order.getTable().getId(),order.getTotalAllPrice()};
+        String sql ="update `order` set total_all_price=? where id=?";
+        Object[] values={order.getTotalAllPrice(),order.getId()};
         return jdbcTemplate.update(sql,values) > 0;
     }
 
