@@ -6,6 +6,8 @@ let orders = {};
 
 let bills = {};
 
+let idTableCurrent=0;
+
 areas.initAreas = function () {
     $.ajax({
         url: "http://localhost:8080/api/areas/",
@@ -15,54 +17,25 @@ areas.initAreas = function () {
             $('#area-sql').empty();
             $('#showOrdersTables').empty().append(
                 `<div class="col mt-5">
-                    <div class="d-xl-flex align-items-xl-start">
-                        <ul class="nav nav-pills text-capitalize border rounded-0 d-xl-flex flex-column shadow" id="area-sql"></ul>
-                        <div class="tab-content shadow">
-                            <div class="tab-pane fade show active card" role="tabpanel" id="tab">
-                                <div class="col d-flex flex-wrap pt-4 pb-4" id="tables-sql">
+                            <div class="d-xl-flex align-items-xl-start">
+                                <ul class="nav nav-pills text-capitalize border rounded-0 d-xl-flex flex-column shadow" id="area-sql"></ul>
+                                <div class="tab-content shadow">
+                                    <div class="tab-pane fade show active card" role="tabpanel" id="tab">
+                                        <div class="col d-flex flex-wrap pt-4 pb-4" id="tables-sql">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>`
+                        </div>`
             );
             $.each(data, function (i, v) {
                 $('#area-sql').append(
                     `<li class="nav-item w-100px">
-                        <a class="nav-link" id="area-${v.id}" role="tab" data-toggle="pill" href="#tab" onclick="areas.showTables(${v.id})">${v.name}</a>
-                    </li>`
+                            <a class="nav-link" id="area-${v.id}" role="tab" data-toggle="pill" href="#tab" onclick="areas.showTables(${v.id})">${v.name}</a>
+                        </li>`
                 );
             });
             $("#area-1").click();
-        }
-    })
-}
-
-areas.showMenu = function (idTable) {
-    $.ajax({
-        url: "http://localhost:8080/api/menu",
-        method: "GET",
-        dataType: "JSON",
-        success: function (data) {
-            $.each(data, function (i, v) {
-                $('#menuOrder').append(
-                    `<hr>
-                        <p>${v.nameProductLine}</p>
-                        <div class="coffee-search-items d-flex flex-row row">
-                        ${v.productList.map(p =>
-                        `<div class="coffee-search-item p-2 col-3 d-flex flex-column align-items-center">
-                             <div
-                                 class="mx-width-100 mx-height-100 w-100px h-100px bg-size-contain bg-pos-center d-flex flex-column justify-content-between"
-                                 style="background-image: url(https://static.wikia.nocookie.net/leagueoflegends/images/6/66/Tear_of_the_Goddess_item_HD.png/revision/latest?cb=20201111004755);" onclick="orders.addOrder(${idTable},${p.id})">
-                                 <span class="text-white price">Giá: ${p.price}</span>
-                             </div>
-                             <p class="product-name">${p.name}</p>
-                        </div>`
-                    ).join("")}
-                        </div>
-                    `
-                )
-            })
         }
     })
 }
@@ -109,6 +82,37 @@ areas.showTables = function (idArea) {
     })
 }
 
+areas.showMenu = function (idTable) {
+    console.log("showmenu: "+idTable);
+    idTableCurrent =idTable;
+    $.ajax({
+        url: "http://localhost:8080/api/menu",
+        method: "GET",
+        dataType: "JSON",
+        success: function (data) {
+            $.each(data, function (i, v) {
+                $('#menuOrder').append(
+                    `<hr>
+                        <p>${v.nameProductLine}</p>
+                        <div class="coffee-search-items d-flex flex-row row">
+                        ${v.productList.map(p =>
+                        `<div class="coffee-search-item p-2 col-3 d-flex flex-column align-items-center">
+                                <div
+                                    class="mx-width-100 mx-height-100 w-100px h-100px bg-size-contain bg-pos-center d-flex flex-column justify-content-between"
+                                    style="background-image: url(https://static.wikia.nocookie.net/leagueoflegends/images/6/66/Tear_of_the_Goddess_item_HD.png/revision/latest?cb=20201111004755);" onclick="orders.addOrder(${idTable},${p.id})">
+                                    <span class="text-white price">Giá: ${p.price}</span>
+                                </div>
+                                <p class="product-name">${p.name}</p>
+                              </div>`
+                    ).join("")}
+                        </div>
+                    `
+                )
+            })
+        }
+    })
+}
+
 tables.showFormAddTable = function (idArea) {
     $('#showOrder').remove();
     $('#showTables').remove();
@@ -127,7 +131,7 @@ tables.showFormAddTable = function (idArea) {
                         <input type="hidden" name="id" id="id">
                             <div class="form-group"><label>Tên bàn</label>
                             <input class="form-control" type="text" name="name" id="name"
-                                                                                 placeholder="Mời nhập tên bàn" required>
+                                                                                 placeholder="Mời nhập tên bàn" required onchange="changeBtn(${idArea})">
                             <small id="err-add-table-name" class="text-danger"></small>
     
                             </div>
@@ -138,18 +142,30 @@ tables.showFormAddTable = function (idArea) {
                     </div>
                     <div class="card-footer">
                        <div class="form-group">
-                            <div class="form-row row">
-
-                                    <button class="btn btn-success col" type="button" onclick="tables.addTable(${idArea})">Thực hiện</button>
+                            <div class="form-row row" id="btnSuccess">
+                                        <button class="btn btn-success col" type="button" onclick="tables.addTable(${idArea})" disabled>Thực
+                hiện</button>
                             </div>
-
                         </div>
-                 
                     </div>
-                    
                 </div>
             </div>`
     )
+}
+
+function changeBtn(idArea) {
+    let value = document.getElementById("name").value
+    if (value !== null) {
+        $('#btnSuccess').empty().append(
+            `<button class="btn btn-success col" type="button" onclick="tables.addTable(${idArea})">Thực
+                hiện</button>`
+        )
+    } else {
+        $('#btnSuccess').empty().append(
+            `<button class="btn btn-success col" type="button" onclick="tables.addTable(${idArea})" disabled>Thực
+                hiện</button>`
+        )
+    }
 }
 
 tables.addTable = function (idArea) {
@@ -210,6 +226,7 @@ tables.emptyTable = function (idTable) {
 }
 
 tables.showFormAddOrder = function (idTable) {
+    console.log(idTable);
     $.ajax({
         url: "http://localhost:8080/api/tables/" + idTable,
         method: "GET",
@@ -291,7 +308,7 @@ tables.showFormAddOrder = function (idTable) {
                                data-toggle="modal"
                                data-target="#exampleModalCenter"
                                class="d-xl-flex justify-content-xl-center align-items-xl-center"
-                               style="  border-radius: 50%;  border: 2px solid;  width: 50px;  height: 50px; " onclick="areas.showMenu(${idTable})">
+                               style="  border-radius: 50%;  border: 2px solid;  width: 50px;  height: 50px; " onclick="areas.showMenu(${data.id})">
                                 <i
                                     class="fa fa-plus" style="font-size: 30px;"></i>
                             </a>
@@ -300,7 +317,6 @@ tables.showFormAddOrder = function (idTable) {
                     <div class="card-footer">
                         <div class="form-group">
                                 <div class="row" id="btnSuccess">
-                                   
                                 </div>
                             </div>
                         </div>
@@ -311,6 +327,43 @@ tables.showFormAddOrder = function (idTable) {
         }
     })
     orders.showOrderAndOrderDetails(idTable);
+}
+
+tables.reloadOrderDetail = function (idOrder, idProduct,idTable)    {
+    let id = '#showDetail' + idOrder + 'and' + idProduct;
+    $.ajax({
+        url:"http://localhost:8080/api/orders/"+idOrder+"/product/"+idProduct+"/orderDetail",
+        method:"GET",
+        dataType:"JSON",
+        success:function (data){
+            $(id).empty().append(
+                       `<td class="d-xl-flex justify-content-xl-center align-items-xl-center order-item-trash col-1">
+                                    <i class="far fa-trash-alt d-xl-flex justify-content-xl-center align-items-xl-center" onclick="orders.removeOrderDetail(${data.order.id},${data.product.id},${idTable})"></i>
+                                </td>
+                                <td class="d-xl-flex justify-content-xl-left align-items-xl-center col-3">
+                                     <div>
+                                          <div>
+                                               <h5>${data.product.name}</h5>
+                                          </div>
+                                     </div>
+                                </td>
+                                <td class="d-xl-flex justify-content-xl-left align-items-xl-center col-2">${data.priceEach} đ</td>
+                                <td class="d-xl-flex justify-content-xl-center align-items-xl-center col-3">
+                                     <div class="quantity clearfix d-flex justify-content-center">
+                                          <input id="quantity-left-minus" onclick="this.parentNode.querySelector('input[type=number]').stepDown();orders.showBtnQuantity(${data.product.id},${data.quantity},${data.order.id},${data.priceEach},${idTable})" type="button" value="-" class="minus btn">
+                                          <input id="quantity${data.product.id}" type="number" step="1" min="1" max="99" name="quantity${data.product.id}" title="Qty" class="qty form-control d-inline-block" size="4" value="${data.quantity}" readonly>
+                                          <input id="quantity-right-plus" onclick="this.parentNode.querySelector('input[type=number]').stepUp();orders.showBtnQuantity(${data.product.id},${data.quantity},${data.order.id},${data.priceEach},${idTable})" type="button" value="+" class="plus btn">
+                                     </div>
+                                </td>
+                                <td class="d-xl-flex justify-content-xl-left align-items-xl-center col-2">
+                                     <strong>${data.priceEach * data.quantity} đ</strong>
+                                </td>
+                                <td class="d-xl-flex justify-content-xl-center align-items-xl-center col-1" id="btnCheck${data.product.id}">
+                                </td>`
+            )
+            orders.showBtnQuantity(idProduct,data.quantity,idOrder,data.priceEach,idTable);
+        }
+    })
 }
 
 orders.getButtonSuccess = function (table) {
@@ -327,12 +380,13 @@ orders.getButtonSuccess = function (table) {
 
 orders.addOrder = function (idTable, idProduct) {
     let tableObj = {};
-    tableObj.id = idTable;
+    tableObj.id = idTableCurrent;
     let accountObj = {};
     accountObj.id = 1;
     let orderObj = {};
     orderObj.table = tableObj;
     orderObj.account = accountObj;
+    console.log(orderObj);
     $.ajax({
         url: "http://localhost:8080/api/orders/",
         method: "POST",
@@ -340,10 +394,10 @@ orders.addOrder = function (idTable, idProduct) {
         contentType: "application/json",
         data: JSON.stringify(orderObj),
         success: function (data) {
-            orders.getProduct(data.id, idProduct, idTable);
+            orders.getProduct(data.id, idProduct, idTableCurrent);
         },
         error: function (data) {
-            orders.getOrder(idTable, idProduct);
+            orders.getOrder(idTableCurrent, idProduct);
         }
     })
 }
@@ -389,7 +443,6 @@ orders.findOrderDetailByIdOrderAndIdProduct = function (idOrder, productObj, idT
 }
 
 orders.plusQuantity = function (orderDetail, idTable) {
-    console.log(orderDetail);
     let orderObj = {};
     orderObj.id = orderDetail.order.id;
     let productObj = {};
@@ -399,7 +452,6 @@ orders.plusQuantity = function (orderDetail, idTable) {
     orderDetailObj.product = productObj;
     orderDetailObj.quantity = orderDetail.quantity + 1;
     orderDetailObj.totalPrice = orderDetailObj.quantity * orderDetail.priceEach;
-    console.log(orderDetailObj);
     $.ajax({
         url: "http://localhost:8080/api/orders/" + orderObj.id + "/product/" + productObj.id,
         method: "PUT",
@@ -407,8 +459,8 @@ orders.plusQuantity = function (orderDetail, idTable) {
         contentType: "application/json",
         data: JSON.stringify(orderDetailObj),
         success: function (data) {
-            orders.updateTotalPriceOrder(idTable, orderObj.id, orderDetail.priceEach);
-            toastr.success("Đã cập nhật số lượng");
+            orders.updateTotalPriceOrder(idTable, orderObj.id, orderDetail.priceEach, 1, orderDetail.product.id);
+            console.log("them quantity thanh cong");
         }
     })
 }
@@ -431,13 +483,13 @@ orders.addOrderDetail = function (idOrder, productCurrent, idTable) {
         contentType: "application/json",
         data: JSON.stringify(orderDetailObj),
         success: function (data) {
-            toastr.success("Đã thêm sản phẩm mới");
-            orders.updateTotalPriceOrder(idTable, idOrder, orderDetailObj.priceEach);
+            console.log("them detail thanh cong");
+            orders.updateTotalPriceOrder(idTable, idOrder, orderDetailObj.priceEach, 1, productCurrent.id);
         }
     })
 }
 
-orders.updateTotalPriceOrder = function (idTable, idOrder, totalPrice) {
+orders.updateTotalPriceOrder = function (idTable, idOrder, totalPrice, step, idProduct) {
     $.ajax({
         url: "http://localhost:8080/api/orders/" + idOrder,
         method: "GET",
@@ -453,7 +505,11 @@ orders.updateTotalPriceOrder = function (idTable, idOrder, totalPrice) {
                 contentType: "application/json",
                 data: JSON.stringify(orderObj),
                 success: function (data) {
-                    tables.usingTable(idTable);
+                    if (step === 1) {
+                        tables.usingTable(idTable);
+                    } else {
+                        tables.reloadOrderDetail(idOrder, idProduct,idTable);
+                    }
                 }
             })
         }
@@ -474,7 +530,7 @@ orders.showOrderAndOrderDetails = function (idTable) {
                     $('#list-orderdetail').empty();
                     $.each(data, function (i, v) {
                         $('#list-orderdetail').append(
-                            `<tr class="row">
+                            `<tr class="row" id="showDetail${v.order.id}and${v.product.id}">
                                 <td class="d-xl-flex justify-content-xl-center align-items-xl-center order-item-trash col-1">
                                     <i class="far fa-trash-alt d-xl-flex justify-content-xl-center align-items-xl-center" onclick="orders.removeOrderDetail(${v.order.id},${v.product.id},${idTable})"></i>
                                 </td>
@@ -489,7 +545,7 @@ orders.showOrderAndOrderDetails = function (idTable) {
                                 <td class="d-xl-flex justify-content-xl-center align-items-xl-center col-3">
                                      <div class="quantity clearfix d-flex justify-content-center">
                                           <input id="quantity-left-minus" onclick="this.parentNode.querySelector('input[type=number]').stepDown();orders.showBtnQuantity(${v.product.id},${v.quantity},${v.order.id},${v.priceEach},${idTable})" type="button" value="-" class="minus btn">
-                                          <input id="quantity${v.product.id}" type="number" step="1" min="1" max="99" name="quantity${v.product.id}" title="Qty" class="qty form-control d-inline-block quantity-orderdetail" size="4" value="${v.quantity}" readonly>
+                                          <input id="quantity${v.product.id}" type="number" step="1" min="1" max="99" name="quantity${v.product.id}" title="Qty" class="qty form-control d-inline-block" size="4" value="${v.quantity}" readonly>
                                           <input id="quantity-right-plus" onclick="this.parentNode.querySelector('input[type=number]').stepUp();orders.showBtnQuantity(${v.product.id},${v.quantity},${v.order.id},${v.priceEach},${idTable})" type="button" value="+" class="plus btn">
                                      </div>
                                 </td>
@@ -554,14 +610,14 @@ orders.updateQuantity = function (idProduct, quantityUpdate, idOrder, priceEach,
                     console.log("sau khi xoa");
                     console.log(arrOrderDetailsTest);
                     tables.updateTableStatus(idTable);
-                    toastr.success("Xóa thành công");
+                    console.log("xoa thanh cong");
                     orders.showOrderAndOrderDetails(idTable);
                     console.log("sau khi load function");
                     console.log(arrOrderDetailsTest);
                 }
             });
-            toastr.success("them quantity thanh cong");
-            orders.updateTotalPriceOrder(idTable, idOrder, priceEach * (quantityUpdate - quantityBefore))
+            console.log("them quantity thanh cong");
+            orders.updateTotalPriceOrder(idTable, idOrder, priceEach * (quantityUpdate - quantityBefore), 2, idProduct)
         }
     })
 }
@@ -579,7 +635,7 @@ orders.removeOrderDetail = function (idOrder, idProduct, idTable) {
         method: "DELETE",
         dataType: "JSON",
         success: function (data) {
-            toastr.success("xoa thanh cong");
+            console.log("xoa thanh cong");
             orders.updateTotalPriceOrder(idTable, idOrder, -data.totalPrice)
             orders.checkOrderDetails(idOrder, idTable);
         }
@@ -676,11 +732,11 @@ bills.removeAllOrderDetails = function (idOrder, idTable) {
         method: "DELETE",
         dataType: "JSON",
         success: function (data) {
-            toastr.success("thanh toan thanh cong");
+            console.log("thanh toan thanh cong");
             orders.removeOrder(idOrder, idTable);
         },
         error: function () {
-            toastr.success("thanh toan thanh cong");
+            console.log("thanh toan thanh cong");
             orders.removeOrder(idOrder, idTable);
         }
     })
