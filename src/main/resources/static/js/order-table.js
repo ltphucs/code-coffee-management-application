@@ -460,7 +460,7 @@ orders.plusQuantity = function (orderDetail, idTable) {
         data: JSON.stringify(orderDetailObj),
         success: function (data) {
             orders.updateTotalPriceOrder(idTable, orderObj.id, orderDetail.priceEach, 1, orderDetail.product.id);
-            console.log("them quantity thanh cong");
+            toastr.success("Đã cập nhật số lượng");
         }
     })
 }
@@ -483,7 +483,7 @@ orders.addOrderDetail = function (idOrder, productCurrent, idTable) {
         contentType: "application/json",
         data: JSON.stringify(orderDetailObj),
         success: function (data) {
-            console.log("them detail thanh cong");
+            toastr.success("Thêm món mới thành công");
             orders.updateTotalPriceOrder(idTable, idOrder, orderDetailObj.priceEach, 1, productCurrent.id);
         }
     })
@@ -610,13 +610,13 @@ orders.updateQuantity = function (idProduct, quantityUpdate, idOrder, priceEach,
                     console.log("sau khi xoa");
                     console.log(arrOrderDetailsTest);
                     tables.updateTableStatus(idTable);
-                    console.log("xoa thanh cong");
+                    toastr.success("Xóa thành công");
                     orders.showOrderAndOrderDetails(idTable);
                     console.log("sau khi load function");
                     console.log(arrOrderDetailsTest);
                 }
             });
-            console.log("them quantity thanh cong");
+            toastr.success("Đã cập nhật số lượng");
             orders.updateTotalPriceOrder(idTable, idOrder, priceEach * (quantityUpdate - quantityBefore), 2, idProduct)
         }
     })
@@ -635,7 +635,7 @@ orders.removeOrderDetail = function (idOrder, idProduct, idTable) {
         method: "DELETE",
         dataType: "JSON",
         success: function (data) {
-            console.log("xoa thanh cong");
+            toastr.success("Xóa thành công");
             orders.updateTotalPriceOrder(idTable, idOrder, -data.totalPrice)
             orders.checkOrderDetails(idOrder, idTable);
         }
@@ -732,11 +732,24 @@ bills.removeAllOrderDetails = function (idOrder, idTable) {
         method: "DELETE",
         dataType: "JSON",
         success: function (data) {
-            console.log("thanh toan thanh cong");
+            // toastr.success("Thanh toán thành công");
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Thanh toán thành công',
+                showConfirmButton: false,
+                timer: 1500
+            })
             orders.removeOrder(idOrder, idTable);
         },
         error: function () {
-            console.log("thanh toan thanh cong");
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Thanh toán thành công',
+                showConfirmButton: false,
+                timer: 1500
+            })
             orders.removeOrder(idOrder, idTable);
         }
     })
@@ -755,6 +768,7 @@ tables.closeOrder = function (idTable) {
 }
 
 $(document).ready(function () {
-        areas.initAreas();
+    areas.initAreas();
+    // document.title = "Trang đặt món - code-coffee";
     }
 );
