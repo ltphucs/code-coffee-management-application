@@ -6,7 +6,7 @@ let orders = {};
 
 let bills = {};
 
-let idTableCurrent=0;
+let idTableCurrent = 0;
 
 areas.initAreas = function () {
     $.ajax({
@@ -83,8 +83,8 @@ areas.showTables = function (idArea) {
 }
 
 areas.showMenu = function (idTable) {
-    console.log("showmenu: "+idTable);
-    idTableCurrent =idTable;
+    console.log("showmenu: " + idTable);
+    idTableCurrent = idTable;
     $.ajax({
         url: "http://localhost:8080/api/menu",
         method: "GET",
@@ -182,7 +182,24 @@ tables.addTable = function (idArea) {
         contentType: "application/json",
         data: JSON.stringify(tableObj),
         success: function (data) {
-            toastr.success("Thêm bàn mới thành công");
+            Command: toastr["success"]("Thêm bàn mới thành công");
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": true,
+                "positionClass": "toast-bottom-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "2000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
             tables.closeTable();
             $("#showTables").empty();
             areas.showTables(idArea);
@@ -232,96 +249,101 @@ tables.showFormAddOrder = function (idTable) {
         method: "GET",
         dataType: "JSON",
         success: function (data) {
+            let tableStatus = "";
+            if(data.tableStatus === "EMPTY"){
+                tableStatus = `<span class="text-success">Bàn trống</span>`;
+            }
+            if(data.tableStatus === "USING"){
+                tableStatus = `<span class="text-danger">Bàn đang dùng</span>`;
+            }
             $('#showTables').remove();
             $('#showOrder').remove();
             $('#showOrdersTables').append(
                 `<div class="col order-list mt-5" id="showOrder">
-                <div class="card shadow">
-                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                        <h6 class="m-0 font-weight-bold text-primary">Đặt món</h6>
-                        <div class="d-flex">
-                            <li class="nav-item dropdown no-arrow">
-                                <a class="nav-link dropdown-toggle btn btn-warning btn-circle mr-2" href="javascript:;" id="userDropdown" role="button"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fas fa-cog"></i>
+                    <div class="card shadow">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Đặt món</h6>
+                            <div class="d-flex">
+                                <li class="nav-item dropdown no-arrow">
+                                    <a class="nav-link dropdown-toggle btn btn-warning btn-circle mr-2"
+                                        href="javascript:;" id="userDropdown" role="button" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-cog"></i>
+                                    </a>
+
+                                    <!-- Dropdown - User Information -->
+                                    <div class="dropdown-menu dropdown-menu-right shadow "
+                                        aria-labelledby="userDropdown">
+                                        <a class="dropdown-item" href="javascript:;">
+                                            <i class="fas fa-exclamation-triangle fa-sm fa-fw mr-2 text-gray-400"></i>
+                                            Cập nhật bàn
+                                        </a>
+                                        <a class="dropdown-item" href="javascript:;">
+                                            <i class="fas fa-trash fa-sm fa-fw mr-2 text-gray-400"></i>
+                                            Xóa bàn
+                                        </a>
+                                    </div>
+                                </li>
+                                <a href="javascript:;" class="btn btn-danger btn-circle"
+                                    onclick="tables.closeOrder(${data.area.id})">
+                                    <i class="fas fa-times"></i>
                                 </a>
-                               
-                            <!-- Dropdown - User Information -->
-                                <div class="dropdown-menu dropdown-menu-right shadow "
-                                    aria-labelledby="userDropdown">
-                                    <a class="dropdown-item" href="javascript:;">
-                                        <i class="fas fa-exclamation-triangle fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Cập nhật bàn
-                                    </a>
-                                    <a class="dropdown-item" href="javascript:;">
-                                        <i class="fas fa-trash fa-sm fa-fw mr-2 text-gray-400"></i>
-                                        Xóa bàn
-                                    </a>
-                                </div>
-                            </li>     
-                             <a href="javascript:;" class="btn btn-danger btn-circle" onclick="tables.closeOrder(${data.area.id})">
-                                 <i class="fas fa-times"></i>
-                             </a>
-                        </div>
-                         
-                    </div>
-                    <div class="card-body">
-                        <div class="form-row flex-column">
-                            <div class="col">
-                                <div>
-                                    <h4>
-                                        <b>Bàn ${data.name}</b>
-                                    </h4>
-                                </div>
                             </div>
-               
-                    <div class="col">
-                        <div>
-                            <h4>
-                               <b>Trạng thái:</b>
-                               <span>${data.tableStatus}</span>
-                            </h4>
 
                         </div>
-                        <div class="form-row">
-                            <div class="col">
-                                <div class="table">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr class="row order-table-title">
-                                                <th class="col-1">&nbsp;</th>
-                                                <th class="col-3">Sản phẩm</th>
-                                                <th class="col-2">Đơn giá</th>
-                                                <th class="col-3 justify-content-center">Số lượng</th>
-                                                <th class="col-2">Tổng</th>
-                                                <th class="col-1">Trạng thái</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="" id="list-orderdetail">
-                                        </tbody>
-                                    </table>
+                        <div class="card-body">
+                            <div class="form-row flex-column">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h5>
+                                            <b>Bàn ${data.name}</b>
+                                        </h5>
+                                    </div>
+                                    <div class="col-6">
+                                        <h5>
+                                            <b>Trạng thái:</b>
+                                            ${tableStatus}
+                                        </h5>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-row">
+                                        <div class="col">
+                                            <div class="table">
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                        <tr class="row order-table-title">
+                                                            <th class="col-1">&nbsp;</th>
+                                                            <th class="col-3">Sản phẩm</th>
+                                                            <th class="col-2">Đơn giá</th>
+                                                            <th class="col-3 justify-content-center">Số lượng</th>
+                                                            <th class="col-2">Tổng</th>
+                                                            <th class="col-1">Chức năng</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="" id="list-orderdetail">
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col d-xl-flex justify-content-xl-center align-items-xl-center mb-3">
+                                        <a href="javascript:;" data-toggle="modal" data-target="#exampleModalCenter"
+                                            class="d-xl-flex justify-content-xl-center align-items-xl-center"
+                                            style="  border-radius: 50%;  border: 2px solid;  width: 50px;  height: 50px; "
+                                            onclick="areas.showMenu(${data.id})">
+                                            <i class="fa fa-plus" style="font-size: 30px;"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col d-xl-flex justify-content-xl-center align-items-xl-center mb-3">
-                            <a href="javascript:;"
-                               data-toggle="modal"
-                               data-target="#exampleModalCenter"
-                               class="d-xl-flex justify-content-xl-center align-items-xl-center"
-                               style="  border-radius: 50%;  border: 2px solid;  width: 50px;  height: 50px; " onclick="areas.showMenu(${data.id})">
-                                <i
-                                    class="fa fa-plus" style="font-size: 30px;"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <div class="form-group">
-                                <div class="row" id="btnSuccess">
-                                </div>
+                        <div class="card-footer">
+                            <div class="row" id="btnSuccess">
+                              　 </div>
                             </div>
-                        </div>
                     </div>
-            </div>`
+                </div>`
             )
             orders.getButtonSuccess(data);
         }
@@ -329,15 +351,15 @@ tables.showFormAddOrder = function (idTable) {
     orders.showOrderAndOrderDetails(idTable);
 }
 
-tables.reloadOrderDetail = function (idOrder, idProduct,idTable)    {
+tables.reloadOrderDetail = function (idOrder, idProduct, idTable) {
     let id = '#showDetail' + idOrder + 'and' + idProduct;
     $.ajax({
-        url:"http://localhost:8080/api/orders/"+idOrder+"/product/"+idProduct+"/orderDetail",
-        method:"GET",
-        dataType:"JSON",
-        success:function (data){
+        url: "http://localhost:8080/api/orders/" + idOrder + "/product/" + idProduct + "/orderDetail",
+        method: "GET",
+        dataType: "JSON",
+        success: function (data) {
             $(id).empty().append(
-                       `<td class="d-xl-flex justify-content-xl-center align-items-xl-center order-item-trash col-1">
+                `<td class="d-xl-flex justify-content-xl-center align-items-xl-center order-item-trash col-1">
                                     <i class="far fa-trash-alt d-xl-flex justify-content-xl-center align-items-xl-center" onclick="orders.removeOrderDetail(${data.order.id},${data.product.id},${idTable})"></i>
                                 </td>
                                 <td class="d-xl-flex justify-content-xl-left align-items-xl-center col-3">
@@ -361,7 +383,7 @@ tables.reloadOrderDetail = function (idOrder, idProduct,idTable)    {
                                 <td class="d-xl-flex justify-content-xl-center align-items-xl-center col-1" id="btnCheck${data.product.id}">
                                 </td>`
             )
-            orders.showBtnQuantity(idProduct,data.quantity,idOrder,data.priceEach,idTable);
+            orders.showBtnQuantity(idProduct, data.quantity, idOrder, data.priceEach, idTable);
         }
     })
 }
@@ -369,11 +391,11 @@ tables.reloadOrderDetail = function (idOrder, idProduct,idTable)    {
 orders.getButtonSuccess = function (table) {
     if (table.tableStatus === "USING") {
         $('#btnSuccess').empty().append(
-            `<button class="btn btn-success col pt-2 pb-2" type="button" onclick="bills.addBill(${table.id})">Thanh toán</button>`
+            `<button class="btn btn-success col pt-3 pb-3" type="button" onclick="bills.addBill(${table.id})">Thanh toán</button>`
         )
     } else {
         $('#btnSuccess').empty().append(
-            `<button class="btn btn-success col pt-2 pb-2" type="button" disabled>Thanh toán</button>`
+            `<button class="btn btn-success col pt-3 pb-3 bg-secondary" type="button" disabled>Thanh toán</button>`
         )
     }
 }
@@ -460,7 +482,24 @@ orders.plusQuantity = function (orderDetail, idTable) {
         data: JSON.stringify(orderDetailObj),
         success: function (data) {
             orders.updateTotalPriceOrder(idTable, orderObj.id, orderDetail.priceEach, 1, orderDetail.product.id);
-            toastr.success("Đã cập nhật số lượng");
+            Command: toastr["success"]("Đã cập nhật số lượng");
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": true,
+                "positionClass": "toast-bottom-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "2000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
         }
     })
 }
@@ -483,7 +522,24 @@ orders.addOrderDetail = function (idOrder, productCurrent, idTable) {
         contentType: "application/json",
         data: JSON.stringify(orderDetailObj),
         success: function (data) {
-            toastr.success("Thêm món mới thành công");
+            Command: toastr["success"]("Thêm món mới thành công");
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": true,
+                "positionClass": "toast-bottom-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "2000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
             orders.updateTotalPriceOrder(idTable, idOrder, orderDetailObj.priceEach, 1, productCurrent.id);
         }
     })
@@ -508,7 +564,7 @@ orders.updateTotalPriceOrder = function (idTable, idOrder, totalPrice, step, idP
                     if (step === 1) {
                         tables.usingTable(idTable);
                     } else {
-                        tables.reloadOrderDetail(idOrder, idProduct,idTable);
+                        tables.reloadOrderDetail(idOrder, idProduct, idTable);
                     }
                 }
             })
@@ -531,8 +587,8 @@ orders.showOrderAndOrderDetails = function (idTable) {
                     $.each(data, function (i, v) {
                         $('#list-orderdetail').append(
                             `<tr class="row" id="showDetail${v.order.id}and${v.product.id}">
-                                <td class="d-xl-flex justify-content-xl-center align-items-xl-center order-item-trash col-1">
-                                    <i class="far fa-trash-alt d-xl-flex justify-content-xl-center align-items-xl-center" onclick="orders.removeOrderDetail(${v.order.id},${v.product.id},${idTable})"></i>
+                                <td class="d-xl-flex justify-content-xl-center align-items-xl-center order-item-trash col-1" onclick="orders.removeOrderDetail(${v.order.id},${v.product.id},${idTable})">
+                                    <i class="far fa-trash-alt d-xl-flex justify-content-xl-center align-items-xl-center" ></i>
                                 </td>
                                 <td class="d-xl-flex justify-content-xl-left align-items-xl-center col-3">
                                      <div>
@@ -610,13 +666,47 @@ orders.updateQuantity = function (idProduct, quantityUpdate, idOrder, priceEach,
                     console.log("sau khi xoa");
                     console.log(arrOrderDetailsTest);
                     tables.updateTableStatus(idTable);
-                    toastr.success("Xóa thành công");
+                    Command: toastr["success"]("Xóa thành công");
+                    toastr.options = {
+                        "closeButton": false,
+                        "debug": false,
+                        "newestOnTop": false,
+                        "progressBar": true,
+                        "positionClass": "toast-bottom-right",
+                        "preventDuplicates": false,
+                        "onclick": null,
+                        "showDuration": "300",
+                        "hideDuration": "1000",
+                        "timeOut": "2000",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                    };
                     orders.showOrderAndOrderDetails(idTable);
                     console.log("sau khi load function");
                     console.log(arrOrderDetailsTest);
                 }
             });
-            toastr.success("Đã cập nhật số lượng");
+            Command: toastr["success"]("Đã cập nhật số lượng");
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": true,
+                "positionClass": "toast-bottom-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "2000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
             orders.updateTotalPriceOrder(idTable, idOrder, priceEach * (quantityUpdate - quantityBefore), 2, idProduct)
         }
     })
@@ -635,7 +725,24 @@ orders.removeOrderDetail = function (idOrder, idProduct, idTable) {
         method: "DELETE",
         dataType: "JSON",
         success: function (data) {
-            toastr.success("Xóa thành công");
+            Command: toastr["success"]("Xóa thành công");
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": true,
+                "positionClass": "toast-bottom-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "2000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
             orders.updateTotalPriceOrder(idTable, idOrder, -data.totalPrice)
             orders.checkOrderDetails(idOrder, idTable);
         }
@@ -732,7 +839,6 @@ bills.removeAllOrderDetails = function (idOrder, idTable) {
         method: "DELETE",
         dataType: "JSON",
         success: function (data) {
-            // toastr.success("Thanh toán thành công");
             Swal.fire({
                 position: 'center',
                 icon: 'success',
@@ -768,7 +874,7 @@ tables.closeOrder = function (idTable) {
 }
 
 $(document).ready(function () {
-    areas.initAreas();
-    // document.title = "Trang đặt món - code-coffee";
+        areas.initAreas();
+        // document.title = "Trang đặt món - code-coffee";
     }
 );
