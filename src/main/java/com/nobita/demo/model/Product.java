@@ -29,4 +29,7 @@ public class Product {
     @NotBlank(message = "Image be not null")
     private String image;
     private ProductStatus productStatus;
+
+    private boolean isIngredient;
+    private boolean deleted;
 }

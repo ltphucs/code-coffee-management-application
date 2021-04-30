@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class ImportIngredient {
     private Long id;
 
-    @JsonFormat(pattern = "HH:mm:ss MM/dd/yyyy")
+    @JsonFormat(pattern = "HH:mm:ss dd/MM/yyyy")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDateTime dateJoin = LocalDateTime.now();
 

@@ -23,7 +23,22 @@ importProducts.initImportProductTable = function () {
                         "<a href='javascript:;' title='remove product' onclick='importProducts.delete(" + data + ")' ><i class='fa fa-trash'></i></a>"
                 }
             },
-        ]
+        ],
+        language: {
+            "sProcessing": "Đang xử lý...",
+            "sLengthMenu": "Xem _MENU_ mục",
+            "sZeroRecords": "Không tìm thấy dòng nào phù hợp",
+            "sInfo": "Đang xem _START_ đến _END_ trong tổng số _TOTAL_ mục",
+            "sInfoEmpty": "Đang xem 0 đến 0 trong tổng số 0 mục",
+            "sInfoFiltered": "(được lọc từ _MAX_ mục)",
+            "sSearch": "Tìm kiếm:",
+            "oPaginate": {
+                "sFirst": "Đầu",
+                "sPrevious": "Trước",
+                "sNext": "Tiếp",
+                "sLast": "Cuối"
+            }
+        }
     });
 }
 
@@ -82,31 +97,6 @@ importProducts.initProduct = function (data) {
     })
 }
 
-function setStatus(inventory, product) {
-    if (inventory < 1) {
-        return product.productStatus = 'OUT_OF_STOCK';
-    } else {
-        return product.productStatus = 'STOCKING';
-    }
-}
-
-function updateProduct(product, id) {
-    $.ajax({
-        url: "http://localhost:8080/api/products/" + id,
-        method: "PUT",
-        dataType: "json",
-        contentType: "application/json",
-        data: JSON.stringify(product),
-        success: function () {
-            console.log("update product success");
-        },
-        error: function (mess) {
-            console.log(mess.responseJSON);
-        }
-    });
-
-}
-
 importProducts.save = function () {
     // console.log(Number($("#products option:selected").html()));
     if ($('#formAddEdit')) {
@@ -122,9 +112,9 @@ importProducts.save = function () {
                     importProductObj.totalPrice = importProductObj.quantity * importProductObj.price;
                     importProductObj.comment = $('#comment').val();
 
-                    let productObj = data.product;
+                    let productObj = data;
                     productObj.inventory += Number(importProductObj.quantity);
-                    productObj.productStatus = setStatus(productObj.inventory, productObj);
+                    productObj.productStatus = products.setProductStatus(productObj.inventory, productObj);
                     importProductObj.product = productObj;
 
                     $.ajax({
@@ -134,7 +124,7 @@ importProducts.save = function () {
                         contentType: "application/json",
                         data: JSON.stringify(importProductObj),
                         success: function () {
-                            updateProduct(productObj, productObj.id);
+                            products.updateProduct(productObj, productObj.id);
                             toastr.success("Nhập sản phẩm thành công");
                             $('#modalAddEditIP').modal('hide');
                             $("#importProducts-datatables").DataTable().ajax.reload();
@@ -160,14 +150,11 @@ importProducts.save = function () {
                     importProductObj.comment = $('#comment').val();
                     importProductObj.id = Number($('#id').val());
 
-                    let productObj = data.product;
-                    // console.log($("#products").val());
+                    let productObj = data;
                     let oldInventory = Number($('#old-quantity').val());
-
                     productObj.inventory -= oldInventory;
                     productObj.inventory += Number(importProductObj.quantity);
-                    productObj.productStatus = setStatus(productObj.inventory, productObj);
-
+                    productObj.productStatus = products.setProductStatus(productObj.inventory, productObj);
                     importProductObj.product = productObj;
 
                     $.ajax({
@@ -177,7 +164,7 @@ importProducts.save = function () {
                         contentType: "application/json",
                         data: JSON.stringify(importProductObj),
                         success: function () {
-                            updateProduct(productObj, productObj.id);
+                            products.updateProduct(productObj, productObj.id);
                             toastr.success(`Cập nhật "nhập sản phẩm" thành công`);
                             $('#modalAddEditIP').modal('hide');
                             $("#importProducts-datatables").DataTable().ajax.reload();
@@ -229,8 +216,8 @@ importProducts.delete = function (id) {
                         productObj.inventory -= data.quantity;
                         if (productObj.inventory < 0)
                             productObj.inventory = 0;
-                        productObj.productStatus = setStatus(productObj.inventory, productObj);
-                        updateProduct(productObj, productObj.id);
+                        productObj.productStatus = products.setProductStatus(productObj.inventory, productObj);
+                        products.updateProduct(productObj, productObj.id);
                         console.log("update done");
                         deleteImportProduct(id);
                     }

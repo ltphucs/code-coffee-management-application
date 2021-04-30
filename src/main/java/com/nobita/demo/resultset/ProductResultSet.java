@@ -27,6 +27,8 @@ public class ProductResultSet implements ResultSetExtractor<List<Product>> {
             product.setProductLine(productLine);
             product.setImage(rs.getString("image"));
             product.setProductStatus(ProductStatus.valueOf(rs.getString("status")));
+            product.setIngredient(rs.getBoolean("is_ingredient"));
+            product.setDeleted(rs.getBoolean("deleted"));
             products.add(product);
         }
         return products;
