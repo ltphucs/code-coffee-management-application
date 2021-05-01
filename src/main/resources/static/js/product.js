@@ -356,6 +356,9 @@ products.setProductStatus = function (inventory, product) {
 }
 
 products.saveImage = function () {
+    $("#save-btn").html(
+        ``
+    );
     let form = new FormData();
     form.append("file", $('#multiImage')[0].files[0]);
     $.ajax({

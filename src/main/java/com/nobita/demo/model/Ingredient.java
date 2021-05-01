@@ -17,6 +17,8 @@ public class Ingredient {
     private Unit unit;
     private String comment;
 
+    private boolean deleted;
+
     @Override
     public String toString() {
         return "Ingredient{" +

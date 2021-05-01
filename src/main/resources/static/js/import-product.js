@@ -24,6 +24,7 @@ importProducts.initImportProductTable = function () {
                 }
             },
         ],
+        order: [[1, "desc"]],
         language: {
             "sProcessing": "Đang xử lý...",
             "sLengthMenu": "Xem _MENU_ mục",
