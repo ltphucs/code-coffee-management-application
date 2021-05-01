@@ -16,13 +16,13 @@ public class ProductDAO implements BaseDAO<Product> {
 
     @Override
     public List<Product> findAll() {
-        String sql = "select p.* ,pl.name as name_productline from product p left join productline pl on pl.id =p.id_productline";
+        String sql = "select p.* ,pl.name as name_productline from product p left join productline pl on pl.id =p.id_productline where p.deleted=0";
         return jdbcTemplate.query(sql, new ProductResultSet());
     }
 
-    public List<Product> findAllNotIngredient(){
-        String sql = "select p.* ,pl.name as name_productline from product p left join productline pl on pl.id =p.id_productline where p.is_ingredient=0";
-        return jdbcTemplate.query(sql,new ProductResultSet());
+    public List<Product> findAllNotIngredient() {
+        String sql = "select p.* ,pl.name as name_productline from product p left join productline pl on pl.id =p.id_productline where p.is_ingredient=0 and p.deleted=0";
+        return jdbcTemplate.query(sql, new ProductResultSet());
     }
 
     @Override
@@ -33,29 +33,29 @@ public class ProductDAO implements BaseDAO<Product> {
     }
 
 
-    public List<Product> findByProductLine(Long id){
+    public List<Product> findByProductLine(Long id) {
         String sql = "select p.* ,pl.name as name_productline from product p left join productline pl on pl.id =p.id_productline where p.id_productline=? and p.status ='STOCKING'";
-        Object [] values={id};
-        return jdbcTemplate.query(sql,new ProductResultSet(),values);
+        Object[] values = {id};
+        return jdbcTemplate.query(sql, new ProductResultSet(), values);
     }
 
     @Override
     public boolean save(Product product) {
-        String sql = "insert into product(name,price,id_productline,image) values(?,?,?,?)";
-        Object[] values = {product.getName(), product.getPrice(), product.getProductLine().getId(), product.getImage()};
+        String sql = "insert into product(name,inventory, price,id_productline,image,status, is_ingredient) values(?,?,?,?,?,?,?)";
+        Object[] values = {product.getName(), product.getInventory(), product.getPrice(), product.getProductLine().getId(), product.getImage(), product.getProductStatus().toString(), product.isIngredient()};
         return jdbcTemplate.update(sql, values) > 0;
     }
 
     @Override
     public boolean update(Product product) {
-        String sql = "update product set name=?,price =?,id_productline =?,image=? where id=?";
-        Object[] values = {product.getName(), product.getPrice(), product.getProductLine().getId(), product.getImage(), product.getId()};
+        String sql = "update product set name=?,inventory = ?, price =?,id_productline =?,image=?,status=?, is_ingredient=? where id=?";
+        Object[] values = {product.getName(), product.getInventory(), product.getPrice(), product.getProductLine().getId(), product.getImage(), product.getProductStatus().toString(), product.isIngredient(), product.getId()};
         return jdbcTemplate.update(sql, values) > 0;
     }
 
     @Override
     public boolean delete(Long id) {
-        String sql = "delete from product where id =?";
+        String sql = "update product set deleted=1 where id =?";
         Object[] values = {id};
         return jdbcTemplate.update(sql, values) > 0;
     }

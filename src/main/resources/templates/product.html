@@ -38,10 +38,10 @@
 
                     <h1 class=" h3 mb-2 text-gray-800 ">Quản lý sản phẩm</h1>
                     <div class="d-flex">
-                        <a href="javascript:;" onclick="products.listProductLine()"
-                           class="btn btn-primary btn-icon-split mr-3">
+                        <a href="javascript:;" onclick="productLines.listProductLine()"
+                           class="btn btn-info btn-icon-split mr-3">
                             <span class="icon text-white-50">
-                                <i class="fas fa-plus"></i>
+                                <i class="fas fa-list-ul"></i>
                             </span>
                             <span class="text">Dòng sản phẩm</span>
                         </a>
@@ -50,7 +50,8 @@
                             <span class="icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                     stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8"
+                                     stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12"
+                                                                                                           y1="8"
                                                                                                            x2="12"
                                                                                                            y2="16"></line><line
                                         x1="8" y1="12" x2="16" y2="12"></line></svg>
@@ -94,72 +95,58 @@
 
                                     <!-- Modal body -->
                                     <div class="modal-body">
-                                        <form id="formView" name="formView">
-                                            <input hidden name="idProduct" id="idProduct">
-                                            <div class="row form-group">
-                                                <div class="col-3">
-                                                    <label>Tên sản phẩm</label>
+                                        <form id="formView" name="formView" class="row">
+                                            <div class="col">
+                                                <div class="row form-group">
+                                                    <div class="col-5">
+                                                        <label>Tên sản phẩm</label>
+                                                    </div>
+                                                    <div class="col-7">
+                                                        <label id="productNameView"></label>
+                                                    </div>
                                                 </div>
-                                                <div class="col-4">
-                                                    <input class="form-control" type="text"
-                                                           name="productNameView" id="productNameView"
-                                                           data-rule-required=true disabled>
+                                                <div class="row form-group">
+                                                    <div class="col-5">
+                                                        <label>Số lượng tồn kho</label>
+                                                    </div>
+                                                    <div class="col-7">
+                                                        <label id="inventoryView"></label>
+                                                    </div>
                                                 </div>
-                                            </div>
-
-                                            <div class="row form-group">
-                                                <div class="col-3">
-                                                    <label>Ảnh</label>
+                                                <div class="row form-group">
+                                                    <div class="col-5">
+                                                        <label>Giá</label>
+                                                    </div>
+                                                    <div class="col-7">
+                                                        <label id="priceView"></label>
+                                                    </div>
                                                 </div>
-                                                <div class="col-4">
-                                                    <input class="form-control" type="text"
-                                                           name="imageView" id="imageView"
-                                                           data-rule-required=true disabled>
-
+                                                <div class="row form-group">
+                                                    <div class="col-5">
+                                                        <label>Dòng sản phẩm</label>
+                                                    </div>
+                                                    <div class="col-7">
+                                                        <label id="productLineView"></label>
+                                                    </div>
                                                 </div>
-                                            </div>
-
-                                            <div class="row form-group">
-                                                <div class="col-3">
-                                                    <label>Số lượng trong kho</label>
-                                                </div>
-                                                <div class="col-4">
-                                                    <input class="form-control" type="text"
-                                                           name="inventoryView" id="inventoryView"
-                                                           data-rule-required=true disabled>
-                                                </div>
-                                            </div>
-
-                                            <div class="row form-group">
-                                                <div class="col-3">
-                                                    <label>Giá</label>
-                                                </div>
-                                                <div class="col-4">
-                                                    <input class="form-control" type="text"
-                                                           name="priceView" id="priceView"
-                                                           data-rule-required=true disabled>
+                                                <div class="row form-group">
+                                                    <div class="col-5">
+                                                        <label>Sản phẩm thuộc loại:</label>
+                                                    </div>
+                                                    <div class="col-7">
+                                                        <label id="productIngredientView"></label>
+                                                    </div>
                                                 </div>
                                             </div>
-
-                                            <div class="row form-group">
-                                                <div class="col-3">
-                                                    <label>Dòng sản phẩm</label>
-                                                </div>
-                                                <div class="col-4">
-                                                    <input class="form-control" type="text"
-                                                           name="productLineView" id="productLineView"
-                                                           data-rule-required=true disabled>
-                                                </div>
-                                            </div>
-
-                                            <div class="row form-group">
-                                                <div class="col-3">
-                                                    <label>Trạng thái</label>
-                                                </div>
-                                                <div class="col-4">
-                                                    <input class="form-control" type="text"
-                                                           name="productStatusView" id="productStatusView"
-                                                           data-rule-required=true disabled>
+                                            <div class="col">
+                                                <div class=" form-group">
+                                                    <div class="row">
+                                                        <label>Ảnh sản phẩm</label>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div id="imageView" class="mt-2">
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </form>
@@ -167,7 +154,7 @@
 
                                     <!-- Modal footer -->
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
                                     </div>
 
                                 </div>
@@ -180,7 +167,7 @@
 
             <!-- The Modal -->
             <div class="modal" id="modalAddEdit" name="modalAddEdit">
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-lg">
                     <div class="modal-content">
 
                         <!-- Modal Header -->
@@ -191,77 +178,91 @@
 
                         <!-- Modal body -->
                         <div class="modal-body">
-                            <form id="formAddEdit" name="formAddEdit">
-                                <input hidden name="id" id="id">
-                                <div class="row form-group">
-                                    <div class="col-3">
-                                        <label>Tên sản phẩm</label>
+                            <form id="formAddEdit" name="formAddEdit" class="row">
+                                <div class="col">
+                                    <input hidden name="id" id="id">
+                                    <div class="row form-group">
+                                        <div class="col-3">
+                                            <label>Tên sản phẩm</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input class="form-control" type="text"
+                                                   name="productName" id="productName"
+                                                   data-rule-required=true>
+                                        </div>
                                     </div>
-                                    <div class="col-9">
-                                        <input class="form-control" type="text"
-                                               name="productName" id="productName"
-                                               data-rule-required=true>
-                                    </div>
-                                </div>
 
-                                <div class="row form-group">
-                                    <div class="col-3">
-                                        <label>Giá</label>
+                                    <div class="row form-group">
+                                        <div class="col-3">
+                                            <label>Giá</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <input class="form-control" type="number"
+                                                   name="price" id="price"
+                                                   data-rule-required=true>
+                                        </div>
                                     </div>
-                                    <div class="col-9">
-                                        <input class="form-control" type="number"
-                                               name="price" id="price"
-                                               data-rule-required=true>
+                                    <div class="row form-group">
+                                        <div class="col-3">
+                                            <label>Dòng sản phẩm</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <select class="form-control" name="productLine" id="productLine"></select>
+                                        </div>
                                     </div>
-                                </div>
-
-                                <div class="row form-group">
-                                    <div class="col-3">
-                                        <label>Ảnh</label>
-                                    </div>
-                                    <div class="col-9">
-                                        <input class="form-control" type="hidden"
-                                               name="imgUrl" id="imgUrl">
-
-                                        <input class="form-control form-control-file" type="file"
-                                               name="multiImage" id="multiImage"
-                                               data-rule-required=true onchange="products.saveImage()">
-                                        <div id="done-upload">
-
+                                    <div class="row form-group">
+                                        <div class="col-3">
+                                            <label>Sản phẩm thuộc loại</label>
+                                        </div>
+                                        <div class="col-9">
+                                            <select class="form-control" name="isIngredient" id="isIngredient">
+                                                <option value="true">Nguyên liệu pha chế</option>
+                                                <option value="false">Nguyên liệu thông thường</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col">
+                                    <div class=" form-group">
+                                        <div class="row">
+                                            <label>Ảnh sản phẩm</label>
+                                        </div>
+                                        <div class="row">
+                                            <input class="form-control" type="hidden"
+                                                   name="imgUrl" id="imgUrl">
 
-                                <div class="row form-group">
-                                    <div class="col-3">
-                                        <label>Dòng sản phẩm</label>
-                                    </div>
-                                    <div class="col-9">
-                                        <select class="form-control" name="productLine" id="productLine"></select>
+                                            <input class="form-control-file" type="file"
+                                                   name="multiImage" id="multiImage"
+                                                   data-rule-required=true onchange="products.saveImage()">
+                                            <div id="done-upload" class="mt-2">
+
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
                         </div>
-
                         <!-- Modal footer -->
                         <div class="modal-footer">
-                            <div id="save"></div>
+                            <div id="save-btn"></div>
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
                         </div>
-
                     </div>
                 </div>
             </div>
 
             <!--            The modal listProductLine-->
             <div class="modal" id="modalProductLine" name="modalProductLine">
-                <div class="modal-dialog" style="max-width: 80% !important;  max-height: calc(100vh - 210px)">
+                <div class="modal-dialog modal-lg">
                     <div class="modal-content">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
+                        <div class="card shadow">
+                            <div class="card-header py-3 d-flex justify-content-between">
                                 <h6 class="m-0 font-weight-bold text-primary">Bảng dòng sản phẩm</h6>
-                                <a href="javascript:;" onclick="products.addNewProductLine()"
-                                   class="btn btn-outline-primary btn-icon-split">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="card-body">
+                                <a data-toggle="modal" onclick="productLines.addNewProductLine()"
+                                   class="btn btn-outline-primary btn-icon-split mb-4">
                                     <span class="icon">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                              viewBox="0 0 24 24"
@@ -274,11 +275,8 @@
                                     </span>
                                     <span class="text">Thêm mới</span>
                                 </a>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            </div>
-                            <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered" id="productsline-datatables" width="100%"
+                                    <table class="table table-bordered" id="productLines-datatables" width="100%"
                                            cellspacing="0">
                                         <tfoot>
                                         <tr>
@@ -295,7 +293,8 @@
             </div>
 
             <!--            The modal add and save productline-->
-            <div class="modal" style="overflow-y:auto;" id="modalAddEditProductLine" name="modalAddEditProductLine">
+            <div class="modal fade" style="overflow-y:auto;" id="modalAddEditProductLine"
+                 name="modalAddEditProductLine">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <!-- Modal Header -->
@@ -306,7 +305,7 @@
 
                         <!-- Modal body -->
                         <div class="modal-body">
-                            <form id="formAddEditProductlines" name="formAddEditProductlines">
+                            <form id="formAddEditProductLines" name="formAddEditProductLines">
                                 <input type="hidden" id="idProductline-2">
                                 <div class="row form-group">
                                     <div class="col-3">
@@ -325,7 +324,7 @@
                         <!-- Modal footer -->
                         <div class="modal-footer">
                             <a href="javascript:;" class="btn btn-primary"
-                               onclick="productline.save()">Lưu</a>
+                               onclick="productLines.save()">Lưu</a>
 
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                         </div>
