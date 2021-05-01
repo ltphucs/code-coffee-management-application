@@ -36,7 +36,7 @@ public class TableDAO implements BaseDAO<Table>{
 
     @Override
     public boolean save(Table table) {
-        String sql ="insert into `table`(name,id_area,comment) values (?,?,?) on duplicate key";
+        String sql ="insert into `table`(name,id_area,comment) values (?,?,?)";
         Object [] values ={table.getName(),table.getArea().getId(),table.getComment()};
         return jdbcTemplate.update(sql,values) > 0;
     }
