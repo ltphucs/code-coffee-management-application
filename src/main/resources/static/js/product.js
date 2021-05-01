@@ -217,7 +217,7 @@ productLines.listProductLine = function () {
 
     products.innitProductLineTable();
     $("#modalProductLine").on("shown.bs.modal", function (e) {
-        $("#unit-datatables")
+        $("#productLines-datatables")
             .DataTable()
             .columns.adjust()
             .responsive.recalc();

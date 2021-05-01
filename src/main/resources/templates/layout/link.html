@@ -63,13 +63,11 @@
 
     <script>
         $(document).ready(function () {
-
             $('#openBtn').click(function () {
                 $('#modalProductLine').modal({
                     show: true
                 })
             });
-
             $(document).on('show.bs.modal', '.modal', function (event) {
                 var zIndex = 1040 + (10 * $('.modal:visible').length);
                 $(this).css('z-index', zIndex);
@@ -78,8 +76,6 @@
                         .addClass('modal-stack');
                 }, 0);
             });
-
-
         });
     </script>
 </th:block>
