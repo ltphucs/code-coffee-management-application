@@ -38,7 +38,7 @@
 
                     <h1 class=" h3 mb-2 text-gray-800 ">Quản lý sản phẩm</h1>
                     <div class="d-flex">
-                        <a href="javascript:;" onclick="products.listProductLine()"
+                        <a href="javascript:;" onclick="productLines.listProductLine()"
                            class="btn btn-primary btn-icon-split mr-3">
                             <span class="icon text-white-50">
                                 <i class="fas fa-plus"></i>
@@ -242,26 +242,27 @@
                                 </div>
                             </form>
                         </div>
-
                         <!-- Modal footer -->
                         <div class="modal-footer">
                             <div id="save-btn"></div>
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
                         </div>
-
                     </div>
                 </div>
             </div>
 
             <!--            The modal listProductLine-->
-            <div class="modal" id="modalProductLine" name="modalProductLine">
-                <div class="modal-dialog" style="max-width: 80% !important;  max-height: calc(100vh - 210px)">
+            <div class="modal fade" id="modalProductLine" name="modalProductLine">
+                <div class="modal-dialog modal-lg">
                     <div class="modal-content">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
+                        <div class="card shadow">
+                            <div class="card-header py-3 d-flex justify-content-between">
                                 <h6 class="m-0 font-weight-bold text-primary">Bảng dòng sản phẩm</h6>
-                                <a href="javascript:;" onclick="products.addNewProductLine()"
-                                   class="btn btn-outline-primary btn-icon-split">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="card-body">
+                                <a data-toggle="modal" onclick="productLines.addNewProductLine()"
+                                   class="btn btn-outline-primary btn-icon-split mb-4">
                                     <span class="icon">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                              viewBox="0 0 24 24"
@@ -274,11 +275,8 @@
                                     </span>
                                     <span class="text">Thêm mới</span>
                                 </a>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            </div>
-                            <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered" id="productsline-datatables" width="100%"
+                                    <table class="table table-bordered" id="productLines-datatables" width="100%"
                                            cellspacing="0">
                                         <tfoot>
                                         <tr>
@@ -295,7 +293,7 @@
             </div>
 
             <!--            The modal add and save productline-->
-            <div class="modal" style="overflow-y:auto;" id="modalAddEditProductLine" name="modalAddEditProductLine">
+            <div class="modal fade" style="overflow-y:auto;" id="modalAddEditProductLine" name="modalAddEditProductLine">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <!-- Modal Header -->
@@ -306,7 +304,7 @@
 
                         <!-- Modal body -->
                         <div class="modal-body">
-                            <form id="formAddEditProductlines" name="formAddEditProductlines">
+                            <form id="formAddEditProductLines" name="formAddEditProductLines">
                                 <input type="hidden" id="idProductline-2">
                                 <div class="row form-group">
                                     <div class="col-3">
@@ -325,7 +323,7 @@
                         <!-- Modal footer -->
                         <div class="modal-footer">
                             <a href="javascript:;" class="btn btn-primary"
-                               onclick="productLine.save()">Lưu</a>
+                               onclick="productLines.save()">Lưu</a>
 
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                         </div>

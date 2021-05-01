@@ -1,5 +1,5 @@
 let products = {};
-let productLine = {};
+let productLines = {};
 
 products.initProductTable = function () {
     $("#products-datatables").DataTable({
@@ -176,7 +176,7 @@ products.renderProductStatus = function (status) {
 
 // datatable product line
 products.innitProductLineTable = function () {
-    $("#productsline-datatables").DataTable({
+    $("#productLines-datatables").DataTable({
         ajax: {
             url: "http://localhost:8080/api/productLines",
             method: "GET",
@@ -188,7 +188,7 @@ products.innitProductLineTable = function () {
             {
                 data: "id", name: "id", title: "Chức năng", orderable: false,
                 "render": function (data, type, row, meta) {
-                    return "<a href='javascript:;' title='edit product' onclick='productLine.get(" + data + ")'><i class='fa fa-edit'></i></a> "
+                    return "<a href='javascript:;' title='edit product' onclick='productLines.get(" + data + ")'><i class='fa fa-edit'></i></a> "
                 }
             },
         ],
@@ -211,7 +211,7 @@ products.innitProductLineTable = function () {
 }
 
 // table product line
-products.listProductLine = function () {
+productLines.listProductLine = function () {
     products.resetForm();
     $('#modalProductLine').modal('show')
 
@@ -232,8 +232,8 @@ products.showView = function () {
 
 
 // add new product line
-products.addNewProductLine = function () {
-    $('#formAddEditProductlines')[0].reset();
+productLines.addNewProductLine = function () {
+    $('#formAddEditProductLines')[0].reset();
     $('#modalTitleProductLine').html("Thêm mới dòng sản phẩm");
     $('#modalAddEditProductLine').modal('show');
 };
@@ -458,13 +458,13 @@ products.save = function () {
 
 
 // lấy ra productline
-productLine.get = function (idProdutLine) {
+productLines.get = function (idProdutLine) {
     $.ajax({
         url: "http://localhost:8080/api/productLines/" + idProdutLine,
         method: "GET",
         dataType: "json",
         success: function (data) {
-            $('#formAddEditProductlines')[0].reset();
+            $('#formAddEditProductLines')[0].reset();
             $('#modalTitleProductLine').html('Chỉnh sửa dòng sản phẩm');
             $('#name').val(data.name);
             $('#idProdutLine').val(data.id);
@@ -475,7 +475,7 @@ productLine.get = function (idProdutLine) {
 }
 
 // form add and save productline
-productLine.save = function () {
+productLines.save = function () {
     if ($('#idProductline-2').val()) {
         let productline = {};
         productline.name = $('#name').val();
@@ -491,7 +491,7 @@ productLine.save = function () {
             success: function (data) {
                 toastr.success("Cập nhật thành công");
                 $('#modalAddEditProductLine').modal('hide');
-                $("#productsline-datatables").DataTable().ajax.reload();
+                $("#productLines-datatables").DataTable().ajax.reload();
             },
             error: function (data) {
                 $('#err-nameProductline').html(data.responseJSON.name);
@@ -510,7 +510,7 @@ productLine.save = function () {
             success: function () {
                 toastr.success("Thêm mới thành công");
                 $('#modalAddEditProductLine').modal('hide');
-                $("#productsline-datatables").DataTable().ajax.reload();
+                $("#productLines-datatables").DataTable().ajax.reload();
             },
             error: function (data) {
                 $('#err-nameProductline').html(data.responseJSON.name);
@@ -523,7 +523,7 @@ productLine.save = function () {
 
 
 // delete dòng sản phẩm
-productLine.delete = function (data) {
+productLines.delete = function (data) {
     bootbox.confirm({
         title: "Xóa dòng sản phẩm",
         message: "Bạn có chắc chắn muốn xóa dòng sản phẩm này không ???",
@@ -544,11 +544,10 @@ productLine.delete = function (data) {
                     succes: function () {
                         toastr.success("Xóa thành công");
                         $('#modalAddEditProductLine').modal('hide');
-                        $("#productsline-datatables").DataTable().ajax.reload();
+                        $("#productLines-datatables").DataTable().ajax.reload();
                     }
                 });
             }
-
         }
     });
 }
