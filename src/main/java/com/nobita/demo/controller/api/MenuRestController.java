@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,14 +29,28 @@ public class MenuRestController {
 
 
     @GetMapping()
-    public ResponseEntity<?> getProduct(){
-        List<ProductLine> productLineList=productLineService.findAll();
-        List<MenuDTO> menu=new ArrayList<>();
-        for (ProductLine productLine:productLineList){
-            MenuDTO menuDTO=new MenuDTO();
+    public ResponseEntity<?> getProduct() {
+        List<ProductLine> productLineList = productLineService.findAll();
+        List<MenuDTO> menu = new ArrayList<>();
+        for (ProductLine productLine : productLineList) {
+            MenuDTO menuDTO = new MenuDTO();
             menuDTO.setIdProductLine(productLine.getId());
             menuDTO.setNameProductLine(productLine.getName());
             menuDTO.setProductList(productService.findByProductLine(productLine.getId()));
+            menu.add(menuDTO);
+        }
+        return new ResponseEntity<>(menu, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/search={productName}")
+    public ResponseEntity<?> searchProduct(@PathVariable("productName") String productName) {
+        List<ProductLine> productLineList = productLineService.findAll();
+        List<MenuDTO> menu = new ArrayList<>();
+        for (ProductLine productLine : productLineList) {
+            MenuDTO menuDTO = new MenuDTO();
+            menuDTO.setIdProductLine(productLine.getId());
+            menuDTO.setNameProductLine(productLine.getName());
+            menuDTO.setProductList(productService.findByProductLineAndProductName(productLine.getId(), productName));
             menu.add(menuDTO);
         }
         return new ResponseEntity<>(menu, HttpStatus.OK);
