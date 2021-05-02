@@ -11,6 +11,8 @@ public interface ProductService extends BaseService<Product> {
 
     public List<Product> findAllNotIngredient();
 
+    public List<Product> findByProductLineAndProductName(Long idProductLine, String nameProduct);
+
     public void uploadAndSaveProductImage(Product product) throws IOException;
 
 }

@@ -41,6 +41,11 @@ public class ProductServiceImpl implements ProductService {
         return productDAO.findAllNotIngredient();
     }
 
+    @Override
+    public List<Product> findByProductLineAndProductName(Long idProductLine, String nameProduct) {
+        return productDAO.findByProductLineAndProductName(idProductLine, nameProduct);
+    }
+
     public void uploadAndSaveProductImage(Product product) throws IOException {
         Map uploadResult = uploadService.upload(product.getMultiImage());
         String url = (String) uploadResult.get("secure_url");

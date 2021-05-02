@@ -90,6 +90,16 @@ areas.showMenu = function (idTable) {
         method: "GET",
         dataType: "JSON",
         success: function (data) {
+            $('#menu-search').html(
+                `
+                <input type="search" id="menu-search-frm" class="form-control"
+                               placeholder="Nhập tên sản phẩm"/>
+                <button type="button" class="btn btn-primary" onclick="areas.searchProduct(${idTable})">
+                    <i class="fas fa-search"></i>
+                </button>
+                `
+            )
+            $('#menuOrder').empty();
             $.each(data, function (i, v) {
                 $('#menuOrder').append(
                     `<hr>
@@ -102,7 +112,46 @@ areas.showMenu = function (idTable) {
                                 <div class="position-relative">
                                     <img class="card-img-top img-pd-pre" src="${p.image}" data-holder-rendered="true">
                                     <div class="card-img-overlay p-1 d-flex flex-column flex-wrap justify-content-between align-content-center bg-gra-1">
-                                        <p class="card-text text-white">Giá: ${p.price}</p>
+                                        <p class="card-text text-white">Giá: ${p.price} đ</p>
+                                        <p class="card-text text-white">Còn lại: ${p.inventory}</p>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                     <p class="card-text">${p.name}</p>
+                                </div>
+                            </div>
+                        </div>
+                        `
+                    ).join("")}
+                        </div>
+                    `
+                )
+            })
+        }
+    })
+}
+
+areas.searchProduct = function (idTable) {
+    idTableCurrent = idTable;
+    $.ajax({
+        url: `http://localhost:8080/api/menu/search=${$('#menu-search-frm').val()}`,
+        method: "GET",
+        dataType: "JSON",
+        success: function (data) {
+            $('#menuOrder').empty();
+            $.each(data, function (i, v) {
+                $('#menuOrder').append(
+                    `<hr>
+                        <p>${v.nameProductLine}</p>
+                        <div class="coffee-search-items d-flex flex-row row">
+                        ${v.productList.map(p =>
+                        `
+                        <div class="col-3 px-2 my-3">
+                            <div class="card" onclick="orders.addOrder(${idTable},${p.id})">
+                                <div class="position-relative">
+                                    <img class="card-img-top img-pd-pre" src="${p.image}" data-holder-rendered="true">
+                                    <div class="card-img-overlay p-1 d-flex flex-column flex-wrap justify-content-between align-content-center bg-gra-1">
+                                        <p class="card-text text-white">Giá: ${p.price} đ</p>
                                         <p class="card-text text-white">Còn lại: ${p.inventory}</p>
                                     </div>
                                 </div>
@@ -258,10 +307,10 @@ tables.showFormAddOrder = function (idTable) {
         dataType: "JSON",
         success: function (data) {
             let tableStatus = "";
-            if(data.tableStatus === "EMPTY"){
+            if (data.tableStatus === "EMPTY") {
                 tableStatus = `<span class="text-success">Bàn trống</span>`;
             }
-            if(data.tableStatus === "USING"){
+            if (data.tableStatus === "USING") {
                 tableStatus = `<span class="text-danger">Bàn đang dùng</span>`;
             }
             $('#showTables').remove();
