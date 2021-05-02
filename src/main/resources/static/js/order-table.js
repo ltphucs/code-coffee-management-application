@@ -96,14 +96,22 @@ areas.showMenu = function (idTable) {
                         <p>${v.nameProductLine}</p>
                         <div class="coffee-search-items d-flex flex-row row">
                         ${v.productList.map(p =>
-                        `<div class="coffee-search-item p-2 col-3 d-flex flex-column align-items-center">
-                                <div
-                                    class="mx-width-100 mx-height-100 w-100px h-100px bg-size-contain bg-pos-center d-flex flex-column justify-content-between"
-                                    style="background-image: url(https://static.wikia.nocookie.net/leagueoflegends/images/6/66/Tear_of_the_Goddess_item_HD.png/revision/latest?cb=20201111004755);" onclick="orders.addOrder(${idTable},${p.id})">
-                                    <span class="text-white price">Giá: ${p.price}</span>
+                        `
+                        <div class="col-3 px-2 my-3">
+                            <div class="card" onclick="orders.addOrder(${idTable},${p.id})">
+                                <div class="position-relative">
+                                    <img class="card-img-top img-pd-pre" src="${p.image}" data-holder-rendered="true">
+                                    <div class="card-img-overlay p-1 d-flex flex-column flex-wrap justify-content-between align-content-center bg-gra-1">
+                                        <p class="card-text text-white">Giá: ${p.price}</p>
+                                        <p class="card-text text-white">Còn lại: ${p.inventory}</p>
+                                    </div>
                                 </div>
-                                <p class="product-name">${p.name}</p>
-                              </div>`
+                                <div class="card-body">
+                                     <p class="card-text">${p.name}</p>
+                                </div>
+                            </div>
+                        </div>
+                        `
                     ).join("")}
                         </div>
                     `
@@ -328,7 +336,7 @@ tables.showFormAddOrder = function (idTable) {
                                         </div>
                                     </div>
                                     <div class="col d-xl-flex justify-content-xl-center align-items-xl-center mb-3">
-                                        <a href="javascript:;" data-toggle="modal" data-target="#exampleModalCenter"
+                                        <a href="javascript:;" data-toggle="modal" data-target="#addOrderDetailModal"
                                             class="d-xl-flex justify-content-xl-center align-items-xl-center"
                                             style="  border-radius: 50%;  border: 2px solid;  width: 50px;  height: 50px; "
                                             onclick="areas.showMenu(${data.id})">
