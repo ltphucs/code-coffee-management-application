@@ -8,7 +8,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping(value = "/reports")
 public class ReportController {
     @GetMapping
-    public String showReportPage(){
+    public String showReportPage() {
         return "/report";
     }
+
+    @GetMapping(value = "/products")
+    public String showReportProduct() {
+        return "/report-product";
+    }
+
+    @GetMapping(value = "/stores")
+    public String showReportStore() {
+        return "/report-store";
+    }
+
+    @GetMapping(value = "/orders")
+    public String showReportOrder() {
+        return "/report-order";
+    }
+
+    @GetMapping(value = "/ingredients")
+    public String showReportIngredient() {
+        return "/report-ingredient";
+    }
+
 }

@@ -30,64 +30,100 @@
 
             <!-- Begin Page Content -->
             <div class="container-fluid">
-
-<!--                <input type='text' class="form-control" id='datetimepicker1'/>-->
-
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
-                                    <input type="text" id="test-time1" class="form-control datetimepicker-input" data-target="#datetimepicker1"/>
-                                    <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
-                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <div><h4 class="">Báo Cáo</h4></div>
+                </div>
+                <div class="row-xs row">
+                    <div class="col-md-3">
+                        <a href="/reports/products">
+                            <div class="card shadow" style="height: 200px; margin-top: 10px;">
+                                <div class="card-body pt-4 pb-4">
+                                    <div class="lh-0 mb-4 d-flex justify-content-center" style="width: 100%">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"
+                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                             stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="18" y1="20" x2="18" y2="10"></line>
+                                            <line x1="12" y1="20" x2="12" y2="4"></line>
+                                            <line x1="6" y1="20" x2="6" y2="14"></line>
+                                        </svg>
                                     </div>
+                                    <h5 class="text-dark text-center font-weight-bold">Nhập hàng</h5>
+                                    <p class="text-secondary mb-0 text-center">
+                                        Báo cáo chi tiết số lượng và doanh thu
+                                        theo
+                                        từng đơn
+                                        hàng
+                                    </p>
                                 </div>
                             </div>
-                        </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="/reports/ingredients">
+                            <div class="card shadow" style="height: 200px; margin-top: 10px;">
+                                <div class="card-body pt-4 pb-4">
+                                    <div class="lh-0 mb-4 d-flex justify-content-center" style="width: 100%">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"
+                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                             stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="18" y1="20" x2="18" y2="10"></line>
+                                            <line x1="12" y1="20" x2="12" y2="4"></line>
+                                            <line x1="6" y1="20" x2="6" y2="14"></line>
+                                        </svg>
+                                    </div>
+                                    <h5 class="text-dark text-center font-weight-bold">Nhập nguyên liệu</h5>
+                                    <p class="text-secondary mb-0 text-center">Báo cáo số lượng nguyên liệu đã được sử dụng</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="/reports/orders">
+                            <div class="card shadow" style="height: 200px; margin-top: 10px;">
+                                <div class="card-body pt-4 pb-4">
+                                    <div class="lh-0 mb-4 d-flex justify-content-center" style="width: 100%">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"
+                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                             stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="18" y1="20" x2="18" y2="10"></line>
+                                            <line x1="12" y1="20" x2="12" y2="4"></line>
+                                            <line x1="6" y1="20" x2="6" y2="14"></line>
+                                        </svg>
+                                    </div>
+                                    <h5 class="text-dark text-center font-weight-bold">Đơn Hàng</h5>
+                                    <p class="text-secondary mb-0 text-center">
+                                        Báo cáo chi tiết số lượng và doanh thu
+                                        theo
+                                        từng đơn
+                                        hàng
+                                    </p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="/reports/stores">
+                            <div class="card shadow" style="height: 200px; margin-top: 10px;">
+                                <div class="card-body pt-4 pb-4">
+                                    <div class="lh-0 mb-4 d-flex justify-content-center" style="width: 100%">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"
+                                             viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                             stroke-linecap="round" stroke-linejoin="round">
+                                            <rect x="1" y="3" width="15" height="13"></rect>
+                                            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                                            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                                        </svg>
+                                    </div>
+                                    <h5 class="text-dark text-center font-weight-bold">Nhập/xuất kho</h5>
+                                    <p class="text-secondary mb-0 text-center">Báo cáo lịch sử nhập kho và điều chỉnh kho nguyên liệu</p>
+                                </div>
+                            </div>
+                        </a>
                     </div>
                 </div>
-                <!-- Page Heading -->
-                <h1 class="h3 mb-2 text-gray-800">Tables</h1>
-                <!-- DataTales Example -->
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Position</th>
-                                    <th>Office</th>
-                                    <th>Age</th>
-                                    <th>Start date</th>
-                                    <th>Salary</th>
-                                </tr>
-                                </thead>
-                                <tfoot>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Position</th>
-                                    <th>Office</th>
-                                    <th>Age</th>
-                                    <th>Start date</th>
-                                    <th>Salary</th>
-                                </tr>
-                                </tfoot>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
             </div>
-            <!-- /.container-fluid -->
-
         </div>
-        <!-- End of Main Content -->
-
         <!-- Footer -->
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">
@@ -97,9 +133,13 @@
             </div>
         </footer>
         <!-- End of Footer -->
-
+        <!-- /.container-fluid -->
     </div>
-    <!-- End of Content Wrapper -->
+    <!-- End of Main Content -->
+
+
+</div>
+<!-- End of Content Wrapper -->
 
 </div>
 <!-- End of Page Wrapper -->
@@ -131,11 +171,7 @@
 
 <th:block th:replace="layout/link.html :: scriptImport">
 </th:block>
-<script type="text/javascript">
-    $(function () {
-        $('#datetimepicker1').datetimepicker();
-    });
-</script>
+
 </body>
 
 </html>
