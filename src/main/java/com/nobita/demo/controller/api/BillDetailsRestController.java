@@ -4,6 +4,7 @@ import com.nobita.demo.model.BillDetail;
 import com.nobita.demo.service.BillDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,9 +16,9 @@ public class BillDetailsRestController {
     @Autowired
     BillDetailsService billDetailsService;
 
-    @GetMapping
-    public ResponseEntity<?> list() {
-        List<BillDetail> billDetails = billDetailsService.findAll();
+    @GetMapping(value = "/{idOrder}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> list(@PathVariable("idOrder") Long idOrder) {
+        List<BillDetail> billDetails = billDetailsService.findByIdOrder(idOrder);
         if (!billDetails.isEmpty()) {
             return new ResponseEntity<>(billDetails, HttpStatus.OK);
         }

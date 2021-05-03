@@ -2,8 +2,8 @@ let reportBills ={};
 
 reportBills.showDatatable=function (){
     $('#report-order').empty().append(
-        `<h1 className="h3 mb-2 text-gray-800">Báo cáo nhập sản phẩm</h1>
-         <p className="mb-4"></p>
+        `<h1 class="h3 mb-2 text-gray-800">Báo cáo nhập sản phẩm</h1>
+         <p class="mb-4" id="total"></p>
          <div class="card shadow mb-4">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary text-uppercase">Báo cáo nhập sản phẩm</h6>
@@ -81,6 +81,7 @@ reportBills.showDatatable=function (){
 };
 
 reportBills.showBills=function (){
+    let total=0;
     let dateObj={};
     dateObj.dateIn=document.getElementById("test-time1").value;
     dateObj.dateOut=document.getElementById("test-time2").value;
@@ -95,22 +96,33 @@ reportBills.showBills=function (){
             console.log(data);
             $('#list-bill').empty();
             $.each(data,function (i,v){
+                total += v.totalPrice;
                 $('#list-bill').append(
                     `<tr>
                         <td>${v.idOrder}</td>
                         <td>${v.dateExport}</td>
                         <td>Bàn ${v.nameTable}</td>
                         <td>${v.totalPrice}</td>
-                        <a class='mr-2' href='javascript:;' title='Thông tin chi tiết' onclick='reportBills.showBillDetails(${v.idOrder})' ><i class='fas fa-eye'></i></a>
+                        <td>
+                            <a class='mr-2' href='javascript:;' title='Thông tin chi tiết' onclick='reportBills.showBillDetails(${v.idOrder})' ><i class='fas fa-eye'></i></a>
+                        </td>
                     </tr>`
                 )
             })
+            $('#total').html(total);
         }
     })
 };
 
-reportBills.showBillDetails=function (){
-
+reportBills.showBillDetails=function (idOrder){
+$.ajax({
+    url:"http://localhost:8080/api/billDetails/"+idOrder,
+    method: "GET",
+    dataType: "JSON",
+    success:function (data){
+        console.log(data);
+    }
+})
 };
 
 $(document).ready(function () {
