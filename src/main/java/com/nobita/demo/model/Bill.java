@@ -9,8 +9,6 @@ import java.time.LocalDateTime;
 @Data
 public class Bill {
     private Long idOrder;
-    @JsonFormat(pattern = "HH:mm:ss dd/MM/yyyy")
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDateTime dateJoin;
     @JsonFormat(pattern = "HH:mm:ss dd/MM/yyyy")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
