@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -24,6 +25,13 @@ public class BillDAO implements BaseDAO<Bill> {
     @Override
     public Bill findByID(Long id) {
         return null;
+    }
+
+    public List<Bill> findByDateExport(String dateExportIn,String dateExportOut){
+        String sql="select * from bill where date_export > ? and date_export < ?";
+        Object[] values={dateExportIn,dateExportOut};
+        return jdbcTemplate.query(sql,new BillResultSet(),values);
+
     }
 
     public Bill findByIdOder(Long idOrder){

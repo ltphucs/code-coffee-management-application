@@ -34,7 +34,7 @@ public class ProductDAO implements BaseDAO<Product> {
 
 
     public List<Product> findByProductLine(Long id) {
-        String sql = "select p.* ,pl.name as name_productline from product p left join productline pl on pl.id =p.id_productline where p.id_productline=? and p.status ='STOCKING' and p.deleted=0";
+        String sql = "select p.* ,pl.name as name_productline from product p left join productline pl on pl.id =p.id_productline where p.id_productline=? and p.status <>'STOP_SELLING' and p.deleted=0";
         Object[] values = {id};
         return jdbcTemplate.query(sql, new ProductResultSet(), values);
     }
@@ -61,7 +61,7 @@ public class ProductDAO implements BaseDAO<Product> {
     }
 
     public List<Product> findByProductLineAndProductName(Long idProductLine, String nameProduct) {
-        String sql = "select p.* ,pl.name as name_productline from product p left join productline pl on pl.id =p.id_productline where p.id_productline=? and p.status ='STOCKING' and p.deleted=0 and p.name like ?";
+        String sql = "select p.* ,pl.name as name_productline from product p left join productline pl on pl.id =p.id_productline where p.id_productline=? and p.status <>'STOP_SELLING' and p.deleted=0 and p.name like ?";
         nameProduct = "%" + nameProduct + "%";
         Object[] values = {idProductLine, nameProduct};
         return jdbcTemplate.query(sql, new ProductResultSet(), values);

@@ -83,7 +83,6 @@ areas.showTables = function (idArea) {
 }
 
 areas.showMenu = function (idTable) {
-    console.log("showmenu: " + idTable);
     idTableCurrent = idTable;
     $.ajax({
         url: "http://localhost:8080/api/menu",

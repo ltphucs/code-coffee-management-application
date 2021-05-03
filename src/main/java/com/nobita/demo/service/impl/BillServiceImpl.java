@@ -6,6 +6,7 @@ import com.nobita.demo.service.BillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -21,6 +22,11 @@ public class BillServiceImpl implements BillService {
     @Override
     public Bill findByID(Long id) {
         return billDAO.findByID(id);
+    }
+
+    @Override
+    public List<Bill> findByDateExport(String dateExportIn, String dateExportOut){
+        return billDAO.findByDateExport(dateExportIn,dateExportOut);
     }
 
     @Override
