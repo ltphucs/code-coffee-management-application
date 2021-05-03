@@ -19,6 +19,7 @@ public class BillDetailsResultSet implements ResultSetExtractor<List<BillDetail>
             billDetail.setNameProduct(rs.getString("name_product"));
             billDetail.setQuantity(rs.getLong("quantity"));
             billDetail.setPriceEach(rs.getLong("price_each"));
+            billDetail.setIdProduct(rs.getLong("id_product"));
             billDetails.add(billDetail);
         }
         return billDetails;

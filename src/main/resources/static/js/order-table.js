@@ -863,6 +863,7 @@ bills.addBill = function (idTable) {
 }
 
 bills.addBillDetail = function (idOrder, idTable) {
+    let arr = [];
     $.ajax({
         url: "http://localhost:8080/api/orders/" + idOrder + "/orderDetails",
         method: "GET",
@@ -874,19 +875,27 @@ bills.addBillDetail = function (idOrder, idTable) {
                 billDetailObj.nameProduct = v.product.name;
                 billDetailObj.quantity = v.quantity;
                 billDetailObj.priceEach = v.priceEach;
-                $.ajax({
-                    url: "http://localhost:8080/api/billDetails/",
-                    method: "POST",
-                    dataType: "JSON",
-                    contentType: "application/json",
-                    data: JSON.stringify(billDetailObj),
-                    success: function (dataBillDetails) {
-                    }
-                })
+                billDetailObj.idProduct=v.product.id;
+                arr.push(billDetailObj);
             })
-            bills.removeAllOrderDetails(idOrder, idTable);
+            bills.doAddBillDetails(arr, idOrder, idTable);
         }
     })
+}
+
+bills.doAddBillDetails = function (arr, idOrder, idTable) {
+    $.each(arr, function (i, v) {
+        $.ajax({
+            url: "http://localhost:8080/api/billDetails/",
+            method: "POST",
+            dataType: "JSON",
+            contentType: "application/json",
+            data: JSON.stringify(v),
+            success: function (data) {
+            }
+        })
+    })
+    bills.removeAllOrderDetails(idOrder, idTable);
 }
 
 bills.removeAllOrderDetails = function (idOrder, idTable) {

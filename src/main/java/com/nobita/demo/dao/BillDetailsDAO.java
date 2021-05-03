@@ -32,8 +32,8 @@ public class BillDetailsDAO implements BaseDAO<BillDetail> {
 
     @Override
     public boolean save(BillDetail billDetail) {
-        String sql="insert into billdetail(id_order,name_product,quantity,price_each) values (?,?,?,?)";
-        Object[] values={billDetail.getIdOrder(),billDetail.getNameProduct(),billDetail.getQuantity(),billDetail.getPriceEach()};
+        String sql="insert into billdetail(id_order,name_product,quantity,price_each,id_product) values (?,?,?,?,?)";
+        Object[] values={billDetail.getIdOrder(),billDetail.getNameProduct(),billDetail.getQuantity(),billDetail.getPriceEach(),billDetail.getIdProduct()};
         return jdbcTemplate.update(sql,values)>0;
     }
 
