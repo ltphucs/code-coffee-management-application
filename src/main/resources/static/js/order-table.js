@@ -299,7 +299,6 @@ tables.emptyTable = function (idTable) {
 }
 
 tables.showFormAddOrder = function (idTable) {
-    console.log(idTable);
     $.ajax({
         url: "http://localhost:8080/api/tables/" + idTable,
         method: "GET",
@@ -464,7 +463,6 @@ orders.addOrder = function (idTable, idProduct) {
     let orderObj = {};
     orderObj.table = tableObj;
     orderObj.account = accountObj;
-    console.log(orderObj);
     $.ajax({
         url: "http://localhost:8080/api/orders/",
         method: "POST",
@@ -506,7 +504,6 @@ orders.getProduct = function (idOrder, idProduct, idTable) {
 }
 
 orders.findOrderDetailByIdOrderAndIdProduct = function (idOrder, productObj, idTable) {
-    console.log(productObj);
     $.ajax({
         url: "http://localhost:8080/api/orders/" + idOrder + "/product/" + productObj.id + "/orderDetail",
         method: "GET",
@@ -844,7 +841,6 @@ bills.addBill = function (idTable) {
             billObj.dateJoin = data.dateJoin;
             billObj.nameTable = data.table.name;
             billObj.totalPrice = data.totalAllPrice;
-            console.log(billObj);
             $.ajax({
                 url: "http://localhost:8080/api/bills/",
                 method: "POST",
@@ -895,7 +891,28 @@ bills.doAddBillDetails = function (arr, idOrder, idTable) {
             }
         })
     })
-    bills.removeAllOrderDetails(idOrder, idTable);
+    bills.addQuantitativeExport(idOrder,idTable);
+}
+
+bills.addQuantitativeExport=function (idOrder,idTable){
+$.ajax({
+    url:"http://localhost:8080/api/billDetails/"+idOrder+"/quantitativeExport",
+    method:"GET",
+    dataType:"JSON",
+    success:function (data){
+        $.each(data,function (i,v){
+            $.ajax({
+                url:"http://localhost:8080/api/quantitativeExport/",
+                method:"POST",
+                contentType: "application/json",
+                data: JSON.stringify(v),
+                success:function (data){
+                }
+            })
+        })
+        bills.removeAllOrderDetails(idOrder, idTable);
+    }
+})
 }
 
 bills.removeAllOrderDetails = function (idOrder, idTable) {
@@ -926,6 +943,8 @@ bills.removeAllOrderDetails = function (idOrder, idTable) {
     })
 }
 
+
+
 tables.closeTable = function (idTable) {
     $('#showTables').empty().hide();
     $('#tables-sql').empty();
@@ -940,6 +959,5 @@ tables.closeOrder = function (idTable) {
 
 $(document).ready(function () {
         areas.initAreas();
-        // document.title = "Trang đặt món - code-coffee";
     }
 );

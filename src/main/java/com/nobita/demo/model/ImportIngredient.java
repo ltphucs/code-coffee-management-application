@@ -18,7 +18,7 @@ public class ImportIngredient {
     private Ingredient ingredient;
 
     @Min(value = 1,message = "Số lượng không được bé hơn 1")
-    private Long quantity;
+    private Double quantity;
 
     @Min(value = 1,message = "Giá không thể bé hơn 1")
     private Long price;

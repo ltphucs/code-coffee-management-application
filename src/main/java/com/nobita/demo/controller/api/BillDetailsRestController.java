@@ -1,6 +1,7 @@
 package com.nobita.demo.controller.api;
 
 import com.nobita.demo.model.BillDetail;
+import com.nobita.demo.model.QuantitativeExport;
 import com.nobita.demo.service.BillDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,5 +34,11 @@ public class BillDetailsRestController {
         } catch (Exception e) {
             return new ResponseEntity<BillDetail>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @GetMapping(value = "/{idOrder}/quantitativeExport",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getQuantitativeExport(@PathVariable("idOrder") Long idOrder){
+        List<QuantitativeExport> quantitativeExports=billDetailsService.getQuantitativeExport(idOrder);
+        return new ResponseEntity<>(quantitativeExports,HttpStatus.OK);
     }
 }
