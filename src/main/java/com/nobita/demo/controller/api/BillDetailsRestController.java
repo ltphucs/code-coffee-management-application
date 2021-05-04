@@ -1,6 +1,7 @@
 package com.nobita.demo.controller.api;
 
 import com.nobita.demo.model.BillDetail;
+import com.nobita.demo.model.ProductExport;
 import com.nobita.demo.model.QuantitativeExport;
 import com.nobita.demo.service.BillDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +37,15 @@ public class BillDetailsRestController {
         }
     }
 
-    @GetMapping(value = "/{idOrder}/quantitativeExport",produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{idOrder}/quantitativeExports",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getQuantitativeExport(@PathVariable("idOrder") Long idOrder){
         List<QuantitativeExport> quantitativeExports=billDetailsService.getQuantitativeExport(idOrder);
         return new ResponseEntity<>(quantitativeExports,HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/{idOrder}/productExports",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getProductExport(@PathVariable("idOrder") Long idOrder){
+        List<ProductExport> productExports=billDetailsService.getProductExport(idOrder);
+        return new ResponseEntity<>(productExports,HttpStatus.OK);
     }
 }

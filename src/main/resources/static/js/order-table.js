@@ -209,9 +209,61 @@ tables.showFormAddTable = function (idArea) {
     )
 }
 
+tables.showFormEditTable = function (idArea,idTable) {
+    let commentValue="";
+    $.ajax({
+        url:"http://localhost:8080/api/tables/" +idTable,
+        method:"GET",
+        dataType:"JSON",
+        success:function (data){
+            if(data.comment != null){
+                commentValue=data.comment;
+            }else {
+                commentValue="";
+            }
+            $('#showOrder').remove();
+            $('#showTables').remove();
+            $('#showOrdersTables').append(
+                `<div class="col table-add-form mt-5" id="showTables">
+                <div class="card shadow">
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Thay đổi bàn</h6>
+                        <div>
+                             <a href="javascript:;" class="btn btn-danger btn-circle" onclick="tables.closeTable(${idArea})">
+                                 <i class="fas fa-times"></i>
+                             </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <input type="hidden" name="id" id="id">
+                            <div class="form-group"><label>Tên bàn</label>
+                            <input class="form-control" type="text" name="name" id="name"
+                                                                                 placeholder="${data.name}" required onchange="changeBtnEdit(${idArea},${idTable})">
+                            <small id="err-add-table-name" class="text-danger"></small>
+    
+                            </div>
+                            <div class="form-group"><label>Mô tả/Ghi chú</label><textarea class="form-control" name="comment" id="comment"
+                                                                                          placeholder="${commentValue}"
+                                                                                          rows="5" required onchange="changeBtnEdit(${idArea},${idTable})"></textarea>
+                            </div>      
+                    </div>
+                    <div class="card-footer">
+                       <div class="form-group">
+                            <div class="form-row row" id="btnEdit">
+                                        <button class="btn btn-success col" type="button" onclick="tables.addTable(${idArea})" disabled>Cập nhật</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`
+            )
+        }
+    })
+}
+
 function changeBtn(idArea) {
-    let value = document.getElementById("name").value
-    if (value !== null) {
+    let value = $('#name').val();
+    if (value !== null && value !== "") {
         $('#btnSuccess').empty().append(
             `<button class="btn btn-success col" type="button" onclick="tables.addTable(${idArea})">Thực
                 hiện</button>`
@@ -222,6 +274,35 @@ function changeBtn(idArea) {
                 hiện</button>`
         )
     }
+}
+
+function changeBtnEdit(idArea,idTable){
+    $.ajax({
+        url:"http://localhost:8080/api/tables/"+idTable,
+        method:"GET",
+        dataType:"JSON",
+        success:function (data){
+            let nameEdit =$('#name').val();
+            let commentEdit=$('#comment').val();
+            if(nameEdit === ""){
+                nameEdit=data.name;
+            }
+            if(commentEdit === ""){
+                commentEdit =data.comment;
+            }
+            if (nameEdit != data.name || commentEdit != data.comment){
+                $('#btnEdit').empty().append(
+                    `<button class="btn btn-success col" type="button" onclick="tables.editTable(${idArea},${idTable})">Cập
+                nhật</button>`
+                )
+            }else {
+                $('#btnEdit').empty().append(
+                    `<button class="btn btn-success col" type="button" onclick="tables.editTable(${idArea})" disabled>Cập
+                nhật</button>`
+                )
+            }
+        }
+    })
 }
 
 tables.addTable = function (idArea) {
@@ -262,6 +343,90 @@ tables.addTable = function (idArea) {
         },
         error: function (err) {
             $("#err-add-table-name").html(err.responseJSON.name);
+        }
+    })
+}
+
+tables.editTable=function (idArea,idTable){
+    let tableObj={};
+    let areaObj={};
+    areaObj.id=idArea
+    tableObj.id=idTable;
+    tableObj.name=$('#name').val();
+    tableObj.area=areaObj;
+    tableObj.comment=$('#comment').val();
+    console.log(tableObj);
+    $.ajax({
+        url:"http://localhost:8080/api/tables/"+idTable,
+        method:"PUT",
+        dataType: "JSON",
+        contentType: "application/json",
+        data: JSON.stringify(tableObj),
+        success:function (data){
+            Command: toastr["success"]("Sửa bàn thành công");
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": true,
+                "positionClass": "toast-bottom-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "2000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            };
+            tables.closeTable();
+            $("#showTables").empty();
+            areas.showTables(idArea);
+        },
+        error: function (err) {
+            $("#err-add-table-name").html(err.responseJSON.name);
+        }
+    })
+}
+
+tables.checkTable=function (idArea,idTable){
+    $.ajax({
+        url:"http://localhost:8080/api/tables/"+idTable+"/order",
+        method:"GET",
+        dataType:"JSON",
+        success:function (data){
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Đang có dịch vụ',
+                showConfirmButton: false,
+                timer: 1500
+            })
+        },
+        error:function (){
+            tables.removeTable(idArea,idTable);
+        }
+    })
+}
+
+tables.removeTable=function (idArea,idTable){
+    $.ajax({
+        url:"http://localhost:8080/api/tables/"+idTable,
+        method:"DELETE",
+        dataType:"JSON",
+        success:function (){
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Xóa thành công',
+                showConfirmButton: false,
+                timer: 1500
+            })
+            tables.closeTable();
+            $("#showTables").empty();
+            areas.showTables(idArea);
         }
     })
 }
@@ -329,11 +494,11 @@ tables.showFormAddOrder = function (idTable) {
                                     <!-- Dropdown - User Information -->
                                     <div class="dropdown-menu dropdown-menu-right shadow "
                                         aria-labelledby="userDropdown">
-                                        <a class="dropdown-item" href="javascript:;">
+                                        <a class="dropdown-item" href="javascript:;" onclick="tables.showFormEditTable(${data.area.id},${data.id})">
                                             <i class="fas fa-exclamation-triangle fa-sm fa-fw mr-2 text-gray-400"></i>
                                             Cập nhật bàn
                                         </a>
-                                        <a class="dropdown-item" href="javascript:;">
+                                        <a class="dropdown-item" href="javascript:;" onclick="tables.checkTable(${data.area.id},${data.id})">
                                             <i class="fas fa-trash fa-sm fa-fw mr-2 text-gray-400"></i>
                                             Xóa bàn
                                         </a>
@@ -894,15 +1059,39 @@ bills.doAddBillDetails = function (arr, idOrder, idTable) {
     bills.addQuantitativeExport(idOrder,idTable);
 }
 
+
+bills.addProductExport=function (idOrder,idTable){
+    console.log("vao dum cai");
+    $.ajax({
+        url:"http://localhost:8080/api/billDetails/"+idOrder+"/productExports",
+        method :"GET",
+        dataType:"JSON",
+        success:function (data){
+            console.log(data);
+            $.each(data,function (i,v){
+                $.ajax({
+                    url:"http://localhost:8080/api/productExports/",
+                    method:"POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(v),
+                    success:function (data){
+                    }
+                })
+            })
+            bills.removeAllOrderDetails(idOrder,idTable);
+        }
+    })
+}
+
 bills.addQuantitativeExport=function (idOrder,idTable){
 $.ajax({
-    url:"http://localhost:8080/api/billDetails/"+idOrder+"/quantitativeExport",
+    url:"http://localhost:8080/api/billDetails/"+idOrder+"/quantitativeExports",
     method:"GET",
     dataType:"JSON",
     success:function (data){
         $.each(data,function (i,v){
             $.ajax({
-                url:"http://localhost:8080/api/quantitativeExport/",
+                url:"http://localhost:8080/api/quantitativeExports/",
                 method:"POST",
                 contentType: "application/json",
                 data: JSON.stringify(v),
@@ -910,7 +1099,7 @@ $.ajax({
                 }
             })
         })
-        bills.removeAllOrderDetails(idOrder, idTable);
+        bills.addProductExport(idOrder, idTable);
     }
 })
 }
@@ -942,8 +1131,6 @@ bills.removeAllOrderDetails = function (idOrder, idTable) {
         }
     })
 }
-
-
 
 tables.closeTable = function (idTable) {
     $('#showTables').empty().hide();

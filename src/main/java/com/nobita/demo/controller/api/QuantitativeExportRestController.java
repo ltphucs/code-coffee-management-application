@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "api/quantitativeExport")
+@RequestMapping(value = "api/quantitativeExports")
 public class QuantitativeExportRestController {
     @Autowired
     QuantitativeExportService quantitativeExportService;

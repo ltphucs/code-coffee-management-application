@@ -2,6 +2,7 @@ package com.nobita.demo.service.impl;
 
 import com.nobita.demo.dao.BillDetailsDAO;
 import com.nobita.demo.model.BillDetail;
+import com.nobita.demo.model.ProductExport;
 import com.nobita.demo.model.QuantitativeExport;
 import com.nobita.demo.service.BillDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,11 @@ public class BillDetailsServiceImpl implements BillDetailsService {
     @Override
     public List<QuantitativeExport> getQuantitativeExport(Long idOrder){
         return billDetailsDAO.getQuantitativeExport(idOrder);
+    }
+
+    @Override
+    public List<ProductExport> getProductExport(Long idOrder){
+        return billDetailsDAO.getProductExport(idOrder);
     }
 
     @Override
