@@ -95,8 +95,11 @@
         $(function () {
             $('#datetimepicker1').datetimepicker();
             $('#datetimepicker1').data("DateTimePicker").format("YYYY-MM-DD HH:mm:ss");
+            $('#datetimepicker1').data("DateTimePicker").defaultDate(`${moment().year()}-${moment().month()+1}-${moment().date()} 00:00:00`);
+
             $('#datetimepicker2').datetimepicker();
             $('#datetimepicker2').data("DateTimePicker").format("YYYY-MM-DD HH:mm:ss");
+            $('#datetimepicker2').data("DateTimePicker").defaultDate(`${moment().year()}-${moment().month()+1}-${moment().date()} 23:59:59`);
         });
     </script>
 </th:block>
