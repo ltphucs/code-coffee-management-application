@@ -852,6 +852,7 @@ orders.showBtnQuantity = function (idProduct, quantity, idOrder, priceEach, idTa
 }
 
 orders.updateQuantity = function (idProduct, quantityUpdate, idOrder, priceEach, idTable, quantityBefore) {
+    console.log("vao update");
     let orderObj = {};
     orderObj.id = idOrder;
     let productObj = {};
@@ -868,45 +869,6 @@ orders.updateQuantity = function (idProduct, quantityUpdate, idOrder, priceEach,
         contentType: "application/json",
         data: JSON.stringify(orderDetailObj),
         success: function (data) {
-            $.ajax({
-                url: "http://localhost:8080/api/orderDetails/" + data.id + "/product/" + idProduct,
-                method: "DELETE",
-                dataType: "json",
-                success: function (data) {
-                    console.log("truoc khi xoa");
-                    console.log(arrOrderDetailsTest);
-                    $.each(arrOrderDetailsTest, function (i, v) {
-                        if (v.id === idProduct) {
-                            console.log("xoa arr roi");
-                            arrOrderDetailsTest.splice(i, 1);
-                        }
-                    })
-                    console.log("sau khi xoa");
-                    console.log(arrOrderDetailsTest);
-                    tables.updateTableStatus(idTable);
-                    Command: toastr["success"]("Xóa thành công");
-                    toastr.options = {
-                        "closeButton": false,
-                        "debug": false,
-                        "newestOnTop": false,
-                        "progressBar": true,
-                        "positionClass": "toast-bottom-right",
-                        "preventDuplicates": false,
-                        "onclick": null,
-                        "showDuration": "300",
-                        "hideDuration": "1000",
-                        "timeOut": "2000",
-                        "extendedTimeOut": "1000",
-                        "showEasing": "swing",
-                        "hideEasing": "linear",
-                        "showMethod": "fadeIn",
-                        "hideMethod": "fadeOut"
-                    };
-                    orders.showOrderAndOrderDetails(idTable);
-                    console.log("sau khi load function");
-                    console.log(arrOrderDetailsTest);
-                }
-            });
             Command: toastr["success"]("Đã cập nhật số lượng");
             toastr.options = {
                 "closeButton": false,
