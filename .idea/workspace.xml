@@ -28,11 +28,7 @@
     </select>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1e1755f3-12e0-4eb0-8e5a-ccd10e1e0be3" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/.vscode/settings.json" beforeDir="false" />
-    </list>
+    <list default="true" id="1e1755f3-12e0-4eb0-8e5a-ccd10e1e0be3" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -202,7 +198,7 @@
       <workItem from="1620045948727" duration="11405000" />
       <workItem from="1620138650129" duration="2275000" />
       <workItem from="1620181670364" duration="8875000" />
-      <workItem from="1620196457765" duration="9139000" />
+      <workItem from="1620196457765" duration="9455000" />
     </task>
     <servers />
   </component>
