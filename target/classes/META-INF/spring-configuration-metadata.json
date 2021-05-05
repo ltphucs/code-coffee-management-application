@@ -1,0 +1,27 @@
+{
+  "groups": [
+    {
+      "name": "application.uploader",
+      "type": "com.nobita.demo.uploader.CloudinaryConfig",
+      "sourceType": "com.nobita.demo.uploader.CloudinaryConfig"
+    }
+  ],
+  "properties": [
+    {
+      "name": "application.uploader.api-key",
+      "type": "java.lang.String",
+      "sourceType": "com.nobita.demo.uploader.CloudinaryConfig"
+    },
+    {
+      "name": "application.uploader.api-secret",
+      "type": "java.lang.String",
+      "sourceType": "com.nobita.demo.uploader.CloudinaryConfig"
+    },
+    {
+      "name": "application.uploader.cloud-name",
+      "type": "java.lang.String",
+      "sourceType": "com.nobita.demo.uploader.CloudinaryConfig"
+    }
+  ],
+  "hints": []
+}

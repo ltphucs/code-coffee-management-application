@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+
+<head>
+    <title>SB Admin 2 - Tables</title>
+    <th:block th:replace="layout/link.html :: headerLink">
+    </th:block>
+
+</head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <th:block th:replace="layout/sidebar.html :: sidebar">
+    </th:block>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            <th:block th:replace="layout/topbar.html :: topbar">
+            </th:block>
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="d-flex justify-content-between mb-4">
+                    <h1 class=" h3 mb-2 text-gray-800 ">Quản lý nguyên liệu</h1>
+                    <div class="d-flex">
+                        <a href="javascript:;" onclick="ingredients.listTable()"
+                           class="btn btn-info btn-icon-split mr-3">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-list-ul"></i>
+                            </span>
+                            <span class="text">Danh sách đơn vị sản phẩm</span>
+                        </a>
+                        <!--  add-->
+                        <a href="javascript:;" onclick="ingredients.addNew()"
+                           class="btn btn-outline-primary btn-icon-split">
+                            <span class="icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8"
+                                                                                                           x2="12"
+                                                                                                           y2="16"></line><line
+                                        x1="8" y1="12" x2="16" y2="12"></line></svg>
+                            </span>
+                            <span class="text">Thêm mới</span>
+                        </a>
+                    </div>
+                </div>
+
+
+                <!-- DataTales Example -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Bảng nguyên liệu</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="ingredients-datatables" width="100%"
+                                   cellspacing="0">
+                                <tfoot>
+                                <tr>
+                                    <th>Tên nguyên liệu</th>
+                                    <th>Đơn vị</th>
+                                    <th>Ghi chú</th>
+                                    <th>Chức năng</th>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--        form mmodal add and save ingredients    -->
+            <div class="modal fade" id="modalSaveIngredient" name="modalSaveIngredient">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="modalTitleIngredient" modalTitleIngredient="modalTitle"></h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <form id="formSaveIngredients" name="formSaveIngredients">
+                                <input hidden name="idIngredient" id="idIngredient">
+                                <div class="row form-group">
+                                    <div class="col-3">
+                                        <label>Tên nguyên liệu</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input class="form-control" type="text"
+                                               name="nameIngredient" id="nameIngredient"
+                                               data-rule-required=true>
+                                        <small id="err-nameIngredient" name="err-nameIngredient"
+                                               class="text-danger"></small>
+                                    </div>
+                                </div>
+
+                                <div class="row form-group">
+                                    <div class="col-3">
+                                        <label>Tên đơn vị</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <select class="form-control" name="nameUnit" id="nameUnit"></select>
+                                    </div>
+                                </div>
+
+                                <div class="row form-group">
+                                    <div class="col-3">
+                                        <label>Ghi chú</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input class="form-control" type="text"
+                                               name="comment" id="comment"
+                                               data-rule-required=true>
+                                    </div>
+
+                                </div>
+
+                            </form>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <a href="javascript:;" class="btn btn-primary"
+                               onclick="ingredients.save()">Save</a>
+
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!--         modal table unit   -->
+            <div class="modal" style="overflow-y:auto;" id="modalTableUnit" name="modalTableUnit">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="card shadow">
+                            <div class="card-header py-3 d-flex justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">Bảng danh sách đơn vị</h6>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="card-body">
+                                <a href="javascript:;" onclick="ingredients.addNewUnit()"
+                                   class="btn btn-outline-primary btn-icon-split mb-4">
+                                    <span class="icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                             stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8"
+                                                                                                                   x2="12"
+                                                                                                                   y2="16"></line><line
+                                                x1="8" y1="12" x2="16" y2="12"></line></svg>
+                                    </span>
+                                    <span class="text">Thêm mới</span>
+                                </a>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="unit-datatables" width="100%"
+                                           cellspacing="0">
+                                        <tfoot>
+                                        <tr>
+                                            <th>Tên đơn vị</th>
+                                            <th>Ghi chú</th>
+                                            <th>Chức năng</th>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!--          modal add and save unit  -->
+            <div class="modal fade" id="modalAddUnit" name="modalAddUnit">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="modalTitleUnit" name="modalTitleUnit"></h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <form id="formAddEditUnit" name="formAddEditUnit">
+                                <input type="hidden" id="idUnit">
+                                <div class="row form-group">
+                                    <div class="col-3">
+                                        <label>Tên đơn vị</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input class="form-control" type="text"
+                                               name="nameUnitt" id="nameUnitt"
+                                               data-rule-required=true>
+                                        <small id="err-nameUnit" class="text-danger"></small>
+                                    </div>
+                                </div>
+
+                                <div class="row form-group">
+                                    <div class="col-3">
+                                        <label>Ghi chú</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input class="form-control" type="text"
+                                               name="commentUnit" id="commentUnit"
+                                               data-rule-required=true>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <a href="javascript:;" class="btn btn-primary"
+                               onclick="ingredients.saveUnit()">Save</a>
+
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="login.html">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="layout/link.html :: scriptImport">
+</th:block>
+</body>
+
+</html>

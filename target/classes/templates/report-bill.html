@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>SB Admin 2 - Tables</title>
+    <th:block th:replace="layout/link.html :: headerLink">
+    </th:block>
+
+</head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <th:block th:replace="layout/sidebar.html :: sidebar">
+    </th:block>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            <th:block th:replace="layout/topbar.html :: topbar">
+            </th:block>
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid" id="report-bill">
+            </div>
+
+            <div class="modal fade" id="modalReportBillView" name="modalReportBillView">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="modalReportBillViewTile" name="modalReportBillViewTile"></h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="row form-group">
+                                        <div class="col-5">
+                                            <label>Mã hóa đơn</label>
+                                        </div>
+                                        <div class="col-7">
+                                            <label id="report-bill-id"></label>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-5">
+                                            <label>Thời gian vào :</label>
+                                        </div>
+                                        <div class="col-7">
+                                            <label id="report-bill-dateJoin"></label>
+                                        </div>
+                                    </div>
+                                    <div class="row form-group">
+                                        <div class="col-5">
+                                            <label>Thời gian ra: </label>
+                                        </div>
+                                        <div class="col-7">
+                                            <label id="report-bill-dateExport"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <table>
+                                    <thead>
+                                    <tr>
+                                        <td>Tên sản phẩm</td>
+                                        <td>Số lượng</td>
+                                        <td>Đơn giá</td>
+                                        <td>Tổng giá</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="report-bill-table">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="report-bill-footer">
+                                <div class="row form-group">
+                                    <div class="col-5">
+                                        <label>Tổng giá: </label>
+                                    </div>
+                                    <div class="col-7">
+                                        <label id="report-bill-totalPrice"></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Đóng</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Copyright &copy; Your Website 2020</span>
+                </div>
+            </div>
+        </footer>
+        <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal-->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="login.html">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<th:block th:replace="layout/link.html :: scriptImport">
+</th:block>
+</body>
+</html>
