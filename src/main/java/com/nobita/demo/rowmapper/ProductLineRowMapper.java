@@ -12,6 +12,7 @@ public class ProductLineRowMapper implements RowMapper<ProductLine> {
         ProductLine productLine=new ProductLine();
         productLine.setId(rs.getLong("id"));
         productLine.setName(rs.getString("name"));
+        productLine.setDeleted(rs.getBoolean("isDeleted"));
         return productLine;
     }
 }

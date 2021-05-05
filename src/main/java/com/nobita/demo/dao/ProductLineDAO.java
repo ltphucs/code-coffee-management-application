@@ -15,7 +15,12 @@ public class ProductLineDAO implements BaseDAO<ProductLine> {
 
     @Override
     public List<ProductLine> findAll() {
-        String sql = "select * from productline";
+        String sql = "select * from productline where isDeleted = false";
+        return jdbcTemplate.query(sql, new ProductLineResultSet());
+    }
+
+    public List<ProductLine> findAllIsDeleted() {
+        String sql = "select * from productline where isDeleted = true";
         return jdbcTemplate.query(sql, new ProductLineResultSet());
     }
 
@@ -28,8 +33,8 @@ public class ProductLineDAO implements BaseDAO<ProductLine> {
 
     @Override
     public boolean save(ProductLine productLine) {
-        String sql = "insert into productline(name) values (?)";
-        Object[] values = {productLine.getName()};
+        String sql = "insert into productline(name,isDeleted) values (?,?)";
+        Object[] values = {productLine.getName(),productLine.isDeleted()};
         return jdbcTemplate.update(sql, values) > 0;
     }
 
@@ -37,6 +42,19 @@ public class ProductLineDAO implements BaseDAO<ProductLine> {
     public boolean update(ProductLine productLine) {
         String sql = "update productline set name=? where id =?";
         Object[] values = {productLine.getName(), productLine.getId()};
+        return jdbcTemplate.update(sql, values) > 0;
+    }
+
+
+    public boolean isDeleted(ProductLine productLine) {
+        String sql = "update productline set isDeleted = true where id =?";
+        Object[] values = {productLine.getId()};
+        return jdbcTemplate.update(sql, values) > 0;
+    }
+
+    public boolean restore(ProductLine productLine) {
+        String sql = "update productline set isDeleted = false where id =?";
+        Object[] values = {productLine.getId()};
         return jdbcTemplate.update(sql, values) > 0;
     }
 

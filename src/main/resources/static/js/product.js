@@ -173,63 +173,11 @@ products.renderProductStatus = function (status) {
     }
 }
 
-
-// datatable product line
-products.innitProductLineTable = function () {
-    $("#productLines-datatables").DataTable({
-        ajax: {
-            url: "http://localhost:8080/api/productLines",
-            method: "GET",
-            dataType: "json",
-            dataSrc: ""
-        },
-        columns: [
-            {data: "name", name: "name", title: "Tên sản phẩm", orderable: true},
-            {
-                data: "id", name: "id", title: "Chức năng", orderable: false,
-                "render": function (data, type, row, meta) {
-                    return "<a href='javascript:;' title='edit product' onclick='productLines.get(" + data + ")'><i class='fa fa-edit'></i></a> "
-                }
-            },
-        ],
-        language: {
-            "sProcessing": "Đang xử lý...",
-            "sLengthMenu": "Xem _MENU_ mục",
-            "sZeroRecords": "Không tìm thấy dòng nào phù hợp",
-            "sInfo": "Đang xem _START_ đến _END_ trong tổng số _TOTAL_ mục",
-            "sInfoEmpty": "Đang xem 0 đến 0 trong tổng số 0 mục",
-            "sInfoFiltered": "(được lọc từ _MAX_ mục)",
-            "sSearch": "Tìm kiếm:",
-            "oPaginate": {
-                "sFirst": "Đầu",
-                "sPrevious": "Trước",
-                "sNext": "Tiếp",
-                "sLast": "Cuối"
-            }
-        }
-    });
-}
-
-// table product line
-productLines.listProductLine = function () {
-    products.resetForm();
-    $('#modalProductLine').modal('show')
-
-    products.innitProductLineTable();
-    $("#modalProductLine").on("shown.bs.modal", function (e) {
-        $("#productLines-datatables")
-            .DataTable()
-            .columns.adjust()
-            .responsive.recalc();
-    });
-}
-
 products.showView = function () {
     $('#modalViewTitle').html("Chi tiết sản phẩm");
     products.resetForm()
     $('#modalView').modal('show')
 }
-
 
 // add new product line
 productLines.addNewProductLine = function () {
@@ -237,7 +185,6 @@ productLines.addNewProductLine = function () {
     $('#modalTitleProductLine').html("Thêm mới dòng sản phẩm");
     $('#modalAddEditProductLine').modal('show');
 };
-
 
 // add new product
 products.addNew = function () {
@@ -459,6 +406,102 @@ products.save = function () {
     }
 };
 
+// datatable product line
+products.innitProductLineTable = function () {
+    $("#productLines-datatables").DataTable({
+        ajax: {
+            url: "http://localhost:8080/api/productLines",
+            method: "GET",
+            dataType: "json",
+            dataSrc: ""
+        },
+        columns: [
+            {data: "name", name: "name", title: "Tên dòng sản phẩm", orderable: true},
+            {
+                data: "id", name: "id", title: "Chức năng", orderable: false,
+                "render": function (data, type, row, meta) {
+                    return "<a href='javascript:;' title='Sửa dòng sản phẩm' onclick='productLines.get(" + data + ")'><i class='fa fa-edit'></i></a> "+
+                        "<a class='mr-2' href='javascript:;' title='Xóa' onclick='productLines.delete(" + data + ")' ><i class='fa fa-trash'></i></a>"
+                }
+            },
+        ],
+        language: {
+            "sProcessing": "Đang xử lý...",
+            "sLengthMenu": "Xem _MENU_ mục",
+            "sZeroRecords": "Không tìm thấy dòng nào phù hợp",
+            "sInfo": "Đang xem _START_ đến _END_ trong tổng số _TOTAL_ mục",
+            "sInfoEmpty": "Đang xem 0 đến 0 trong tổng số 0 mục",
+            "sInfoFiltered": "(được lọc từ _MAX_ mục)",
+            "sSearch": "Tìm kiếm:",
+            "oPaginate": {
+                "sFirst": "Đầu",
+                "sPrevious": "Trước",
+                "sNext": "Tiếp",
+                "sLast": "Cuối"
+            }
+        }
+    });
+}
+
+products.initProductLineTableDeleteIsTrue = function () {
+    $("#productLines-datatablesIsTrue").DataTable({
+        ajax: {
+            url: "http://localhost:8080/api/productLines?deleted=true",
+            method: "GET",
+            dataType: "json",
+            dataSrc: ""
+        },
+        columns: [
+            {data: "name", name: "name", title: "Tên dòng sản phẩm", orderable: true},
+            {
+                data: "id", name: "id", title: "Chức năng", orderable: false,
+                "render": function (data, type, row, meta) {
+                    return "<a href='javascript:;' title='Khôi phục' onclick='productLines.restore(" + data + ")'><i class='fa fa-edit'></i></a> "
+                }
+            },
+        ],
+        language: {
+            "sProcessing": "Đang xử lý...",
+            "sLengthMenu": "Xem _MENU_ mục",
+            "sZeroRecords": "Không tìm thấy dòng nào phù hợp",
+            "sInfo": "Đang xem _START_ đến _END_ trong tổng số _TOTAL_ mục",
+            "sInfoEmpty": "Đang xem 0 đến 0 trong tổng số 0 mục",
+            "sInfoFiltered": "(được lọc từ _MAX_ mục)",
+            "sSearch": "Tìm kiếm:",
+            "oPaginate": {
+                "sFirst": "Đầu",
+                "sPrevious": "Trước",
+                "sNext": "Tiếp",
+                "sLast": "Cuối"
+            }
+        }
+    });
+}
+
+// table product line
+productLines.listProductLine = function () {
+    $('#modalProductLine').modal('show')
+
+    products.innitProductLineTable();
+    $("#modalProductLine").on("shown.bs.modal", function (e) {
+        $("#productLines-datatables")
+            .DataTable()
+            .columns.adjust()
+            .responsive.recalc();
+    });
+}
+
+productLines.listProductLineDeletedIsTrue = function () {
+    $('#modalProductLineDeleted').modal('show')
+
+    products.initProductLineTableDeleteIsTrue();
+    $("#modalProductLineDeleted").on("shown.bs.modal", function (e) {
+        $("#productLines-datatablesIsTrue")
+            .DataTable()
+            .columns.adjust()
+            .responsive.recalc();
+    });
+}
 
 // lấy ra productline
 productLines.get = function (idProdutLine) {
@@ -544,10 +587,10 @@ productLines.delete = function (data) {
                     url: "http://localhost:8080/api/productLines/" + data,
                     method: "DELETE",
                     dataType: "json",
-                    succes: function () {
+                    success: function () {
+                        $("#productLines-datatables").DataTable().ajax.reload();
                         toastr.success("Xóa thành công");
                         $('#modalAddEditProductLine').modal('hide');
-                        $("#productLines-datatables").DataTable().ajax.reload();
                     }
                 });
             }
@@ -555,11 +598,27 @@ productLines.delete = function (data) {
     });
 }
 
+productLines.restore = function (idProductLine){
+    $.ajax({
+        url: `http://localhost:8080/api/productLines/${idProductLine}/restore`,
+        method: "POST",
+        dataType: "json",
+        contentType: "application/json",
+        success: function () {
+            toastr.success("Khôi phục thành công");
+            $("#productLines-datatablesIsTrue").DataTable().ajax.reload();
+        },
+        error: function (data) {
+            $('#err-nameProductline').html(data.responseJSON.name);
+        }
+
+    });
+}
+
 
 products.init = function () {
     products.initProductTable();
     products.initProductLines();
-
 };
 
 

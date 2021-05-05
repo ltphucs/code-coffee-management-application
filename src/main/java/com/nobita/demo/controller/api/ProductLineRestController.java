@@ -30,13 +30,21 @@ public class ProductLineRestController {
     ProductService productService;
 
     @GetMapping
-    public ResponseEntity<?> list() {
-        List<ProductLine> productLines = productLineService.findAll();
-        if (!productLines.isEmpty()) {
-            return new ResponseEntity<>(productLines, HttpStatus.OK);
-        }
-        return new ResponseEntity<List<ProductLine>>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<List<ProductLine>> show(@RequestParam(name = "deleted", required = false) String deleted) {
+        List<ProductLine> productLines = deleted == null || !deleted.equals("true")
+                ? productLineService.findAll()
+                : productLineService.findAllIsDeleted();
+        return new ResponseEntity<>(productLines, HttpStatus.OK);
     }
+
+//    @GetMapping
+//    public ResponseEntity<?> list() {
+//        List<ProductLine> productLines = productLineService.findAll();
+//        if (!productLines.isEmpty()) {
+//            return new ResponseEntity<>(productLines, HttpStatus.OK);
+//        }
+//        return new ResponseEntity<List<ProductLine>>(HttpStatus.NO_CONTENT);
+//    }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> get(@PathVariable("id") Long id) {
@@ -80,13 +88,25 @@ public class ProductLineRestController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<?> delete(@PathVariable("id") long id){
+//        ProductLine productLine = productLineService.findByID(id);
+//        if (productLine != null){
+//            productLineService.delete(id);
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        }
+//        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") long id){
-        ProductLine productLine = productLineService.findByID(id);
-        if (productLine != null){
-            productLineService.delete(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> deleteProductLine(@PathVariable(value = "id") Long id) {
+        productLineService.isDeleted(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/{id}/restore")
+    public ResponseEntity<ProductLine> restore(@PathVariable(value = "id") Long id) {
+        productLineService.restore(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

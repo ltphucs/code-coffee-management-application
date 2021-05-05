@@ -37,4 +37,21 @@ public class ProductLineServiceImpl implements ProductLineService {
     public boolean delete(Long id) {
         return productLineDAO.delete(id);
     }
+
+    @Override
+    public void isDeleted(Long id) {
+        ProductLine productLine = productLineDAO.findByID(id);
+        productLineDAO.isDeleted(productLine);
+    }
+
+    @Override
+    public void restore(Long id) {
+        ProductLine productLine = productLineDAO.findByID(id);
+        productLineDAO.restore(productLine);
+    }
+
+    @Override
+    public List<ProductLine> findAllIsDeleted() {
+        return productLineDAO.findAllIsDeleted();
+    }
 }

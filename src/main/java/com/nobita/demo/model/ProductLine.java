@@ -10,4 +10,6 @@ public class ProductLine {
 
     @Size(min = 3, max = 50, message = "Tên dòng sản phẩm phải từ trong khoảng [3-50] ký tự")
     private String name;
+
+    private boolean isDeleted;
 }

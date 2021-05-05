@@ -17,6 +17,7 @@ public class ProductLineResultSet implements ResultSetExtractor<List<ProductLine
             ProductLine productLine=new ProductLine();
             productLine.setId(rs.getLong("id"));
             productLine.setName(rs.getString("name"));
+            productLine.setDeleted(rs.getBoolean("isDeleted"));
             productLines.add(productLine);
         }
         return productLines;

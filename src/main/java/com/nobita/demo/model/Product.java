@@ -31,5 +31,6 @@ public class Product {
     private ProductStatus productStatus;
 
     private boolean isIngredient;
+
     private boolean deleted;
 }

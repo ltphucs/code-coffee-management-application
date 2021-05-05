@@ -38,6 +38,13 @@
 
                     <h1 class=" h3 mb-2 text-gray-800 ">Quản lý sản phẩm</h1>
                     <div class="d-flex">
+                        <a href="javascript:;" onclick="productLines.listProductLineDeletedIsTrue()"
+                           class="btn btn-info btn-icon-split mr-3">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-list-ul"></i>
+                            </span>
+                            <span class="text">Thùng rác</span>
+                        </a>
                         <a href="javascript:;" onclick="productLines.listProductLine()"
                            class="btn btn-info btn-icon-split mr-3">
                             <span class="icon text-white-50">
@@ -280,7 +287,48 @@
                                            cellspacing="0">
                                         <tfoot>
                                         <tr>
-                                            <th>Tên sản phẩm</th>
+                                            <th>Tên dòng sản phẩm</th>
+                                            <th>Chức năng</th>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--            The modal listProductLine-->
+            <div class="modal" id="modalProductLineDeleted" name="modalProductLineDeleted">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="card shadow">
+                            <div class="card-header py-3 d-flex justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">Bảng dòng sản phẩm</h6>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="card-body">
+                                <a data-toggle="modal" onclick="productLines.addNewProductLine()"
+                                   class="btn btn-outline-primary btn-icon-split mb-4">
+                                    <span class="icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                             viewBox="0 0 24 24"
+                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                             stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line
+                                                x1="12" y1="8"
+                                                x2="12"
+                                                y2="16"></line><line
+                                                x1="8" y1="12" x2="16" y2="12"></line></svg>
+                                    </span>
+                                    <span class="text">Thêm mới</span>
+                                </a>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="productLines-datatablesIsTrue" width="100%"
+                                           cellspacing="0">
+                                        <tfoot>
+                                        <tr>
+                                            <th>Tên dòng sản phẩm</th>
                                             <th>Chức năng</th>
                                         </tr>
                                         </tfoot>

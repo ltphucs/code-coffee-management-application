@@ -1,5 +1,7 @@
 package com.nobita.demo.dao;
 
+import com.nobita.demo.model.ProductLine;
+
 import java.util.List;
 
 public interface BaseDAO<T>{
