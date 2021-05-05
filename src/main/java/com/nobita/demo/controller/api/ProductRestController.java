@@ -2,6 +2,7 @@ package com.nobita.demo.controller.api;
 
 import com.nobita.demo.model.ImportProduct;
 import com.nobita.demo.model.Product;
+import com.nobita.demo.model.ProductLine;
 import com.nobita.demo.model.dto.ProductDTO;
 import com.nobita.demo.service.ImportProductService;
 import com.nobita.demo.service.ProductService;
@@ -30,14 +31,23 @@ public class ProductRestController {
     @Autowired
     ImportProductService importProductService;
 
+
     @GetMapping
-    public ResponseEntity<?> list() {
-        List<Product> products = productService.findAll();
-        if (!products.isEmpty()) {
-            return new ResponseEntity<>(products, HttpStatus.OK);
-        }
-        return new ResponseEntity<List<Product>>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<List<Product>> show(@RequestParam(name = "deleted", required = false) String deleted) {
+        List<Product> product = deleted == null || !deleted.equals("true")
+                ? productService.findAll()
+                : productService.findAllIsDeleted();
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
+
+//    @GetMapping
+//    public ResponseEntity<?> list() {
+//        List<Product> products = productService.findAll();
+//        if (!products.isEmpty()) {
+//            return new ResponseEntity<>(products, HttpStatus.OK);
+//        }
+//        return new ResponseEntity<List<Product>>(HttpStatus.NO_CONTENT);
+//    }
 
     @GetMapping(value = "/notIngredient",produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> listNotIngredient(){
@@ -91,14 +101,26 @@ public class ProductRestController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<?> delete(@PathVariable("id") long id){
+//        Product product = productService.findByID(id);
+//        if (product != null){
+//            productService.delete(id);
+//            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//        }
+//        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") long id){
-        Product product = productService.findByID(id);
-        if (product != null){
-            productService.delete(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> deleteProduct(@PathVariable(value = "id") Long id) {
+        productService.isDeleted(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/{id}/restore")
+    public ResponseEntity<Product> restore(@PathVariable(value = "id") Long id) {
+        productService.restore(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

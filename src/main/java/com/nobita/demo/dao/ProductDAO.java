@@ -1,6 +1,7 @@
 package com.nobita.demo.dao;
 
 import com.nobita.demo.model.Product;
+import com.nobita.demo.model.ProductLine;
 import com.nobita.demo.resultset.ProductResultSet;
 import com.nobita.demo.rowmapper.ProductRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,12 @@ public class ProductDAO implements BaseDAO<Product> {
 
     @Override
     public List<Product> findAll() {
-        String sql = "select p.* ,pl.name as name_productline from product p left join productline pl on pl.id =p.id_productline where p.deleted=0";
+        String sql = "select p.* ,pl.name as name_productline from product p left join productline pl on pl.id =p.id_productline where p.deleted=false";
+        return jdbcTemplate.query(sql, new ProductResultSet());
+    }
+
+    public List<Product> findAllIsDeleted() {
+        String sql = "select p.* ,pl.name as name_productline from product p left join productline pl on pl.id =p.id_productline where p.deleted=true";
         return jdbcTemplate.query(sql, new ProductResultSet());
     }
 
@@ -41,8 +47,8 @@ public class ProductDAO implements BaseDAO<Product> {
 
     @Override
     public boolean save(Product product) {
-        String sql = "insert into product(name,inventory, price,id_productline,image,status, is_ingredient) values(?,?,?,?,?,?,?)";
-        Object[] values = {product.getName(), product.getInventory(), product.getPrice(), product.getProductLine().getId(), product.getImage(), product.getProductStatus().toString(), product.isIngredient()};
+        String sql = "insert into product(name,inventory, price,id_productline,image,status, is_ingredient,deleted) values(?,?,?,?,?,?,?,?)";
+        Object[] values = {product.getName(), product.getInventory(), product.getPrice(), product.getProductLine().getId(), product.getImage(), product.getProductStatus().toString(), product.isIngredient(),product.isDeleted()};
         return jdbcTemplate.update(sql, values) > 0;
     }
 
@@ -55,8 +61,20 @@ public class ProductDAO implements BaseDAO<Product> {
 
     @Override
     public boolean delete(Long id) {
-        String sql = "update product set deleted=1 where id =?";
+        String sql = "update product set deleted=true where id =?";
         Object[] values = {id};
+        return jdbcTemplate.update(sql, values) > 0;
+    }
+
+    public boolean isDelete(Product product) {
+        String sql = "update product set deleted=true where id =?";
+        Object[] values = {product.getId()};
+        return jdbcTemplate.update(sql, values) > 0;
+    }
+
+    public boolean restore(Product product) {
+        String sql = "update product set isDeleted = false where id =?";
+        Object[] values = {product.getId()};
         return jdbcTemplate.update(sql, values) > 0;
     }
 

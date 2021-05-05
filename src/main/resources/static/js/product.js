@@ -62,7 +62,6 @@ products.initProductTable = function () {
     });
 }
 
-
 products.renderProductStatusButton = function (data, row) {
     if (data === "OUT_OF_STOCK") {
         return `<a href="javascript:;" class="btn btn-warning btn-icon-split" onclick="products.switchProductStatusButton(${row.id})">
@@ -246,6 +245,7 @@ products.delete = function (id) {
                     method: "DELETE",
                     dataType: "json",
                     success: function (data) {
+                        toastr.success("Xóa thành công");
                         $('#modalAddEdit').modal('hide');
                         $("#products-datatables").DataTable().ajax.reload();
                         // importProducts.initImportProductTable();
@@ -255,6 +255,22 @@ products.delete = function (id) {
         }
     });
 };
+
+products.restore = function (idProduct){
+    $.ajax({
+        url: `http://localhost:8080/api/products/${idProduct}/restore`,
+        method: "POST",
+        dataType: "json",
+        contentType: "application/json",
+        success: function () {
+            toastr.success("Khôi phục thành công");
+            $("#products-datatablesIsTrue").DataTable().ajax.reload();
+        },
+        error: function (data) {
+            $('#err-nameProduct').html(data.responseJSON.name);
+        }
+    });
+}
 
 
 products.get = function (id) {
@@ -408,7 +424,7 @@ products.save = function () {
 
 // datatable product line
 products.innitProductLineTable = function () {
-    $("#productLines-datatables").DataTable({
+    $("#productLines-datatables").empty().DataTable({
         ajax: {
             url: "http://localhost:8080/api/productLines",
             method: "GET",
@@ -444,7 +460,7 @@ products.innitProductLineTable = function () {
 }
 
 products.initProductLineTableDeleteIsTrue = function () {
-    $("#productLines-datatablesIsTrue").DataTable({
+    $("#productLines-datatables").empty().DataTable({
         ajax: {
             url: "http://localhost:8080/api/productLines?deleted=true",
             method: "GET",
@@ -479,10 +495,13 @@ products.initProductLineTableDeleteIsTrue = function () {
 }
 
 // table product line
-productLines.listProductLine = function () {
+productLines.listProductLine = function (step) {
     $('#modalProductLine').modal('show')
-
+if (step === 1){
     products.innitProductLineTable();
+}else {
+    products.initProductLineTableDeleteIsTrue();
+}
     $("#modalProductLine").on("shown.bs.modal", function (e) {
         $("#productLines-datatables")
             .DataTable()
@@ -492,10 +511,12 @@ productLines.listProductLine = function () {
 }
 
 productLines.listProductLineDeletedIsTrue = function () {
-    $('#modalProductLineDeleted').modal('show')
+    $("#productLines-datatables").empty();
+    $('#modalProductLine').modal('hide');
+    $('#modalProductLineDeleted').modal('show');
 
     products.initProductLineTableDeleteIsTrue();
-    $("#modalProductLineDeleted").on("shown.bs.modal", function (e) {
+    $("#modalProductLine").on("shown.bs.modal", function (e) {
         $("#productLines-datatablesIsTrue")
             .DataTable()
             .columns.adjust()
@@ -564,7 +585,6 @@ productLines.save = function () {
 
         });
     }
-    // }
 }
 
 
@@ -611,7 +631,6 @@ productLines.restore = function (idProductLine){
         error: function (data) {
             $('#err-nameProductline').html(data.responseJSON.name);
         }
-
     });
 }
 

@@ -2,6 +2,7 @@ package com.nobita.demo.service.impl;
 
 import com.nobita.demo.dao.ProductDAO;
 import com.nobita.demo.model.Product;
+import com.nobita.demo.model.ProductLine;
 import com.nobita.demo.service.ProductService;
 import com.nobita.demo.service.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,23 @@ public class ProductServiceImpl implements ProductService {
         String url = (String) uploadResult.get("secure_url");
         product.setImage(url);
         productDAO.save(product);
+    }
+
+    @Override
+    public void isDeleted(Long id) {
+        Product product = productDAO.findByID(id);
+        productDAO.isDelete(product);
+    }
+
+    @Override
+    public void restore(Long id) {
+        Product product = productDAO.findByID(id);
+        productDAO.restore(product);
+    }
+
+    @Override
+    public List<Product> findAllIsDeleted() {
+        return productDAO.findAllIsDeleted();
     }
 
     @Override
