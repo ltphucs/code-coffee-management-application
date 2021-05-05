@@ -116,7 +116,7 @@ reportBills.showBills=function (){
                         <td>Bàn ${v.nameTable}</td>
                         <td>${v.totalPrice}</td>
                         <td>
-                            <a class='mr-2' href='javascript:;' title='Thông tin chi tiết' onclick='reportBills.showBillDetails(${v.idOrder})' ><i class='fas fa-eye'></i></a>
+                            <a class='mr-2' href='javascript:;' title='Thông tin chi tiết' onclick='reportBills.showBillDetails(${v.idOrder},"${v.dateJoin}","${v.dateExport}",${v.totalPrice})' ><i class='fas fa-eye'></i></a>
                         </td>
                     </tr>`
                 )
@@ -126,13 +126,39 @@ reportBills.showBills=function (){
     })
 };
 
-reportBills.showBillDetails=function (idOrder){
+reportBills.showBillDetails=function (idOrder, dateJoin, dateExport, totalPrice){
 $.ajax({
     url:"http://localhost:8080/api/billDetails/"+idOrder,
     method: "GET",
     dataType: "JSON",
     success:function (data){
         console.log(data);
+        $('#report-bill-id').html(idOrder);
+        $('#report-bill-dateJoin').html(dateJoin);
+        $('#report-bill-dateExport').html(dateExport);
+        $('#report-bill-totalPrice').html(totalPrice);
+        $('#modalReportBillView').modal("show");
+        $.each(data, function (i, v) {
+            $('#report-bill-table').append(
+                `
+                <tr>
+                    <td>
+                        ${v.nameProduct}
+                    </td>
+                    <td>
+                        ${v.quantity}
+                    </td>
+                    <td>
+                        ${v.priceEach}
+                    </td>
+                    <td>
+                        ${v.quantity * v.priceEach}
+                    </td>
+                </tr>
+                `
+            )
+        });
+        $('#report-bill-totalPrice').html(totalPrice);
     }
 })
 };
