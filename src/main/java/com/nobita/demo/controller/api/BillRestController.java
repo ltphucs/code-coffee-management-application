@@ -18,9 +18,9 @@ public class BillRestController {
     @Autowired
     BillService billService;
 
-    @PostMapping(value = "/dateExport",produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/dateExport", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> list(@RequestBody BillDateDTO billDateDTO) {
-        List<Bill> bills = billService.findByDateExport(billDateDTO.getDateIn(),billDateDTO.getDateOut()    );
+        List<Bill> bills = billService.findByDateExport(billDateDTO.getDateIn(), billDateDTO.getDateOut());
         if (!bills.isEmpty()) {
             return new ResponseEntity<>(bills, HttpStatus.OK);
         }

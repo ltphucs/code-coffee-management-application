@@ -10,7 +10,10 @@ import java.time.LocalDateTime;
 public class Bill {
     private Long idOrder;
     private LocalDateTime dateJoin;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss ")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDateTime dateJoinView;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDateTime dateExport;
     private String nameTable;
