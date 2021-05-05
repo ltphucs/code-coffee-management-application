@@ -16,9 +16,8 @@ public class QuantitativeExportResultSet implements ResultSetExtractor<List<Quan
         List<QuantitativeExport> quantitativeExports=new ArrayList<>();
         while(rs.next()){
             QuantitativeExport quantitativeExport=new QuantitativeExport();
-            quantitativeExport.setIdOrder(rs.getLong("id_order"));
+            quantitativeExport.setId(rs.getLong("id"));
             quantitativeExport.setDateExport(rs.getTimestamp("date_export").toLocalDateTime());
-            quantitativeExport.setNameProduct(rs.getString("name_product"));
             quantitativeExport.setNameIngredient(rs.getString("name_ingredient"));
             quantitativeExport.setQuantity(rs.getDouble("quantity"));
             quantitativeExports.add(quantitativeExport);

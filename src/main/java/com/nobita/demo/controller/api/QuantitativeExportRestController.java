@@ -1,9 +1,12 @@
 package com.nobita.demo.controller.api;
 
+import com.nobita.demo.model.Bill;
 import com.nobita.demo.model.QuantitativeExport;
+import com.nobita.demo.model.dto.BillDateDTO;
 import com.nobita.demo.service.QuantitativeExportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -14,11 +17,11 @@ public class QuantitativeExportRestController {
     @Autowired
     QuantitativeExportService quantitativeExportService;
 
-    @GetMapping
-    public ResponseEntity<?> list(){
-        List<QuantitativeExport> quantitativeExportList=quantitativeExportService.findAll();
-        if(quantitativeExportList != null ){
-            return new ResponseEntity<>(quantitativeExportList, HttpStatus.OK);
+    @PostMapping(value = "/dateExport",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> list(@RequestBody BillDateDTO billDateDTO) {
+        List<QuantitativeExport> quantitativeExports = quantitativeExportService.findAllByDateExport(billDateDTO.getDateIn(),billDateDTO.getDateOut()    );
+        if (!quantitativeExports.isEmpty()) {
+            return new ResponseEntity<>(quantitativeExports, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

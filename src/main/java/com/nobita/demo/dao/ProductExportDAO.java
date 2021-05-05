@@ -20,8 +20,8 @@ public class ProductExportDAO implements BaseDAO<ProductExport> {
         return jdbcTemplate.query(sql,new ProductExportResultSet());
     }
 
-    public List<ProductExport> findAllByDateExport(LocalDateTime dateIn,LocalDateTime dateOut) {
-        String sql = "select * from product_export where date_export > ? and date_export < ?";
+    public List<ProductExport> findAllByDateExport(String dateIn,String dateOut) {
+        String sql = "select max(px.id) as id,max(px.date_export) as date_export,name_product,sum(px.quantity) as quantity from product_export px where px.date_export > ? and px.date_export < ? group by px.name_product";
         Object[] values = {dateIn, dateOut};
         return jdbcTemplate.query(sql,new ProductExportResultSet(),values);
     }

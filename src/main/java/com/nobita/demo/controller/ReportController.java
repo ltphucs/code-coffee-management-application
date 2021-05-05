@@ -12,9 +12,9 @@ public class ReportController {
         return "/report";
     }
 
-    @GetMapping(value = "/products")
+    @GetMapping(value = "/bills")
     public String showReportProduct() {
-        return "/report-product";
+        return "report-bill";
     }
 
     @GetMapping(value = "/stores")
@@ -22,14 +22,14 @@ public class ReportController {
         return "/report-store";
     }
 
-    @GetMapping(value = "/orders")
+    @GetMapping(value = "/ingredients")
     public String showReportOrder() {
-        return "/report-order";
+        return "report-ingredient";
     }
 
-    @GetMapping(value = "/ingredients")
+    @GetMapping(value = "/products")
     public String showReportIngredient() {
-        return "/report-ingredient";
+        return "report-product";
     }
 
 }

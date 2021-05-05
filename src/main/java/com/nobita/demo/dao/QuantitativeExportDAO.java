@@ -19,6 +19,12 @@ public class QuantitativeExportDAO implements BaseDAO<QuantitativeExport> {
         return jdbcTemplate.query(sql, new QuantitativeExportResultSet());
     }
 
+    public List<QuantitativeExport> findAllByDateExport(String dateIn,String dateOut){
+        String sql="select max(qx.id) as id,max(qx.date_export) as date_export,qx.name_ingredient as name_ingredient,sum(qx.quantity) as quantity from quantitative_export qx where qx.date_export > ? and qx.date_export < ? group by qx.name_product,qx.name_ingredient";
+        Object[] values={dateIn,dateOut};
+        return jdbcTemplate.query(sql,new QuantitativeExportResultSet(),values);
+    }
+
     @Override
     public QuantitativeExport findByID(Long id) {
         return null;

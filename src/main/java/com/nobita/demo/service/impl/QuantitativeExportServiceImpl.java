@@ -24,6 +24,10 @@ public class QuantitativeExportServiceImpl implements QuantitativeExportService 
     }
 
     @Override
+    public List<QuantitativeExport> findAllByDateExport(String dateIn,String dateOut){
+        return quantitativeExportDAO.findAllByDateExport(dateIn,dateOut);
+    }
+    @Override
     public boolean save(QuantitativeExport quantitativeExport) {
         return quantitativeExportDAO.save(quantitativeExport);
     }

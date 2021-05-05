@@ -40,7 +40,7 @@ public class ProductExportServiceImpl implements ProductExportService {
     }
 
     @Override
-    public List<ProductExport> findAllByDateExport(LocalDateTime dateIn, LocalDateTime dateOut) {
+    public List<ProductExport> findAllByDateExport(String dateIn, String dateOut) {
         return productExportDAO.findAllByDateExport(dateIn,dateOut);
     }
 }
