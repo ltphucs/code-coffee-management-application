@@ -3,7 +3,7 @@ let reportIngredients ={};
 reportIngredients.showDatatable=function (){
     $('#report-ingredient').empty().append(
         `<h1 class="h3 mb-2 text-gray-800">Báo cáo nguyên liệu</h1>
-         <p class="mb-4" id="total"></p>
+         <p class="mb-4"></p>
          <div class="card shadow mb-4">
                     <div class="card-header py-3">
                         <h6 class="m-0 font-weight-bold text-primary text-uppercase">Báo cáo nguyên liệu</h6>
@@ -37,7 +37,7 @@ reportIngredients.showDatatable=function (){
                                 </div>
                             </div>
                             <div class="col-sm-3">
-                                <a href="#" class="btn btn-light btn-icon-split border">
+                                <a href="javascript:;" class="btn btn-light btn-icon-split border">
                                     <span class="icon text-gray-600 bg-light">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                              viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -66,6 +66,7 @@ reportIngredients.showDatatable=function (){
                     </div>
                 </div>`
     )
+    setDatetime();
     reportBills.showBills();
 };
 

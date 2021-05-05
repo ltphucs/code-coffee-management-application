@@ -53,6 +53,12 @@ public class ProductDAO implements BaseDAO<Product> {
         return jdbcTemplate.update(sql, values) > 0;
     }
 
+    public boolean updateInventory(Product product){
+        String sql ="update product set inventory=? where id =?";
+        Object[] values={product.getInventory(),product.getId()};
+        return jdbcTemplate.update(sql,values) >0 ;
+    }
+
     @Override
     public boolean delete(Long id) {
         String sql = "update product set deleted=1 where id =?";

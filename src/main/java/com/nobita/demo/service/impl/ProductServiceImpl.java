@@ -54,6 +54,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public boolean updateInventory(Product product){
+        return productDAO.updateInventory(product);
+    }
+
+    @Override
     public boolean save(Product product) {
         return productDAO.save(product);
     }

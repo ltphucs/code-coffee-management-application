@@ -15,4 +15,6 @@ public interface ProductService extends BaseService<Product> {
 
     public void uploadAndSaveProductImage(Product product) throws IOException;
 
+    public boolean updateInventory(Product product);
+
 }

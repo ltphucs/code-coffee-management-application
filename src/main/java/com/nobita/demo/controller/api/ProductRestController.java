@@ -91,6 +91,16 @@ public class ProductRestController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @PutMapping(value = "/{idProduct}/inventory")
+    public ResponseEntity<?> updateInventory(@PathVariable("idProduct") Long idProduct,@RequestBody Product product) throws IOException {
+        Product product1 = productService.findByID(idProduct);
+        if (product1 != null){
+            productService.updateInventory(product);
+            return new ResponseEntity<>(product,HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") long id){
         Product product = productService.findByID(id);

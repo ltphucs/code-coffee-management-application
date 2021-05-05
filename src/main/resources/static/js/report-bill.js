@@ -1,5 +1,15 @@
 let reportBills ={};
 
+function setDatetime() {
+    $('#datetimepicker1').datetimepicker();
+    $('#datetimepicker1').data("DateTimePicker").format("YYYY-MM-DD HH:mm:ss");
+    $('#datetimepicker1').data("DateTimePicker").defaultDate(`${moment().year()}-${moment().month()+1}-${moment().date()} 00:00:00`);
+
+    $('#datetimepicker2').datetimepicker();
+    $('#datetimepicker2').data("DateTimePicker").format("YYYY-MM-DD HH:mm:ss");
+    $('#datetimepicker2').data("DateTimePicker").defaultDate(`${moment().year()}-${moment().month()+1}-${moment().date()} 23:59:59`);
+}
+
 reportBills.showDatatable=function (){
     $('#report-bill').empty().append(
         `<h1 class="h3 mb-2 text-gray-800">Báo cáo hóa đơn</h1>
@@ -37,7 +47,7 @@ reportBills.showDatatable=function (){
                                 </div>
                             </div>
                             <div class="col-sm-3">
-                                <a href="#" class="btn btn-light btn-icon-split border">
+                                <a href="javascript:;" class="btn btn-light btn-icon-split border">
                                     <span class="icon text-gray-600 bg-light">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                              viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -78,6 +88,7 @@ reportBills.showDatatable=function (){
                     </div>
                 </div>`
     )
+    setDatetime();
     reportBills.showBills();
 };
 

@@ -37,7 +37,7 @@ reportProducts.showDatatable=function (){
                                 </div>
                             </div>
                             <div class="col-sm-3">
-                                <a href="#" class="btn btn-light btn-icon-split border">
+                                <a href="javascript:;" class="btn btn-light btn-icon-split border">
                                     <span class="icon text-gray-600 bg-light">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                              viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -66,6 +66,8 @@ reportProducts.showDatatable=function (){
                     </div>
                 </div>`
     )
+    setDatetime();
+    reportProducts.showProductExport();
 };
 
 reportProducts.showProductExport=function (){
