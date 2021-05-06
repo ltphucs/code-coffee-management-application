@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -jar -Dserver.port=$PORT target/code-coffee-1.jar
+web: java $JAVA_OPTS -jar  target/code-coffee-1.jar
