@@ -1,6 +1,10 @@
 let products = {};
 let productLines = {};
 
+let productExports={};
+
+let billDetails={};
+
 products.initProductTable = function () {
     $("#products-datatables").DataTable({
         ajax: {
@@ -135,6 +139,39 @@ products.updateProduct = function (product, id) {
         error: function (err) {
             console.log("err update product");
             console.log(err.responseJSON);
+        }
+    })
+}
+
+productExports.update=function (nameProduct,idProduct){
+    let productExportObj={};
+    productExportObj.idProduct=idProduct;
+    productExportObj.nameProduct=nameProduct;
+    console.log(productExportObj);
+    $.ajax({
+        url:`http://localhost:8080/api/productExports/${idProduct}`,
+        method:"PUT",
+        dataType: "json",
+        contentType: "application/json",
+        data: JSON.stringify(productExportObj),
+        success:function (data){
+        }
+    })
+}
+
+billDetails.update=function (nameProduct,idProduct){
+    let billDetailsObj={};
+    billDetailsObj.idProduct=idProduct;
+    billDetailsObj.nameProduct=nameProduct;
+    console.log(billDetailsObj);
+    $.ajax({
+        url:`http://localhost:8080/api/billDetails/${idProduct}`,
+        method:"PUT",
+        dataType: "json",
+        contentType: "application/json",
+        data: JSON.stringify(billDetailsObj),
+        success:function (data){
+            console.log("vao r")
         }
     })
 }
@@ -450,6 +487,8 @@ products.save = function () {
                     toastr.success("Cập nhật thành công")
                     $('#modalAddEdit').modal('hide');
                     $("#products-datatables").DataTable().ajax.reload();
+                    productExports.update(productObj.name,productObj.id);
+                    billDetails.update(productObj.name,productObj.id);
                 },
                 error: function () {
                     console.log('loi update')

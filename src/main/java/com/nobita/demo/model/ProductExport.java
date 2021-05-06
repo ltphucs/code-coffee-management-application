@@ -10,4 +10,5 @@ public class ProductExport {
     private LocalDateTime dateExport;
     private String nameProduct;
     private Long quantity;
+    private Long idProduct;
 }

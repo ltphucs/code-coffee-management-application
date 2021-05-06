@@ -48,4 +48,14 @@ public class BillDetailsRestController {
         List<ProductExport> productExports=billDetailsService.getProductExport(idOrder);
         return new ResponseEntity<>(productExports,HttpStatus.OK);
     }
+
+    @PutMapping(value = "/{idProduct}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> update(@RequestBody BillDetail billDetail){
+        try{
+            billDetailsService.update(billDetail);
+            return new ResponseEntity<>(billDetail,HttpStatus.OK);
+        }catch (Exception e ){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }

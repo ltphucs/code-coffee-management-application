@@ -35,13 +35,13 @@ public class BillDetailsDAO implements BaseDAO<BillDetail> {
     }
     
     public List<QuantitativeExport> getQuantitativeExport(Long idOrder){
-        String sql ="select bd.id_order as id_order,b.date_export as date_export,bd.name_product as name_product,i.name as name_ingredient,q.quantity*bd.quantity as quantity from billdetail bd left join bill b on b.id_order=bd.id_order left join quantitative q on q.id_product=bd.id_product left join ingredient i on q.id_ingredient=i.id left join product p on p.id=bd.id_product where bd.id_order=? and p.is_ingredient=1";
+        String sql ="select b.date_export as date_export,bd.name_product as name_product,i.name as name_ingredient,q.quantity*bd.quantity as quantity from billdetail bd left join bill b on b.id_order=bd.id_order left join quantitative q on q.id_product=bd.id_product left join ingredient i on q.id_ingredient=i.id left join product p on p.id=bd.id_product where bd.id_order=? and p.is_ingredient=1";
         Object[] values={idOrder};
         return jdbcTemplate.query(sql,new QuantitativeExportResultSet(),values);
     }
 
     public List<ProductExport> getProductExport(Long idOrder){
-        String sql="select b.date_export as date_export,bd.name_product as name_product,bd.quantity as quantity from billdetail bd left join bill b on b.id_order=bd.id_order left join product p on p.id=bd.id_product where bd.id_order=? and p.is_ingredient = 0";
+        String sql="select b.date_export as date_export,bd.name_product as name_product,bd.quantity as quantity,bd.id_product as id_product from billdetail bd left join bill b on b.id_order=bd.id_order left join product p on p.id=bd.id_product where bd.id_order=? and p.is_ingredient = 0";
         Object[] values={idOrder};
         return jdbcTemplate.query(sql,new ProductExportResultSet(),values);
     }
@@ -55,7 +55,9 @@ public class BillDetailsDAO implements BaseDAO<BillDetail> {
 
     @Override
     public boolean update(BillDetail billDetail) {
-        return false;
+        String sql="update billdetail set name_product=? where id_product=?";
+        Object[] values={billDetail.getNameProduct(),billDetail.getIdProduct()};
+        return jdbcTemplate.update(sql,values) > 0 ;
     }
 
     @Override

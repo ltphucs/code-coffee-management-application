@@ -67,7 +67,7 @@ reportIngredients.showDatatable=function (){
                 </div>`
     )
     setDatetime();
-    reportBills.showBills();
+    reportIngredients.showIngredientExport();
 };
 
 reportIngredients.showIngredientExport=function (){

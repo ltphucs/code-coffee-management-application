@@ -2,6 +2,7 @@ package com.nobita.demo.dao;
 
 import com.nobita.demo.model.QuantitativeExport;
 import com.nobita.demo.resultset.QuantitativeExportResultSet;
+import com.nobita.demo.resultset.QuantitativeReportResultSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -20,9 +21,9 @@ public class QuantitativeExportDAO implements BaseDAO<QuantitativeExport> {
     }
 
     public List<QuantitativeExport> findAllByDateExport(String dateIn,String dateOut){
-        String sql="select max(qx.id) as id,max(qx.date_export) as date_export,qx.name_ingredient as name_ingredient,sum(qx.quantity) as quantity from quantitative_export qx where qx.date_export > ? and qx.date_export < ? group by qx.name_product,qx.name_ingredient";
+        String sql="select qx.name_ingredient as name_ingredient,sum(qx.quantity) as quantity from quantitative_export qx where qx.date_export > ? and qx.date_export < ? group by qx.name_ingredient";
         Object[] values={dateIn,dateOut};
-        return jdbcTemplate.query(sql,new QuantitativeExportResultSet(),values);
+        return jdbcTemplate.query(sql,new QuantitativeReportResultSet(),values);
     }
 
     @Override

@@ -102,7 +102,7 @@ areas.showMenu = function (idTable) {
             $.each(data, function (i, v) {
                 $('#menuOrder').append(
                     `<hr>
-                        <p>${v.nameProductLine}</p>
+                        <p style="font-weight: bold">${v.nameProductLine}</p>
                         <div class="coffee-search-items d-flex flex-row row">
                         ${v.productList.map(p =>
                         `
@@ -1021,71 +1021,26 @@ bills.doAddBillDetails = function (arr, idOrder, idTable) {
     bills.addQuantitativeExport(idOrder,idTable);
 }
 
-bills.getBillDetails=function (idOrder,idTable){
-    console.log("vao get billdetails");
+bills.addQuantitativeExport=function (idOrder,idTable){
     $.ajax({
-        url:"http://localhost:8080/api/billDetails/"+idOrder,
+        url:"http://localhost:8080/api/billDetails/"+idOrder+"/quantitativeExports",
         method:"GET",
         dataType:"JSON",
         success:function (data){
             $.each(data,function (i,v){
-                bills.checkProduct(v.idProduct,v.quantity);
+                $.ajax({
+                    url:"http://localhost:8080/api/quantitativeExports/",
+                    method:"POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(v),
+                    success:function (data){
+                        console.log("vao quantitative");
+                    }
+                })
             })
-            bills.removeAllOrderDetails(idOrder,idTable)
         }
     })
-}
-
-bills.checkProduct=function (idProduct,quantityOrder){
-    console.log("vao check product");
-    $.ajax({
-        url:"http://localhost:8080/api/products/"+idProduct,
-        method:"GET",
-        dataType:"JSON",
-        success:function (data){
-            if(!data.isIngredient){
-                bills.updateInventory(data.inventory,idProduct,quantityOrder);
-            }
-        }
-    })
-}
-
-bills.updateInventory=function (inventoryCurrent,idProduct,quantityOrder){
-    console.log("vao update");
-    let productObj={};
-    productObj.inventory=inventoryCurrent-quantityOrder;
-    productObj.id=idProduct;
-    $.ajax({
-        url:"http://localhost:8080/api/products/"+idProduct+"/inventory",
-        method:"PUT",
-        contentType: "application/json",
-        data: JSON.stringify(productObj),
-        success:function (data){
-            console.log("vao dum cai");
-        }
-    })
-
-}
-
-bills.addQuantitativeExport=function (idOrder,idTable){
-$.ajax({
-    url:"http://localhost:8080/api/billDetails/"+idOrder+"/quantitativeExports",
-    method:"GET",
-    dataType:"JSON",
-    success:function (data){
-        $.each(data,function (i,v){
-            $.ajax({
-                url:"http://localhost:8080/api/quantitativeExports/",
-                method:"POST",
-                contentType: "application/json",
-                data: JSON.stringify(v),
-                success:function (data){
-                }
-            })
-        })
-        bills.addProductExport(idOrder, idTable);
-    }
-})
+    bills.addProductExport(idOrder, idTable);
 }
 
 bills.addProductExport=function (idOrder,idTable){
@@ -1096,18 +1051,62 @@ bills.addProductExport=function (idOrder,idTable){
         success:function (data){
             console.log(data);
             $.each(data,function (i,v){
+                console.log(v);
                 $.ajax({
                     url:"http://localhost:8080/api/productExports/",
                     method:"POST",
                     contentType: "application/json",
                     data: JSON.stringify(v),
                     success:function (data){
+                        console.log("vao product")
                     }
                 })
             })
-            bills.getBillDetails(idOrder,idTable);
         }
     })
+    bills.getBillDetails(idOrder,idTable);
+}
+
+bills.getBillDetails=function (idOrder,idTable){
+    $.ajax({
+        url:"http://localhost:8080/api/billDetails/"+idOrder,
+        method:"GET",
+        dataType:"JSON",
+        success:function (data){
+            $.each(data,function (i,v){
+                bills.checkProduct(v.idProduct,v.quantity);
+            })
+        }
+    })
+    bills.removeAllOrderDetails(idOrder,idTable)
+}
+
+bills.checkProduct=function (idProduct,quantityOrder){
+    $.ajax({
+        url:"http://localhost:8080/api/products/"+idProduct,
+        method:"GET",
+        dataType:"JSON",
+        success:function (data){
+            if(data.ingredient === false){
+                bills.updateInventory(data.inventory,idProduct,quantityOrder);
+            }
+        }
+    })
+}
+
+bills.updateInventory=function (inventoryCurrent,idProduct,quantityOrder){
+    let productObj={};
+    productObj.inventory=inventoryCurrent-quantityOrder;
+    productObj.id=idProduct;
+    $.ajax({
+        url:"http://localhost:8080/api/products/"+idProduct+"/inventory",
+        method:"PUT",
+        contentType: "application/json",
+        data: JSON.stringify(productObj),
+        success:function (data){
+        }
+    })
+
 }
 
 bills.removeAllOrderDetails = function (idOrder, idTable) {

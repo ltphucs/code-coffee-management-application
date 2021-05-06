@@ -39,4 +39,14 @@ public class ProductExportRestController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PutMapping(value = "/{idProduct}",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> update(@RequestBody ProductExport productExport){
+        try{
+            productExportService.update(productExport);
+            return new ResponseEntity<>(productExport,HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
 }
