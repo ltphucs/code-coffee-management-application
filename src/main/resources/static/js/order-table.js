@@ -112,7 +112,6 @@ areas.showMenu = function (idTable) {
                                     <img class="card-img-top img-pd-pre" src="${p.image}" data-holder-rendered="true">
                                     <div class="card-img-overlay p-1 d-flex flex-column flex-wrap justify-content-between align-content-center bg-gra-1">
                                         <p class="card-text text-white">Giá: ${p.price} đ</p>
-                                        <p class="card-text text-white">Còn lại: ${p.inventory}</p>
                                     </div>
                                 </div>
                                 <div class="card-body">

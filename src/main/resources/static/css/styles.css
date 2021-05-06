@@ -73,7 +73,7 @@ a:hover {
 }
 
 .table-item:hover {
-    color: #007bff;
+    background-color: #0000000d;
 }
 
 .order-item-trash:hover {
@@ -123,6 +123,11 @@ a:hover {
 }
 
 .bg-gra-1 {
-    background: rgb(0, 0, 0);
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.6054796918767507) 0%, rgba(255, 255, 255, 0) 25%, rgba(255, 255, 255, 0) 75%, rgba(0, 0, 0, 0.6138830532212884) 100%);
+    background: rgb(255, 255, 255);
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0) 75%, rgba(0, 0, 0, 0.6138830532212884) 100%);
+}
+
+.scroll-modal {
+    max-height: calc(100vh - 210px);
+    overflow-y: auto;
 }
